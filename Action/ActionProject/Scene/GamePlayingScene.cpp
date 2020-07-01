@@ -69,10 +69,9 @@ GamePlayingScene::~GamePlayingScene()
 
 void GamePlayingScene::FadeoutUpdate(const Input& input)
 {
-	if (--waitTimer == 0)
+	if (--waitTimer < 0)
 	{
-		controller_.ChangeScene(new GameOverScene(controller_));
-		
+		controller_.ChangeScene(new GameOverScene(controller_));		
 	}
 }
 
