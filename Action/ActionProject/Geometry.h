@@ -28,10 +28,29 @@ using Position2f = Vector2F;
 struct Size
 {
 	int w, h;
+	Size() : w(0), h(0) {};
+	Size(int vw, int vh) :w(vw), h(vh) {};
 };
 
 struct Rect 
 {
 	Position2 pos;
 	Size size;
+	Rect(const Position2& vpos, const Size& vsize) : pos(vpos),size(vsize){};
+	int Left()const
+	{
+		return pos.x - size.w / 2;
+	}
+	int Right()const
+	{
+		return pos.x + size.w / 2;
+	}
+	int Top()const
+	{
+		return pos.y - size.h / 2;
+	}
+	int Bottom()const
+	{
+		return pos.y + size.h / 2;
+	}
 };

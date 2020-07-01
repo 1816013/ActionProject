@@ -87,7 +87,7 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 
 void GamePlayingScene::GamePlayUpdate(const Input& input)
 {
-	//++runCount;
+	++runCount;
 	if (input.IsTriggered("OK"))
 	{
 		updater_ = &GamePlayingScene::FadeoutUpdate;
@@ -106,7 +106,7 @@ void GamePlayingScene::NomalDraw()
 	{
 		DrawExtendGraph(0, 0, 800, 600, h, true);
 	}
-	DrawRotaGraph(350, 500,3.0f,0.0f, _runH[++runCount / 5 % _countof(_runH)], true);
+	DrawRotaGraph(350, 500,3.0f,0.0f, _runH[runCount / 5 % _countof(_runH)], true);
 	
 	
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
