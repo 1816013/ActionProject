@@ -59,6 +59,8 @@ Input::Input()
 	{
 		currentTbl["OK"] = false;
 		currentTbl["pause"] = false;
+		currentTbl["up"] = false;
+		currentTbl["down"] = false;
 	}
 	//currentTbl["OK"] = false;
 }
@@ -70,26 +72,11 @@ void Input::Update()
 
 	char keyState[keyBufferSize];
 	GetHitKeyStateAll(keyState);
-	//auto& currentTbl = _inputStateTable[currentInputIndex];
-	if (keyState[KEY_INPUT_RETURN])
-	{
-		const string cmd = "OK";
-		CurrentInput("OK") = true;
-	}
-	else
-	{
-		CurrentInput("OK") = false;
-	}
-
-	if (keyState[KEY_INPUT_P])
-	{
-		const string cmd = "pause";
-		CurrentInput("pause") = true;
-	}
-	else
-	{
-		CurrentInput("pause") = false;
-	}
+	//auto& currentTbl = _inputStateTable[currentInputIndex];	
+	CurrentInput("OK") = keyState[KEY_INPUT_RETURN];
+	CurrentInput("pause") = keyState[KEY_INPUT_P];
+	CurrentInput("up") = keyState[KEY_INPUT_UP];
+	CurrentInput("down") = keyState[KEY_INPUT_DOWN];
 }
 
 bool Input::IsPressed(const char * cmd) const

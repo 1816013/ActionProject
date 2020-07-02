@@ -1,5 +1,7 @@
 #pragma once
 #include "Scene.h"
+#include <memory>
+class Character;
 class TitleScene;
 class GamePlayingScene : public Scene
 {
@@ -18,6 +20,8 @@ private:
 
 	using DrawerFunction_t = void (GamePlayingScene::*)();
 	DrawerFunction_t drawer_;
+
+	std::unique_ptr<Character>character_;
 	
 public:
 	~GamePlayingScene();

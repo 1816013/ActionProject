@@ -28,7 +28,7 @@ void ContinueScene::FadeinUpdate(const Input& input)
 
 void ContinueScene::FadeoutUpdate(const Input& input)
 {
-	if (--waitTimer < 0)
+	if (--waitTimer == 0)
 	{
 		controller_.ChangeScene(new TitleScene(controller_));
 	}

@@ -29,7 +29,7 @@ void GameOverScene::FadeinUpdate(const Input &)
 
 void GameOverScene::FadeoutUpdate(const Input& input)
 {
-	if (--waitTimer < 0)
+	if (--waitTimer == 0)
 	{
 		controller_.ChangeScene(new ContinueScene(controller_));
 	}

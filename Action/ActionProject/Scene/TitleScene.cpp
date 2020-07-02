@@ -7,7 +7,7 @@
 #include "../Geometry.h"
 
 namespace{
-	constexpr uint32_t FadeoutInterval = 45;
+	constexpr uint32_t FadeInterval = 45;
 	constexpr uint32_t BlinkIntervalNomal = 30;
 	constexpr uint32_t BlinkIntervalFast = 2;
 	unsigned int waitTimer = 0;
@@ -18,13 +18,16 @@ namespace{
 }
 
 TitleScene::TitleScene(SceneController& c): Scene(c),
-updater_(&TitleScene::WaitUpdate),
-drawer_(&TitleScene::NomalDraw)
+updater_(&TitleScene::FadeinUpdate),
+drawer_(&TitleScene::FadeDraw)
 {
+	waitTimer = 0;
 	blinkInterval = BlinkIntervalNomal;
 	titleH = LoadGraph(L"Resourse/Image/Title/Title.png");
 	startH = LoadGraph(L"Resourse/Image/Title/pressstart.png");
 }
+
+
 
 TitleScene::~TitleScene()
 {
@@ -33,7 +36,7 @@ TitleScene::~TitleScene()
 }
 
 
-void TitleScene::WaitUpdate(const Input& input)
+void TitleScene::TitleUpdate(const Input& input)
 {
 	if (input.IsTriggered("OK"))
 	{
@@ -47,7 +50,7 @@ void TitleScene::FastBlinkUpdate(const Input& input)
 {
 	if (--waitTimer == 0)
 	{
-		waitTimer = FadeoutInterval;
+		waitTimer = FadeInterval;
 		updater_ = &TitleScene::FadeoutUpdate;
 		drawer_ = &TitleScene::FadeDraw;
 
@@ -59,6 +62,15 @@ void TitleScene::FadeoutUpdate(const Input &)
 	if (--waitTimer == 0)
 	{
 		controller_.ChangeScene(new GamePlayingScene(controller_));
+	}
+}
+
+void TitleScene::FadeinUpdate(const Input&)
+{
+	if (++waitTimer == FadeInterval)
+	{
+		updater_ = &TitleScene::TitleUpdate;
+		drawer_ = &TitleScene::NomalDraw;
 	}
 }
 
@@ -91,7 +103,7 @@ void TitleScene::FadeDraw()
 {
 	const auto& vpSize = Application::Instance().GetViewport().GetSize();
 	NomalDraw();
-	auto blendParam = static_cast<int>(255 * static_cast<float>(FadeoutInterval - waitTimer) / FadeoutInterval);
+	auto blendParam = static_cast<int>(255 * static_cast<float>(FadeInterval - waitTimer) / FadeInterval);
 	SetDrawBlendMode(DX_BLENDMODE_MULA, blendParam);
 	DrawBox(0, 0, vpSize.w, vpSize.h, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

@@ -7,6 +7,8 @@
 #include <iomanip>
 #include "../Input.h"
 #include "PauseScene.h"
+#include "../Game/Character.h"
+#include "../Game/Player.h"
 
 using namespace std;
 namespace 
@@ -15,8 +17,8 @@ namespace
 	unsigned int waitTimer = 0;
 	
 	int _bgH[11] = {};
-	int _runH[6] = {};
-	int runCount = 0;
+	/*int _runH[6] = {};
+	int runCount = 0;*/
 }
 
 
@@ -43,33 +45,21 @@ drawer_(&GamePlayingScene::FadeDraw)
 		}
 		wss << ".png";
 		_bgH[_countof(_bgH)-1-i] = LoadGraph(wss.str().c_str());
-	}
-	// ƒLƒƒƒ‰‚Ìƒ[ƒh
-	for (int i = 0; i < _countof(_runH); i++)
-	{
-		wstringstream wss;
-		wss << L"Resourse/Image/Player/adventurer-run-";
-		wss << setw(2) << setfill(L'0') << i;
-		wss << ".png";
-		_runH[i] = LoadGraph(wss.str().c_str());
 	}	
+	character_ = make_unique<Player>();
 }
 
 GamePlayingScene::~GamePlayingScene()
 {
-	for (auto& h : _bgH)
+	for (auto& bg : _bgH)
 	{
-		DeleteGraph(h);
-	}
-	for (auto& h : _runH)
-	{
-		DeleteGraph(h);
+		DeleteGraph(bg);
 	}
 }
 
 void GamePlayingScene::FadeoutUpdate(const Input& input)
 {
-	if (--waitTimer < 0)
+	if (--waitTimer == 0)
 	{
 		controller_.ChangeScene(new GameOverScene(controller_));		
 	}
@@ -86,7 +76,7 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 
 void GamePlayingScene::GamePlayUpdate(const Input& input)
 {
-	++runCount;
+	//++runCount;
 	if (input.IsTriggered("OK"))
 	{
 		updater_ = &GamePlayingScene::FadeoutUpdate;
@@ -105,8 +95,6 @@ void GamePlayingScene::NomalDraw()
 	{
 		DrawExtendGraph(0, 0, 800, 600, h, true);
 	}
-	DrawRotaGraph(350, 500,3.0f,0.0f, _runH[runCount / 5 % _countof(_runH)], true);
-	
 	
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
 }
@@ -126,9 +114,11 @@ void GamePlayingScene::FadeDraw()
 void GamePlayingScene::Update(const Input & input)
 {
 	(this->*updater_)(input);
+	character_->Update(input);
 }
 
 void GamePlayingScene::Draw()
 {
 	(this->*drawer_)();
+	character_->Draw();
 }

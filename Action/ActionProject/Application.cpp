@@ -5,6 +5,11 @@
 #include "Input.h"
 #include "Geometry.h"
 
+namespace
+{
+	bool isExit_ = false;
+}
+
 Size Viewport::GetSize() const
 {
 	Size ret = { 800, 600 };
@@ -23,6 +28,7 @@ bool Application::Initialize()
 	}
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
 	sceneController_.reset(new SceneController());
+	isExit_ = false;
 	return true;
 }
 
@@ -37,6 +43,10 @@ void Application::Run()
 		sceneController_->Update(input);
 		sceneController_->Draw();
 		ScreenFlip();
+		if (isExit_)
+		{
+			break;
+		}
 	}
 }
 
@@ -47,6 +57,11 @@ void Application::Terminate()
 
 Application::~Application()
 {
+}
+
+void Application::Exit()
+{
+	isExit_ = true;
 }
 
 const Viewport& Application::GetViewport() const

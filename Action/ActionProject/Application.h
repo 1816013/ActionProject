@@ -37,8 +37,12 @@ public:
 	bool Initialize();
 	// 実行
 	void Run();
-	// 終了処理
+	// 終了後後処理
 	void Terminate();
+
+	// アプリケーションの終了
+	void Exit();
+
 	~Application();
 
 	const Viewport& GetViewport()const;

@@ -25,6 +25,12 @@ void SceneController::PopScene()
 	assert(!scene_.empty());
 }
 
+void SceneController::CleanChangeScene(Scene* scene)
+{
+	scene_.clear();
+	scene_.emplace_front(scene);
+}
+
 void SceneController::Update(const Input & input)
 {
 	assert(!scene_.empty());
