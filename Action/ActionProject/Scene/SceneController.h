@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 #include <deque>
+#include <functional>
+
 class Input;
 class Application;
 class Scene;
@@ -11,6 +13,10 @@ private:
 	// シーンスタック(FIFO)※コンテナを使うためdeque
 	std::deque<std::shared_ptr<Scene>>scene_;	
 	SceneController();
+	// シーン切り替えの時Drawの後にシーン切り替えの関数を呼ぶためのもの
+	// 普通に呼び出していると前のシーンのDrawが呼び出されたりして
+	// 見えちゃいけないものが見える可能性がある
+	std::function<void(void)> postDrawExecuter_;
 	//std::shared_ptr<Scene>_scene;
 public:		
 	~SceneController() = default;

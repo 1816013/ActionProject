@@ -1,8 +1,12 @@
 #pragma once
 #include "Scene.h"
 #include <memory>
-class Character;
+#include <vector>
+
+class Player;
+class Background;
 class TitleScene;
+class InputListner;
 class GamePlayingScene : public Scene
 {
 	friend TitleScene;
@@ -21,10 +25,13 @@ private:
 	using DrawerFunction_t = void (GamePlayingScene::*)();
 	DrawerFunction_t drawer_;
 
-	std::unique_ptr<Character>character_;
-	
+	std::unique_ptr<Player>player_;
+	std::unique_ptr<Background>bg_;
+	std::vector<std::shared_ptr<InputListner>>listners_;
+
 public:
 	~GamePlayingScene();
+	void AddListner(std::shared_ptr<InputListner> listner);
 	void Update(const Input&)override;
 	void Draw()override;
 };

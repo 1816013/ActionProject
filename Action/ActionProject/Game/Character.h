@@ -12,7 +12,7 @@ public:
 	virtual ~Character() = default;
 	///キャラクターの更新を行う
 	///プレイヤー以外に必要ないパラメータだが必要ない奴は無視する
-	virtual void Update(const Input&) = 0;
+	virtual void Update() = 0;
 	///<summary>キャラクターの描画を行う</summary>
 	virtual void Draw() = 0;	
 };

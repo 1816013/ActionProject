@@ -7,18 +7,14 @@
 #include <iomanip>
 #include "../Input.h"
 #include "PauseScene.h"
-#include "../Game/Character.h"
 #include "../Game/Player.h"
+#include "../Game/Background.h"
 
 using namespace std;
 namespace 
 {
 	constexpr uint32_t FadeInterval = 45;
 	unsigned int waitTimer = 0;
-	
-	int _bgH[11] = {};
-	/*int _runH[6] = {};
-	int runCount = 0;*/
 }
 
 
@@ -27,34 +23,19 @@ updater_(&GamePlayingScene::FadeinUpdate),
 drawer_(&GamePlayingScene::FadeDraw)
 {
 	waitTimer = 0;
-	int skipNo[2] = { 4 , 7 };
-	int no = 9;
-	for (int i = 0; i < _countof(_bgH); i++)
-	{
-		wstringstream wss;
-		wss << L"Resourse/Image/BackGround/Layer_";
-		wss << setw(4) << setfill(L'0') << i << "_";
-		if (std::count(begin(skipNo), end(skipNo), i) > 0)
-		{
-			wss << "Lights";
-		}
-		else
-		{
-			wss << no;
-			--no;
-		}
-		wss << ".png";
-		_bgH[_countof(_bgH)-1-i] = LoadGraph(wss.str().c_str());
-	}	
-	character_ = make_unique<Player>();
+		
+	player_ = make_unique<Player>(this);
+	bg_ = make_unique<Background>();
 }
 
 GamePlayingScene::~GamePlayingScene()
 {
-	for (auto& bg : _bgH)
-	{
-		DeleteGraph(bg);
-	}
+	
+}
+
+void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)
+{
+	listners_.push_back(listner);
 }
 
 void GamePlayingScene::FadeoutUpdate(const Input& input)
@@ -76,7 +57,6 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 
 void GamePlayingScene::GamePlayUpdate(const Input& input)
 {
-	//++runCount;
 	if (input.IsTriggered("OK"))
 	{
 		updater_ = &GamePlayingScene::FadeoutUpdate;
@@ -87,15 +67,18 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	{
 		controller_.PushScene(new PauseScene(controller_));
 	}
+	bg_->Update();
+	player_->Update();
+	for (auto& listner : listners_)
+	{
+		listner->Notify(input);
+	}
 }
 
 void GamePlayingScene::NomalDraw()
-{
-	for (auto h : _bgH)
-	{
-		DrawExtendGraph(0, 0, 800, 600, h, true);
-	}
-	
+{	
+	bg_->Draw();	
+	player_->Draw();
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
 }
 
@@ -113,12 +96,11 @@ void GamePlayingScene::FadeDraw()
 
 void GamePlayingScene::Update(const Input & input)
 {
-	(this->*updater_)(input);
-	character_->Update(input);
+	(this->*updater_)(input);	
 }
 
 void GamePlayingScene::Draw()
 {
 	(this->*drawer_)();
-	character_->Draw();
+	
 }

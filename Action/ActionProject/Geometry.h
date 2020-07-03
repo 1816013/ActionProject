@@ -17,6 +17,18 @@ struct Vector2D
 		return Vector2D(x - val.x, y - val.y);
 	}
 
+	void operator+=(const Vector2D& val)
+	{
+		x += val.x;
+		y += val.y;
+	}
+
+	void operator-=(const Vector2D& val)
+	{
+		x -= val.x;
+		y -= val.y;
+	}
+
 };
 
 
