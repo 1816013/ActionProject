@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Scene">
-      <UniqueIdentifier>{f0caeef0-59d2-43c0-9d13-b0f02028cda9}</UniqueIdentifier>
-      <Extensions>*Scene*.cpp</Extensions>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{35af11dd-832b-4437-9651-f1274e3c1a94}</UniqueIdentifier>
       <Extensions>*Scene*.h</Extensions>
@@ -27,6 +23,10 @@
     <Filter Include="ヘッダー ファイル\Game">
       <UniqueIdentifier>{88492799-6f35-4b28-a19d-9c5c23b4fbee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Scene">
+      <UniqueIdentifier>{f0caeef0-59d2-43c0-9d13-b0f02028cda9}</UniqueIdentifier>
+      <Extensions>*Scene*.cpp</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,22 +36,22 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneController.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Scene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\ContinueScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GamePlayingScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GameOver.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>ソース ファイル</Filter>
@@ -60,7 +60,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\PauseScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Game\Player.cpp">
       <Filter>ソース ファイル\Game</Filter>
@@ -72,6 +72,21 @@
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\Enemy.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\BombEquip.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\BombShot.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Equipment.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Projectile.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ProjectileManager.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,6 +131,21 @@
       <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\Enemy.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\BombEquip.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\BombShot.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Equipment.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Projectile.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ProjectileManager.h">
       <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
   </ItemGroup>

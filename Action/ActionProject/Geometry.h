@@ -33,9 +33,9 @@ struct Vector2D
 
 
 using Vector2 = Vector2D<int>;
-using Vector2F = Vector2D<float>;
+using Vector2f = Vector2D<float>;
 using Position2 = Vector2;
-using Position2f = Vector2F;
+using Position2f = Vector2f;
 
 struct Size
 {
