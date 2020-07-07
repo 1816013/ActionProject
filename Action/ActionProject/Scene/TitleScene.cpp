@@ -94,8 +94,7 @@ void TitleScene::NomalDraw()
 	
 	if (blinkTimer / blinkInterval % 2  == 1)
 	{
-		DrawRotaGraph(vpSize.w / 2, 400, 1.0, 0.0, startH, true);
-		
+		DrawRotaGraph(vpSize.w / 2, 400, 1.0, 0.0, startH, true);		
 	}
 }
 

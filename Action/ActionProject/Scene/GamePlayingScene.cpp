@@ -5,10 +5,12 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <assert.h>
 #include "../Input.h"
 #include "PauseScene.h"
 #include "../Game/Player.h"
 #include "../Game/Background.h"
+#include "../Game/ProjectileManager.h"
 
 using namespace std;
 namespace 
@@ -23,9 +25,11 @@ updater_(&GamePlayingScene::FadeinUpdate),
 drawer_(&GamePlayingScene::FadeDraw)
 {
 	waitTimer = 0;
-		
-	player_ = make_unique<Player>(this);
+			
 	bg_ = make_unique<Background>();
+	pm_ = make_unique<ProjectileManager>();
+	player_ = make_unique<Player>(this);
+	player_->SetPosition({ 350, 500 });
 }
 
 GamePlayingScene::~GamePlayingScene()
@@ -68,6 +72,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 		controller_.PushScene(new PauseScene(controller_));
 	}
 	bg_->Update();
+	pm_->Update();
 	player_->Update();
 	for (auto& listner : listners_)
 	{
@@ -77,8 +82,10 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 
 void GamePlayingScene::NomalDraw()
 {	
-	bg_->Draw();	
+	bg_->Draw();
+	pm_->Draw();
 	player_->Draw();
+
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
 }
 
@@ -92,6 +99,12 @@ void GamePlayingScene::FadeDraw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
+ProjectileManager& GamePlayingScene::GetProjectileManager()
+{
+	assert(pm_);
+	return *pm_;
+}
+
 
 
 void GamePlayingScene::Update(const Input & input)
@@ -101,6 +114,5 @@ void GamePlayingScene::Update(const Input & input)
 
 void GamePlayingScene::Draw()
 {
-	(this->*drawer_)();
-	
+	(this->*drawer_)();	
 }

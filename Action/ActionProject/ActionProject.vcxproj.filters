@@ -23,7 +23,7 @@
     <Filter Include="ヘッダー ファイル\Game">
       <UniqueIdentifier>{88492799-6f35-4b28-a19d-9c5c23b4fbee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Game\Scene">
+    <Filter Include="ソース ファイル\Scene">
       <UniqueIdentifier>{f0caeef0-59d2-43c0-9d13-b0f02028cda9}</UniqueIdentifier>
       <Extensions>*Scene*.cpp</Extensions>
     </Filter>
@@ -36,22 +36,22 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneController.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Scene.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\ContinueScene.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GamePlayingScene.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GameOver.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>ソース ファイル</Filter>
@@ -60,7 +60,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\PauseScene.cpp">
-      <Filter>ヘッダー ファイル\Game\Scene</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Game\Player.cpp">
       <Filter>ソース ファイル\Game</Filter>

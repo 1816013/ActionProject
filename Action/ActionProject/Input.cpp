@@ -63,6 +63,7 @@ Input::Input()
 		currentTbl["down"] = false;
 		currentTbl["left"] = false;
 		currentTbl["right"] = false;
+		currentTbl["shot"] = false;
 	}
 	//currentTbl["OK"] = false;
 }
@@ -81,6 +82,7 @@ void Input::Update()
 	CurrentInput("down") = keyState[KEY_INPUT_DOWN];
 	CurrentInput("left") = keyState[KEY_INPUT_LEFT];
 	CurrentInput("right") = keyState[KEY_INPUT_RIGHT];
+	CurrentInput("shot") = keyState[KEY_INPUT_LSHIFT];
 }
 
 bool Input::IsPressed(const char * cmd) const

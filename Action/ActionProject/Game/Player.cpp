@@ -5,6 +5,7 @@
 #include "../Geometry.h"
 #include "../Input.h"
 #include "../Scene/GamePlayingScene.h"
+#include "BombEquip.h"
 
 using namespace std;
 
@@ -50,9 +51,14 @@ Player::Player( GamePlayingScene* gs)
 			{
 				player_.Move({ 5, 0 });
 			}
+			if (input.IsTriggered("shot"))
+			{
+				player_.Attack(input);
+			}
 		}
 	};
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
+	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager()));
 }
 
 Player::Player()
@@ -65,6 +71,11 @@ Player::~Player()
 	{
 		DeleteGraph(run);
 	}
+}
+
+void Player::Attack(const Input& input)
+{
+	equipments_[currentEquipmentNo_]->Attack(*this, input);
 }
 
 void Player::SetPosition(const Position2& p )
@@ -85,5 +96,10 @@ void Player::Update()
 
 void Player::Draw()
 {
-	DrawRotaGraph(350 + pos_.x, 500 + pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true);
+	DrawRotaGraph(pos_.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true);
+}
+
+const Position2 Player::Position()const
+{
+	return pos_;
 }

@@ -3,6 +3,8 @@ class Player;
 class Input;
 class Equipment
 {
+public:
+	virtual ~Equipment() = default;
 	/// <summary>
 	/// ¡‚Ì•Ší‚ÅUŒ‚‚·‚é
 	/// </summary>

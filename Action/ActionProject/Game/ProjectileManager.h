@@ -1,10 +1,16 @@
 #pragma once
-#include <vector>
+#include <list>
+#include <memory>
 
 class Projectile;
 class ProjectileManager
 {
 private:
-	std::vector<Projectile>projectiles_;
+	std::list<std::shared_ptr<Projectile>>projectiles_;
+public:
+	//std::list<std::shared_ptr<Projectile>>& Projectiles();
+	void AddProjectile(Projectile* p);
+	void Update();
+	void Draw();
 };
 

@@ -1,12 +1,25 @@
 #pragma once
 #include "Projectile.h"
-class BombShot :
-	public Projectile
+#include <functional>
+class BombShot : public Projectile
 {
+private:
+	float angle_;
+
+	void NomalUpdate();
+	void DestroyUpdate();
+
+	using UpdateFunction_t = void (BombShot::*)();
+	UpdateFunction_t updater_;
+
 public:
 	BombShot(const Position2& pos, const Vector2f& vel);
-	// Update‚ÍProjectile‚Ì‚à‚Ì‚ðŽg—p
-
+	~BombShot();
+	
+	void Update()override;
+	
 	void Draw()override;
+
+
 };
 
