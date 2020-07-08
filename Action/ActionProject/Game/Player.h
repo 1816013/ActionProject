@@ -15,12 +15,26 @@ public:
 	Player(GamePlayingScene* g);
 	Player();
 	~Player();
+	/// <summary>
+	/// 持っている武器で攻撃する
+	/// </summary>
+	/// <param name="input">入力参照</param>
 	void Attack(const Input& input);
-	void SetPosition(const Position2&);
+	/// <summary>
+	/// プレイヤーの座標を設定する
+	/// </summary>
+	/// <param name="pos">新たな座標</param>
+	void SetPosition(const Position2& pos);
+	/// <summary>
+	/// プレイヤーを移動させる
+	/// </summary>
+	/// <param name="v">移動ベクトル</param>
 	void Move(const Vector2& v);
+	void NextEquip();
 	void Update()override;
 	void Draw()override;
 	const Position2 Position()const;
+	size_t CurrentEquipmentNo()const;
 
 };
 

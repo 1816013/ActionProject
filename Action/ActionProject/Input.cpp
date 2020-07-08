@@ -54,16 +54,28 @@ namespace
 Input::Input()
 {
 	currentInputIndex = 0;
+	keyPair_.emplace_back(make_pair("OK", KEY_INPUT_RETURN));
+	keyPair_.emplace_back(make_pair("pause", KEY_INPUT_P));
+	keyPair_.emplace_back(make_pair("up", KEY_INPUT_UP));
+	keyPair_.emplace_back(make_pair("down", KEY_INPUT_DOWN));
+	keyPair_.emplace_back(make_pair("left", KEY_INPUT_LEFT));
+	keyPair_.emplace_back(make_pair("right", KEY_INPUT_RIGHT));
+	keyPair_.emplace_back(make_pair("shot", KEY_INPUT_LSHIFT));
+	keyPair_.emplace_back(make_pair("change", KEY_INPUT_C));
 	//auto& currentTbl = _inputStateTable[currentInputIndex];
 	for (auto& currentTbl : _inputStateTable)
 	{
-		currentTbl["OK"] = false;
+		for (auto& keycode : keyPair_)
+		{
+			currentTbl[keycode.first] = false;
+		}
+		/*currentTbl["OK"] = false;
 		currentTbl["pause"] = false;
 		currentTbl["up"] = false;
 		currentTbl["down"] = false;
 		currentTbl["left"] = false;
 		currentTbl["right"] = false;
-		currentTbl["shot"] = false;
+		currentTbl["shot"] = false;*/
 	}
 	//currentTbl["OK"] = false;
 }
@@ -75,14 +87,18 @@ void Input::Update()
 
 	char keyState[keyBufferSize];
 	GetHitKeyStateAll(keyState);
-	//auto& currentTbl = _inputStateTable[currentInputIndex];	
-	CurrentInput("OK") = keyState[KEY_INPUT_RETURN];
+	//auto& currentTbl = _inputStateTable[currentInputIndex];
+	for (auto& keycode : keyPair_)
+	{
+		CurrentInput(keycode.first) = keyState[keycode.second];
+	}
+	/*CurrentInput("OK") = keyState[KEY_INPUT_RETURN];
 	CurrentInput("pause") = keyState[KEY_INPUT_P];
 	CurrentInput("up") = keyState[KEY_INPUT_UP];
 	CurrentInput("down") = keyState[KEY_INPUT_DOWN];
 	CurrentInput("left") = keyState[KEY_INPUT_LEFT];
 	CurrentInput("right") = keyState[KEY_INPUT_RIGHT];
-	CurrentInput("shot") = keyState[KEY_INPUT_LSHIFT];
+	CurrentInput("shot") = keyState[KEY_INPUT_LSHIFT];*/
 }
 
 bool Input::IsPressed(const char * cmd) const

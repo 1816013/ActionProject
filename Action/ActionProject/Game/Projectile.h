@@ -4,7 +4,7 @@ class Projectile : public Character
 {
 protected:
 	Vector2f vel_;	// ‘¬“x
-	bool isActive_ = false;
+	bool isActive_ = false;	// ¶‚«‚Ä‚¢‚é‚©
 public:
 	virtual ~Projectile() = default;
 	///<summary>
@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// €‚ñ‚¾‚©‚Ç‚¤‚©
 	/// </summary>
-	/// <returns></returns>
-	bool IsDead()const { return !isActive_; }
+	/// <returns>true: €‚ñ‚Å‚¢‚é false ¶‚«‚Ä‚¢‚é</returns>
+	bool IsDead()const;
 };
 

@@ -1,6 +1,11 @@
 #pragma once
+#include <vector>
+#include <utility>
+#include <string>
 class Input
 {
+private:
+	std::vector<std::pair<std::string, unsigned int>>keyPair_; // <keyname, keycode>
 public:
 	Input();
 	Input(const Input&) = delete;

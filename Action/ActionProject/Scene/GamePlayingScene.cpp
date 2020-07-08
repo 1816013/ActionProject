@@ -17,6 +17,7 @@ namespace
 {
 	constexpr uint32_t FadeInterval = 45;
 	unsigned int waitTimer = 0;
+	int weaponUIH_[2];
 }
 
 
@@ -30,6 +31,8 @@ drawer_(&GamePlayingScene::FadeDraw)
 	pm_ = make_unique<ProjectileManager>();
 	player_ = make_unique<Player>(this);
 	player_->SetPosition({ 350, 500 });
+	weaponUIH_[0] = LoadGraph(L"Resourse/Image/UI/bomb.png");
+	weaponUIH_[1] = LoadGraph(L"Resourse/Image/UI/shuriken.png");
 }
 
 GamePlayingScene::~GamePlayingScene()
@@ -85,7 +88,10 @@ void GamePlayingScene::NomalDraw()
 	bg_->Draw();
 	pm_->Draw();
 	player_->Draw();
-
+	// •ŠíUI•\Ž¦
+	DrawBox(10, 10, 76, 76, 0x000000, false);
+	DrawGraph(10, 10, weaponUIH_[player_->CurrentEquipmentNo()], true);
+	DrawBox(10, 10, 74, 74, 0xffffff, false);
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
 }
 

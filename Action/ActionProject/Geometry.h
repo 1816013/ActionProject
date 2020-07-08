@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 template<typename T>
 struct Vector2D
@@ -17,6 +18,11 @@ struct Vector2D
 		return Vector2D(x - val.x, y - val.y);
 	}
 
+	Vector2D operator/(const float& scale)
+	{
+		return Vector2D(x / scale, y / scale);
+	}
+
 	void operator+=(const Vector2D& val)
 	{
 		x += val.x;
@@ -27,6 +33,25 @@ struct Vector2D
 	{
 		x -= val.x;
 		y -= val.y;
+	}
+
+	void operator*=(const float& scale)
+	{
+		x *= scale;
+		y *= scale;
+	}
+
+	float Magnitude()const
+	{
+		return hypot(x, y);
+	}
+
+	void Nomarize()const
+	{
+		Vector2D vec(x, y);
+		auto mag = vec.Magnitude();
+		x / mag;
+		y / mag;
 	}
 
 };

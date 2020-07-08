@@ -13,7 +13,6 @@ BombShot::BombShot(const Position2& pos, const Vector2f& vel)
 	if (bombH == -1)
 	{
 		bombH = LoadGraph(L"Resourse/Image/Player/bombshot2.png");
-		//bombH = LoadGraph(L"Resourse/Image/Title/pressstart.png");
 	}
 	updater_ = &BombShot::NomalUpdate;
 	isActive_ = true;
@@ -22,7 +21,9 @@ BombShot::BombShot(const Position2& pos, const Vector2f& vel)
 
 BombShot::~BombShot()
 {
+#ifdef _DEBUG
 	OutputDebugStringA("\n bomb is delete\n");
+#endif // _DEBUG
 }
 
 void BombShot::NomalUpdate()
@@ -40,13 +41,10 @@ void BombShot::DestroyUpdate()
 	isActive_ = false;
 }
 
-
-
 void BombShot::Update()
 {
 	(this->*updater_)();
 }
-
 
 void BombShot::Draw()
 {

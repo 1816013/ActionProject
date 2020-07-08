@@ -6,6 +6,7 @@
 #include "../Input.h"
 #include "../Scene/GamePlayingScene.h"
 #include "BombEquip.h"
+#include "ShurikenEquip.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ namespace
 {
 	int _runH[6] = {};
 	int runCount = 0;
+	
 }
 Player::Player( GamePlayingScene* gs)
 {
@@ -37,28 +39,33 @@ Player::Player( GamePlayingScene* gs)
 		{
 			if (input.IsPressed("up"))
 			{
-				player_.Move({ 0, -5 });
+			//	player_.Move({ 0, -5 });
 			}
 			if (input.IsPressed("down"))
 			{
-				player_.Move({ 0, 5 });
+			//	player_.Move({ 0, 5 });
 			}
 			if (input.IsPressed("left"))
 			{
-				player_.Move({ -5, 0 });
+			//	player_.Move({ -5, 0 });
 			}
 			if (input.IsPressed("right"))
 			{
-				player_.Move({ 5, 0 });
+				//player_.Move({ 5, 0 });
 			}
 			if (input.IsTriggered("shot"))
 			{
 				player_.Attack(input);
 			}
+			if (input.IsTriggered("change"))
+			{
+				player_.NextEquip();
+			}
 		}
 	};
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager()));
+	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager()));
 }
 
 Player::Player()
@@ -78,9 +85,9 @@ void Player::Attack(const Input& input)
 	equipments_[currentEquipmentNo_]->Attack(*this, input);
 }
 
-void Player::SetPosition(const Position2& p )
+void Player::SetPosition(const Position2& pos )
 {
-	pos_ = p;
+	pos_ = pos;
 }
 
 void Player::Move(const Vector2& v)
@@ -88,10 +95,14 @@ void Player::Move(const Vector2& v)
 	pos_ += v;
 }
 
+void Player::NextEquip()
+{
+	currentEquipmentNo_ = (currentEquipmentNo_ + 1) % equipments_.size();
+}
+
 void Player::Update()
 {
-	++runCount;
-	
+	++runCount;	
 }
 
 void Player::Draw()
@@ -102,4 +113,9 @@ void Player::Draw()
 const Position2 Player::Position()const
 {
 	return pos_;
+}
+
+size_t Player::CurrentEquipmentNo() const
+{
+	return currentEquipmentNo_;
 }
