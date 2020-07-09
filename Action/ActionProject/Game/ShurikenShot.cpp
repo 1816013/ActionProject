@@ -13,7 +13,7 @@ ShurikenShot::ShurikenShot(const Position2& pos, const Vector2f& vel)
 
 	if (shurikenH == -1)
 	{
-		shurikenH = LoadGraph(L"Resourse/Image/Player/shuriken.png");
+		shurikenH = LoadGraph(L"Resource/Image/Player/shuriken.png");
 	}
 	angle_ = 0.0f;
 	updater_ = &ShurikenShot::NomalUpdate;

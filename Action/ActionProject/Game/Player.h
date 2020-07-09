@@ -11,9 +11,10 @@ class Player : public Character
 private:
 	std::vector<std::shared_ptr<Equipment>>equipments_;
 	size_t currentEquipmentNo_ = 0;
+	Direction direction_;
 public:
 	Player(GamePlayingScene* g);
-	Player();
+	Player() = default;
 	~Player();
 	/// <summary>
 	/// ‚Á‚Ä‚¢‚é•Ší‚ÅUŒ‚‚·‚é
@@ -35,6 +36,6 @@ public:
 	void Draw()override;
 	const Position2 Position()const;
 	size_t CurrentEquipmentNo()const;
-
+	Direction Direction()const;
 };
 

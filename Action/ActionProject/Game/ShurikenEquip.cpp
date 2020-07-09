@@ -30,9 +30,16 @@ void ShurikenEquip::Attack(const Player& player, const Input& input)
 	}
 	if (vel.x == 0 && vel.y == 0)
 	{
-		vel += { 1, 0 };
+		if (player.Direction() == Direction::RIGHT)
+		{
+			vel += { 1, 0 };
+		}
+		if (player.Direction() == Direction::LEFT)
+		{
+			vel += { -1, 0 };
+		}
 	}
 	vel.Nomarize();
-	vel *= 10;
+	vel *= 15;
 	pm_.AddProjectile(new ShurikenShot(player.Position(), vel));
 }

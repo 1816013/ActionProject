@@ -2,6 +2,13 @@
 #include <memory>
 #include "../Geometry.h"
 
+enum class Direction
+{
+	RIGHT,
+	LEFT
+};
+
+
 class Input;
 class Character
 {

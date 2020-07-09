@@ -7,6 +7,7 @@
 #include "../Scene/GamePlayingScene.h"
 #include "BombEquip.h"
 #include "ShurikenEquip.h"
+#include "ChainEquip.h"
 
 using namespace std;
 
@@ -18,10 +19,11 @@ namespace
 }
 Player::Player( GamePlayingScene* gs)
 {
+	direction_ = Direction::RIGHT;
 	for (int i = 0; i < _countof(_runH); i++)
 	{
 		wstringstream wss;
-		wss << L"Resourse/Image/Player/adventurer-run-";
+		wss << L"Resource/Image/Player/adventurer-run-";
 		wss << setw(2) << setfill(L'0') << i;
 		wss << ".png";
 		_runH[i] = LoadGraph(wss.str().c_str());
@@ -47,10 +49,12 @@ Player::Player( GamePlayingScene* gs)
 			}
 			if (input.IsPressed("left"))
 			{
+				player_.direction_ = Direction::LEFT;
 			//	player_.Move({ -5, 0 });
 			}
 			if (input.IsPressed("right"))
 			{
+				player_.direction_ = Direction::RIGHT;
 				//player_.Move({ 5, 0 });
 			}
 			if (input.IsTriggered("shot"))
@@ -66,11 +70,9 @@ Player::Player( GamePlayingScene* gs)
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager()));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager()));
+	equipments_.emplace_back(make_shared<ChainEquip>(*this));
 }
 
-Player::Player()
-{
-}
 
 Player::~Player()
 {
@@ -102,12 +104,27 @@ void Player::NextEquip()
 
 void Player::Update()
 {
-	++runCount;	
+	++runCount;
+	for (auto e : equipments_)
+	{
+		e->Update();
+	}
 }
 
 void Player::Draw()
 {
-	DrawRotaGraph(pos_.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true);
+	for (auto e : equipments_)
+	{
+		e->Draw();
+	}
+	if (direction_ == Direction::RIGHT)
+	{
+		DrawRotaGraph(pos_.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true);
+	}
+	else
+	{
+		DrawRotaGraph(pos_.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true, true);
+	}
 }
 
 const Position2 Player::Position()const
@@ -118,4 +135,9 @@ const Position2 Player::Position()const
 size_t Player::CurrentEquipmentNo() const
 {
 	return currentEquipmentNo_;
+}
+
+Direction Player::Direction() const
+{
+	return direction_;
 }

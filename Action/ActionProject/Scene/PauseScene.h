@@ -28,9 +28,9 @@ private:
 	// ポーズの基本Updater
 	void PauseUpdate(const Input&);
 	// ポーズのメニューを開く際のUpdater
-	void AccordionOpenUpdate(const Input&);
+	void OpenUpdate(const Input&);
 	// ポーズのメニューを閉じる際のUpdater
-	void AccordionCloseUpdate(const Input&);
+	void CloseUpdate(const Input&);
 	using UpdateFunction_t = void (PauseScene::*)(const Input&);
 	UpdateFunction_t updater_;
 
@@ -38,7 +38,7 @@ private:
 	// ポーズシーンの基本drawer
 	void NomalDraw();
 	// ポーズのメニューの開閉する際のdrawer
-	void AccordionDraw();
+	void OpenCloseDraw();
 	using DrawerFunction_t = void (PauseScene::*)();
 	DrawerFunction_t drawer_;
 

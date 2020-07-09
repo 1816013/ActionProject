@@ -19,7 +19,7 @@ Background::Background()
 	for (int i = 0; i < bgH_.size(); i++)
 	{
 		wstringstream wss;
-		wss << L"Resourse/Image/BackGround/Layer_";
+		wss << L"Resource/Image/BackGround/Layer_";
 		wss << setw(4) << setfill(L'0') << i << "_";
 		if (std::count(begin(skipNo), end(skipNo), i) > 0)
 		{

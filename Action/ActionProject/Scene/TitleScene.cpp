@@ -23,8 +23,8 @@ drawer_(&TitleScene::FadeDraw)
 {
 	waitTimer = 0;
 	blinkInterval = BlinkIntervalNomal;
-	titleH = LoadGraph(L"Resourse/Image/Title/Title.png");
-	startH = LoadGraph(L"Resourse/Image/Title/pressstart.png");
+	titleH = LoadGraph(L"Resource/Image/Title/Title.png");
+	startH = LoadGraph(L"Resource/Image/Title/pressstart.png");
 }
 
 

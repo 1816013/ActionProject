@@ -12,7 +12,7 @@ BombShot::BombShot(const Position2& pos, const Vector2f& vel)
 	vel_ = vel;
 	if (bombH == -1)
 	{
-		bombH = LoadGraph(L"Resourse/Image/Player/bombshot2.png");
+		bombH = LoadGraph(L"Resource/Image/Player/bombshot2.png");
 	}
 	updater_ = &BombShot::NomalUpdate;
 	isActive_ = true;

@@ -46,12 +46,19 @@ struct Vector2D
 		return hypot(x, y);
 	}
 
-	void Nomarize()const
+	void Nomarize()
 	{
 		Vector2D vec(x, y);
 		auto mag = vec.Magnitude();
-		x / mag;
-		y / mag;
+		x /= mag;
+		y /= mag;
+	}
+
+	Vector2D Nomarized()
+	{
+		Vector2D vec(x, y);
+		auto mag = vec.Magnitude();
+		return (x / mag, y / mag);
 	}
 
 };

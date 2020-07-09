@@ -31,11 +31,11 @@ PauseScene::~PauseScene()
 
 
 PauseScene::PauseScene(SceneController& c) : Scene(c),
-updater_(&PauseScene::AccordionOpenUpdate),
-drawer_(&PauseScene::AccordionDraw)
+updater_(&PauseScene::OpenUpdate),
+drawer_(&PauseScene::OpenCloseDraw)
 {
 	waitTimer = AccordionInterval;
-	IndicatorH = LoadGraph(L"Resourse/Image/UI/indicator.png");
+	IndicatorH = LoadGraph(L"Resource/Image/UI/indicator.png");
 
 	int y = menubase_y;
 
@@ -83,7 +83,7 @@ void PauseScene::PauseUpdate(const Input& input)
 }
 
 // メニューを開く
-void PauseScene::AccordionOpenUpdate(const Input& input)
+void PauseScene::OpenUpdate(const Input& input)
 {	
 	if (--waitTimer == 0)	
 	{		
@@ -93,7 +93,7 @@ void PauseScene::AccordionOpenUpdate(const Input& input)
 }
 
 // メニューを閉じる
-void PauseScene::AccordionCloseUpdate(const Input&)
+void PauseScene::CloseUpdate(const Input&)
 {
 	if (++waitTimer == AccordionInterval)
 	{		
@@ -105,8 +105,8 @@ void PauseScene::AccordionCloseUpdate(const Input&)
 void PauseScene::CloseMenu()
 {
 	waitTimer = 0;
-	updater_ = &PauseScene::AccordionCloseUpdate;
-	drawer_ = &PauseScene::AccordionDraw;
+	updater_ = &PauseScene::CloseUpdate;
+	drawer_ = &PauseScene::OpenCloseDraw;
 }
 
 void PauseScene::Update(const Input& input)
@@ -143,7 +143,7 @@ void PauseScene::NomalDraw()
 	DrawGraph(menuRect.Left() + indicatorPos.x - indicatorWidth_, menuRect.Top() + indicatorPos.y , IndicatorH, true);
 }
 
-void PauseScene::AccordionDraw()
+void PauseScene::OpenCloseDraw()
 {         
 	auto vh = static_cast<float>(AccordionInterval - waitTimer) / AccordionInterval;
 	Rect rc = menuRect;

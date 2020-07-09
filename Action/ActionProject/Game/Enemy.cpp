@@ -1,9 +1,5 @@
 #include "Enemy.h"
 
-void Enemy::Update()
-{
-}
-
-void Enemy::Draw()
+Enemy::Enemy(std::shared_ptr<Player> p) : player_(p)
 {
 }
