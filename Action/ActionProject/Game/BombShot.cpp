@@ -6,7 +6,7 @@ namespace
 {
 	int bombH = -1;
 }
-BombShot::BombShot(const Position2& pos, const Vector2f& vel)
+BombShot::BombShot(const Position2f& pos, const Vector2f& vel)
 {
 	pos_ = pos;
 	vel_ = vel;

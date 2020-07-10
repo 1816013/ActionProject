@@ -11,6 +11,9 @@
 #include "../Game/Player.h"
 #include "../Game/Background.h"
 #include "../Game/ProjectileManager.h"
+#include "../Game/EnemyManager.h"
+#include "../Game/SideSpawner.h"
+#include "../Game/Slasher.h"
 
 using namespace std;
 namespace 
@@ -28,9 +31,11 @@ drawer_(&GamePlayingScene::FadeDraw)
 	waitTimer = 0;
 			
 	bg_ = make_unique<Background>();
-	pm_ = make_unique<ProjectileManager>();
-	player_ = make_unique<Player>(this);
+	projectileManager_ = make_unique<ProjectileManager>();
+	player_ = make_shared<Player>(this);
 	player_->SetPosition({ 350, 500 });
+	enemyManager_ = make_shared<EnemyManager>();
+	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_), enemyManager_));
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
 	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
 	weaponUIH_[2] = LoadGraph(L"Resource/Image/UI/chain.png");
@@ -45,6 +50,35 @@ void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)
 {
 	listners_.push_back(listner);
 }
+
+
+void GamePlayingScene::GamePlayUpdate(const Input& input)
+{
+	if (input.IsTriggered("OK"))
+	{
+		updater_ = &GamePlayingScene::FadeoutUpdate;
+		drawer_ = &GamePlayingScene::FadeDraw;
+		waitTimer = FadeInterval;
+	}
+	if (input.IsTriggered("pause"))
+	{
+		controller_.PushScene(new PauseScene(controller_));
+	}
+	bg_->Update();
+	projectileManager_->Update();
+	
+	player_->Update();
+	for (auto& listner : listners_)
+	{
+		listner->Notify(input);
+	}
+	enemyManager_->Update();
+	for (auto spw : spawners_)
+	{
+		spw->Update();
+	}
+}
+
 
 void GamePlayingScene::FadeoutUpdate(const Input& input)
 {
@@ -63,31 +97,11 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 	}
 }
 
-void GamePlayingScene::GamePlayUpdate(const Input& input)
-{
-	if (input.IsTriggered("OK"))
-	{
-		updater_ = &GamePlayingScene::FadeoutUpdate;
-		drawer_ = &GamePlayingScene::FadeDraw;
-		waitTimer = FadeInterval;
-	}
-	if (input.IsTriggered("pause"))
-	{
-		controller_.PushScene(new PauseScene(controller_));
-	}
-	bg_->Update();
-	pm_->Update();
-	player_->Update();
-	for (auto& listner : listners_)
-	{
-		listner->Notify(input);
-	}
-}
-
 void GamePlayingScene::NomalDraw()
 {	
 	bg_->Draw();
-	pm_->Draw();
+	projectileManager_->Draw();
+	enemyManager_->Draw();
 	player_->Draw();
 	// ïêäÌUIï\é¶
 	DrawBox(10, 10, 76, 76, 0x000000, false);
@@ -108,8 +122,8 @@ void GamePlayingScene::FadeDraw()
 
 ProjectileManager& GamePlayingScene::GetProjectileManager()
 {
-	assert(pm_);
-	return *pm_;
+	assert(projectileManager_);
+	return *projectileManager_;
 }
 
 

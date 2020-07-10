@@ -25,16 +25,16 @@ public:
 	/// プレイヤーの座標を設定する
 	/// </summary>
 	/// <param name="pos">新たな座標</param>
-	void SetPosition(const Position2& pos);
+	void SetPosition(const Position2f& pos);
 	/// <summary>
 	/// プレイヤーを移動させる
 	/// </summary>
 	/// <param name="v">移動ベクトル</param>
-	void Move(const Vector2& v);
+	void Move(const Vector2f& v);
 	void NextEquip();
 	void Update()override;
 	void Draw()override;
-	const Position2 Position()const;
+	const Position2f Position()const;
 	size_t CurrentEquipmentNo()const;
 	Direction Direction()const;
 };

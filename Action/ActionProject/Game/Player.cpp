@@ -87,12 +87,12 @@ void Player::Attack(const Input& input)
 	equipments_[currentEquipmentNo_]->Attack(*this, input);
 }
 
-void Player::SetPosition(const Position2& pos )
+void Player::SetPosition(const Position2f& pos )
 {
 	pos_ = pos;
 }
 
-void Player::Move(const Vector2& v)
+void Player::Move(const Vector2f& v)
 {
 	pos_ += v;
 }
@@ -127,7 +127,7 @@ void Player::Draw()
 	}
 }
 
-const Position2 Player::Position()const
+const Position2f Player::Position()const
 {
 	return pos_;
 }

@@ -8,6 +8,8 @@ class Background;
 class TitleScene;
 class InputListner;
 class ProjectileManager;
+class EnemyManager;
+class Spawner;
 class GamePlayingScene : public Scene
 {
 	friend TitleScene;
@@ -28,10 +30,12 @@ private:
 
 	
 
-	std::unique_ptr<Player>player_;
-	std::unique_ptr<Background>bg_;
-	std::vector<std::shared_ptr<InputListner>>listners_;
-	std::unique_ptr<ProjectileManager>pm_;
+	std::shared_ptr<Player> player_;
+	std::unique_ptr<Background> bg_;
+	std::vector<std::shared_ptr<InputListner>> listners_;
+	std::unique_ptr<ProjectileManager> projectileManager_;
+	std::shared_ptr<EnemyManager> enemyManager_;
+	std::vector<std::shared_ptr<Spawner>> spawners_;
 
 public:
 	~GamePlayingScene();

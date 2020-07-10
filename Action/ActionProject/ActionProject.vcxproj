@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Game\EnemyManager.cpp" />
     <ClCompile Include="Game\ChainEquip.cpp" />
     <ClCompile Include="Game\BombEquip.cpp" />
     <ClCompile Include="Game\BombShot.cpp" />
@@ -162,10 +163,12 @@
     <ClCompile Include="Game\ShurikenEquip.cpp" />
     <ClCompile Include="Game\ShurikenShot.cpp" />
     <ClCompile Include="Game\Spawner.cpp" />
-    <ClCompile Include="Game\Zako.cpp" />
+    <ClCompile Include="Game\Slasher.cpp" />
+    <ClCompile Include="Game\SideSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Game\EnemyManager.h" />
     <ClInclude Include="Game\ChainEquip.h" />
     <ClInclude Include="Game\BombEquip.h" />
     <ClInclude Include="Game\BombShot.h" />
@@ -188,7 +191,8 @@
     <ClInclude Include="Game\ShurikenEquip.h" />
     <ClInclude Include="Game\ShurikenShot.h" />
     <ClInclude Include="Game\Spawner.h" />
-    <ClInclude Include="Game\Zako.h" />
+    <ClInclude Include="Game\Slasher.h" />
+    <ClInclude Include="Game\SideSpawner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

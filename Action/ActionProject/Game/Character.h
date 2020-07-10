@@ -13,7 +13,7 @@ class Input;
 class Character
 {
 protected:
-	Position2 pos_;
+	Position2f pos_;
 public:
 	Character();
 	virtual ~Character() = default;

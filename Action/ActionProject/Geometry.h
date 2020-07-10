@@ -8,17 +8,17 @@ struct Vector2D
 	T y;
 	Vector2D() : x(0), y(0) {};
 	Vector2D(T inx, T iny) : x(inx), y(iny){};
-	Vector2D operator+(const Vector2D& val)
+	Vector2D operator+(const Vector2D& val)const
 	{
 		return Vector2D(x + val.x, y + val.y);
 	}
 
-	Vector2D operator-(const Vector2D& val)
+	Vector2D operator-(const Vector2D& val)const
 	{
 		return Vector2D(x - val.x, y - val.y);
 	}
 
-	Vector2D operator/(const float& scale)
+	Vector2D operator/(const float& scale)const
 	{
 		return Vector2D(x / scale, y / scale);
 	}

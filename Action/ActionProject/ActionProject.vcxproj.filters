@@ -98,11 +98,17 @@
     <ClCompile Include="Game\ChainEquip.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Spawner.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Game\EnemyManager.cpp">
+      <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Zako.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Game\Spawner.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Slasher.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\SideSpawner.cpp">
+      <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,10 +179,16 @@
       <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\Spawner.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Zako.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Game\EnemyManager.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Slasher.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SideSpawner.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
