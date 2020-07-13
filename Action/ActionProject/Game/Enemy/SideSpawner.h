@@ -8,6 +8,9 @@ private:
 public:
 	SideSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager>& em);
 	~SideSpawner() = default;
+	/// <summary>
+	/// 毎フレーム更新
+	/// </summary>
 	void Update()override;
 };
 

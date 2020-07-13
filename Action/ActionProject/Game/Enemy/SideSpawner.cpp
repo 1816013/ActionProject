@@ -5,6 +5,7 @@
 SideSpawner::SideSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager>& em)
 	: Spawner(pos, prototype, em)
 {
+	frame_ = 0;
 }
 
 

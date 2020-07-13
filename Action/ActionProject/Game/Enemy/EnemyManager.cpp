@@ -1,9 +1,14 @@
 #include "EnemyManager.h"
 #include "Enemy.h"
 
-void EnemyManager::AddEnemy(Enemy* e)
+void EnemyManager::AddEnemy(Enemy* enemy)
 {
-	enemies_.emplace_back(e);
+	enemies_.emplace_back(enemy);
+}
+
+EnemyList& EnemyManager::Enemies()
+{
+	return enemies_;
 }
 
 void EnemyManager::Update()
@@ -12,7 +17,10 @@ void EnemyManager::Update()
 	{
 		e->Update();
 	}
-	enemies_.remove_if([](std::shared_ptr<Enemy>& e) { return e->IsDeletable(); });
+	enemies_.remove_if([](std::shared_ptr<Enemy>& e) {
+		return e->IsDeletable();
+		});
+
 }
 
 void EnemyManager::Draw()
@@ -22,3 +30,4 @@ void EnemyManager::Draw()
 		e->Draw();
 	}
 }
+

@@ -2,15 +2,21 @@
 #include <memory>
 #include <list>
 
+
 class Enemy;
+using EnemyList = std::list<std::shared_ptr<Enemy>>;
+/// <summary>
+/// “G‚ğŠÇ—‚·‚é
+/// </summary>
 class EnemyManager
 {
 private:
-	std::list<std::shared_ptr<Enemy>>enemies_;
+	EnemyList enemies_;
 public:
-	//std::list<std::shared_ptr<Projectile>>& Projectiles();
-	void AddEnemy(Enemy* p);
+	void AddEnemy(Enemy* enemy);
+	EnemyList& Enemies();
 	void Update();
 	void Draw();
 };
+
 

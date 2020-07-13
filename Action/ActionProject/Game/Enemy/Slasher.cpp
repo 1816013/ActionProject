@@ -13,7 +13,7 @@ Slasher::Slasher(const std::shared_ptr<Player>& p) : Enemy(p)
     drawer_ = &Slasher::RunDraw;
     runH = LoadGraph(L"Resource/Image/Enemy/Slasher/run.png");
     slashH = LoadGraph(L"Resource/Image/Enemy/Slasher/slash.png");
-    AimPlayer();
+   
 }
 
 
@@ -24,6 +24,11 @@ Enemy* Slasher::MakeClone()
 
 void Slasher::RunUpdate()
 {
+    if (frame_ % 150 == 0)
+    {
+        AimPlayer();
+        velocity_ *= 5;
+    }
     pos_ += velocity_;
     ++frame_;
     animFrame_ = (animFrame_ + 1) % 15;
