@@ -1,5 +1,5 @@
 #include "Enemy.h"
-#include "Player.h"
+#include "../Player/Player.h"
 
 Enemy::Enemy(const std::shared_ptr<Player>& p) : player_(p)
 {

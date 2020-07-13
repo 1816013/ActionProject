@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
-#include "../Geometry.h"
-#include <list>
+#include "../../Geometry.h"
 
 class Enemy;
 class EnemyManager;
@@ -12,7 +11,7 @@ class Spawner
 {
 protected:
 	Position2f pos_;
-	std::unique_ptr<Enemy> prototype_;
+	std::shared_ptr<Enemy> prototype_;
 	std::shared_ptr<EnemyManager>& enemyManager_;
 	//std::list<std::shared_ptr<Enemy>>& enemies_;
 

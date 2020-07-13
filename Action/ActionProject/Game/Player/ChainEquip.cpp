@@ -2,7 +2,7 @@
 #include <DxLib.h>
 #include <cmath>
 #include "Player.h"
-#include "../Input.h"
+#include "../../Input.h"
 
 namespace
 {

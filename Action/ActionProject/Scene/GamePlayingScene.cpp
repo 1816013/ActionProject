@@ -8,12 +8,12 @@
 #include <assert.h>
 #include "../Input.h"
 #include "PauseScene.h"
-#include "../Game/Player.h"
+#include "../Game/Player/Player.h"
 #include "../Game/Background.h"
-#include "../Game/ProjectileManager.h"
-#include "../Game/EnemyManager.h"
-#include "../Game/SideSpawner.h"
-#include "../Game/Slasher.h"
+#include "../Game/Player/ProjectileManager.h"
+#include "../Game/Enemy/EnemyManager.h"
+#include "../Game/Enemy/SideSpawner.h"
+#include "../Game/Enemy/Slasher.h"
 
 using namespace std;
 namespace 

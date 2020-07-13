@@ -1,6 +1,6 @@
 #include "ShurikenEquip.h"
-#include "../Geometry.h"
-#include "../Input.h"
+#include "../../Geometry.h"
+#include "../../Input.h"
 #include "ProjectileManager.h"
 #include "Player.h"
 #include "ShurikenShot.h"

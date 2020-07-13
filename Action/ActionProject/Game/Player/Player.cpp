@@ -2,9 +2,9 @@
 #include <DxLib.h>
 #include <sstream>
 #include <iomanip>
-#include "../Geometry.h"
-#include "../Input.h"
-#include "../Scene/GamePlayingScene.h"
+#include "../../Geometry.h"
+#include "../../Input.h"
+#include "../../Scene/GamePlayingScene.h"
 #include "BombEquip.h"
 #include "ShurikenEquip.h"
 #include "ChainEquip.h"
