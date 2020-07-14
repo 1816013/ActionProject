@@ -10,7 +10,7 @@ namespace
 }
 ChainEquip::ChainEquip(const Player& p): player_(p)
 {
-	frame_ = -1;
+	frame_ = -1;	// -1‚Å‰Šú‰»
 	if (chainH == -1)
 	{
 		chainH = LoadGraph(L"Resource/Image/Player/chainsickle.png");

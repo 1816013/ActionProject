@@ -25,7 +25,7 @@ void Enemy::SetPosition(const Vector2f& vel)
 
 const Vector2f& Enemy::GetVelocity() const
 {
-	return Vector2f();
+	return velocity_;
 }
 
 void Enemy::SetVelocity(const Vector2f& vel)

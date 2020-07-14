@@ -46,6 +46,15 @@ struct Vector2D
 		return hypot(x, y);
 	}
 
+	/// <summary>
+	///  ベクトルの長さの2乗を返す
+	/// </summary>
+	/// <returns> ベクトルの長さの2乗</returns>
+	float SQMagnitude()const
+	{
+		return x * x + y * y;
+	}
+
 	void Nomarize()
 	{
 		Vector2D vec(x, y);
@@ -97,4 +106,15 @@ struct Rect
 	{
 		return pos.y + size.h / 2;
 	}
+};
+
+/// <summary>
+/// 円
+/// </summary>
+struct Circle
+{
+	Position2f center;	// 中心
+	float radius;		// 半径
+	Circle() :center({ 0, 0 }), radius(0.0f) {}
+	Circle(const Position2f& c, const float r) :center(c), radius(r) {}
 };
