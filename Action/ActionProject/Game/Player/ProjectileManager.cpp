@@ -2,10 +2,10 @@
 #include "Projectile.h"
 #include <algorithm>
 
-//std::list<std::shared_ptr<Projectile>>& ProjectileManager::Projectiles()
-//{
-//	// TODO: return ステートメントをここに挿入します
-//}
+std::list<std::shared_ptr<Projectile>>& ProjectileManager::Projectiles()
+{
+	return projectiles_;
+}
 
 void ProjectileManager::AddProjectile(Projectile* p)
 {

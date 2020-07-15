@@ -50,3 +50,7 @@ void BombShot::Draw()
 {
 	DrawRotaGraph(pos_.x, pos_.y, 0.5f, angle_, bombH, true);
 }
+
+void BombShot::OnHit(CollisionInfo& c)
+{
+}

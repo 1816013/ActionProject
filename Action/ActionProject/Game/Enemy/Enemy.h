@@ -42,5 +42,7 @@ public:
 
 	virtual bool IsDead()const;
 	virtual bool IsDeletable()const;
+
+	void OnHit(CollisionInfo& c)override;
 };
 

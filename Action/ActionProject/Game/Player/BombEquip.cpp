@@ -3,8 +3,12 @@
 #include "../../Input.h"
 #include "ProjectileManager.h"
 #include "BombShot.h"
+#include "../CollisionManager.h"
+#include "../CircleCollider.h"
 
-BombEquip::BombEquip(ProjectileManager& pm) : pm_(pm)
+BombEquip::BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col) : 
+	pm_(pm),
+	collisionManager_(col)
 {
 }
 
@@ -38,5 +42,8 @@ void BombEquip::Attack(const Player& player, const Input& input)
 			vel = { -5, 0 };
 		}
 	}
-	pm_.AddProjectile(new BombShot(player.Position(), vel));
+	auto bomb = new BombShot(player.Position(), vel);
+	
+	pm_.AddProjectile(bomb);
+	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back()));
 }

@@ -50,3 +50,7 @@ void ShurikenShot::Draw()
 {
 	DrawGraph(pos_.x, pos_.y, shurikenH, true);
 }
+
+void ShurikenShot::OnHit(CollisionInfo& c)
+{
+}

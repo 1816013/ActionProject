@@ -1,6 +1,7 @@
 #include "Slasher.h"
 #include "../Player/Player.h"
 #include <DxLib.h>
+#include "../Collider.h"
 
 namespace
 {
@@ -14,6 +15,10 @@ Slasher::Slasher(const std::shared_ptr<Player>& p) : Enemy(p)
     runH = LoadGraph(L"Resource/Image/Enemy/Slasher/run.png");
     slashH = LoadGraph(L"Resource/Image/Enemy/Slasher/slash.png");
    
+}
+
+Slasher::~Slasher()
+{
 }
 
 
@@ -83,4 +88,13 @@ void Slasher::Update()
 void Slasher::Draw()
 {
     (this->*drawer_)();
+}
+
+void Slasher::OnHit(CollisionInfo& col)
+{
+    if (col.collider->GetTag() == "pAtk")
+    {
+        // Ž€‚Ê
+        isDeletable_ = true;
+    }
 }

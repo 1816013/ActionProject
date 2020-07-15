@@ -67,8 +67,9 @@ Player::Player( GamePlayingScene* gs)
 			}
 		}
 	};
+	collisionManager_ =  gs->GetCollisionManager();
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
-	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager()));
+	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager()));
 	equipments_.emplace_back(make_shared<ChainEquip>(*this));
 }
@@ -140,4 +141,8 @@ size_t Player::CurrentEquipmentNo() const
 Direction Player::Direction() const
 {
 	return direction_;
+}
+
+void Player::OnHit(CollisionInfo& c)
+{
 }

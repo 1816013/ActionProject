@@ -42,3 +42,7 @@ bool Enemy::IsDeletable() const
 {
 	return isDeletable_;
 }
+
+void Enemy::OnHit(CollisionInfo& c)
+{
+}

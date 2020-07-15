@@ -19,11 +19,13 @@ private:
 
 public:
 	Slasher(const std::shared_ptr<Player>& p);
-    ~Slasher() = default;
+    ~Slasher();
 	void OnDamage(int damage);
 
 	void OnDead();
 	void Update();
 	void Draw();
+
+    void OnHit(CollisionInfo& c)override;
 };
 

@@ -10,6 +10,7 @@ class InputListner;
 class ProjectileManager;
 class EnemyManager;
 class Spawner;
+class CollisionManager;
 class GamePlayingScene : public Scene
 {
 	friend TitleScene;
@@ -36,6 +37,7 @@ private:
 	std::unique_ptr<ProjectileManager> projectileManager_;
 	std::shared_ptr<EnemyManager> enemyManager_;
 	std::vector<std::shared_ptr<Spawner>> spawners_;
+	std::shared_ptr<CollisionManager> collisionManager_;
 
 public:
 	~GamePlayingScene();
@@ -43,5 +45,6 @@ public:
 	void Update(const Input&)override;
 	void Draw()override;
 	ProjectileManager& GetProjectileManager();
+	std::shared_ptr<CollisionManager> GetCollisionManager();
 };
 

@@ -14,6 +14,7 @@
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/SideSpawner.h"
 #include "../Game/Enemy/Slasher.h"
+#include "../Game/CollisionManager.h"
 
 using namespace std;
 namespace 
@@ -29,13 +30,15 @@ updater_(&GamePlayingScene::FadeinUpdate),
 drawer_(&GamePlayingScene::FadeDraw)
 {
 	waitTimer = 0;
-			
+	collisionManager_ = make_shared<CollisionManager>();
 	bg_ = make_unique<Background>();
 	projectileManager_ = make_unique<ProjectileManager>();
 	player_ = make_shared<Player>(this);
 	player_->SetPosition({ 350, 500 });
 	enemyManager_ = make_shared<EnemyManager>();
 	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_), enemyManager_));
+	
+
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
 	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
 	weaponUIH_[2] = LoadGraph(L"Resource/Image/UI/chain.png");
@@ -77,6 +80,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	{
 		spw->Update();
 	}
+	collisionManager_->Update();
 }
 
 
@@ -124,6 +128,11 @@ ProjectileManager& GamePlayingScene::GetProjectileManager()
 {
 	assert(projectileManager_);
 	return *projectileManager_;
+}
+
+std::shared_ptr<CollisionManager> GamePlayingScene::GetCollisionManager()
+{
+	return collisionManager_;
 }
 
 

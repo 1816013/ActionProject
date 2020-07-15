@@ -10,6 +10,7 @@ enum class Direction
 
 
 class Input;
+struct CollisionInfo;
 class Character
 {
 protected:
@@ -26,5 +27,7 @@ public:
 	/// キャラクターの描画を行う
 	/// </summary>
 	virtual void Draw() = 0;	
+
+	virtual void OnHit(CollisionInfo& c) = 0;
 };
 
