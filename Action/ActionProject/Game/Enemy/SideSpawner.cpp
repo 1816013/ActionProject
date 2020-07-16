@@ -1,9 +1,11 @@
 #include "SideSpawner.h"
 #include "EnemyManager.h"
 #include "Enemy.h"
+#include "../CollisionManager.h"
+#include "../CircleCollider.h"
 
-SideSpawner::SideSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager>& em)
-	: Spawner(pos, prototype, em)
+SideSpawner::SideSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager>& em, std::shared_ptr<CollisionManager>cm)
+	: Spawner(pos, prototype, em), collisionManeger_(cm)
 {
 	frame_ = 0;
 }
@@ -26,5 +28,6 @@ void SideSpawner::Update()
 		}
 		fromRight = !fromRight;
 		enemyManager_->AddEnemy(enemy);
+		collisionManeger_->AddCollider(new CircleCollider(enemyManager_->Enemies().back(), tagEnemyDamage, Circle({ 0, 0 }, 50)));
 	}
 }

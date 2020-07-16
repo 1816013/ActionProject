@@ -2,13 +2,14 @@
 #include "Equipment.h"
 
 class ProjectileManager;
+class CollisionManager;
 class ShurikenEquip :
 	public Equipment
 {
 private:
 	ProjectileManager& pm_;
 public:
-	ShurikenEquip(ProjectileManager& pm);
+	ShurikenEquip(ProjectileManager& pm,std::shared_ptr<CollisionManager>cm );
 
 	/// <summary>
 	/// è— Œ•UŒ‚

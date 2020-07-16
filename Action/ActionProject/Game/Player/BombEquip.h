@@ -7,7 +7,7 @@ class BombEquip : public Equipment
 {
 private:
 	ProjectileManager& pm_;
-	std::shared_ptr<CollisionManager>collisionManager_;
+	//std::shared_ptr<CollisionManager>collisionManager_;
 public:
 	BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col);
 

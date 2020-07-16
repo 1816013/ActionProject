@@ -1,5 +1,7 @@
 #pragma once
 #include "Enemy.h"
+
+class EffectManager;
 class Slasher : public Enemy
 {
 private:
@@ -17,15 +19,20 @@ private:
     void SlashDraw();
     Func_t drawer_;
 
+    std::shared_ptr<EffectManager>effectManager_;
+
 public:
-	Slasher(const std::shared_ptr<Player>& p);
+	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em);
     ~Slasher();
 	void OnDamage(int damage);
 
 	void OnDead();
 	void Update();
 	void Draw();
-
+    /// <summary>
+    /// ‰½‚©‚ª“–‚½‚Á‚½
+    /// </summary>
+    /// <param name="c">“–‚½‚Á‚½‘Šè‚ÌƒRƒŠƒWƒ‡ƒ“î•ñ</param>
     void OnHit(CollisionInfo& c)override;
 };
 

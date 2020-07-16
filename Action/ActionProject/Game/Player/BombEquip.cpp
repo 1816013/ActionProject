@@ -8,7 +8,7 @@
 
 BombEquip::BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col) : 
 	pm_(pm),
-	collisionManager_(col)
+	Equipment(col)
 {
 }
 
@@ -42,8 +42,8 @@ void BombEquip::Attack(const Player& player, const Input& input)
 			vel = { -5, 0 };
 		}
 	}
-	auto bomb = new BombShot(player.Position(), vel);
+	auto bomb = new BombShot(player.GetPosition(), vel);
 	
 	pm_.AddProjectile(bomb);
-	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back()));
+	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), tagPlayerAtack, {0, 0}, 24));
 }

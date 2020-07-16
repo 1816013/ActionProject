@@ -27,6 +27,7 @@ public:
 	/// キャラクターの描画を行う
 	/// </summary>
 	virtual void Draw() = 0;	
+	virtual const Position2f GetPosition()const;
 
 	virtual void OnHit(CollisionInfo& c) = 0;
 };

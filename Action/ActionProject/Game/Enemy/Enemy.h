@@ -33,7 +33,6 @@ public:
 	virtual void Draw() = 0;
 
 	///座標アクセス 
-	virtual const Position2f& GetPosition()const;
 	virtual void SetPosition(const Vector2f& vel);
 
 	///速度アクセス 

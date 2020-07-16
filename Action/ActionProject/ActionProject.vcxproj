@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\CapsuleCollider.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\AABBCollider.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Game\Enemy\SideSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\CapsuleCollider.h" />
     <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\AABBCollider.h" />
     <ClInclude Include="Application.h" />

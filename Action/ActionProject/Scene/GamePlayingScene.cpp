@@ -15,6 +15,7 @@
 #include "../Game/Enemy/SideSpawner.h"
 #include "../Game/Enemy/Slasher.h"
 #include "../Game/CollisionManager.h"
+#include "../Game/Effect.h"
 
 using namespace std;
 namespace 
@@ -29,14 +30,16 @@ GamePlayingScene::GamePlayingScene(SceneController & c) : Scene(c),
 updater_(&GamePlayingScene::FadeinUpdate),
 drawer_(&GamePlayingScene::FadeDraw)
 {
+	
 	waitTimer = 0;
 	collisionManager_ = make_shared<CollisionManager>();
+	effectManager_ = make_shared<EffectManager>();
 	bg_ = make_unique<Background>();
 	projectileManager_ = make_unique<ProjectileManager>();
 	player_ = make_shared<Player>(this);
 	player_->SetPosition({ 350, 500 });
 	enemyManager_ = make_shared<EnemyManager>();
-	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_), enemyManager_));
+	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_), enemyManager_, collisionManager_));
 	
 
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
@@ -68,6 +71,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 		controller_.PushScene(new PauseScene(controller_));
 	}
 	bg_->Update();
+	collisionManager_->Update();
 	projectileManager_->Update();
 	
 	player_->Update();
@@ -80,7 +84,8 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	{
 		spw->Update();
 	}
-	collisionManager_->Update();
+
+	effectManager_->Update();
 }
 
 
@@ -102,16 +107,18 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 }
 
 void GamePlayingScene::NomalDraw()
-{	
-	bg_->Draw();
+{		
+	bg_->Draw();	
 	projectileManager_->Draw();
 	enemyManager_->Draw();
 	player_->Draw();
+	effectManager_->Draw();
 	// •ŠíUI•\Ž¦
 	DrawBox(10, 10, 76, 76, 0x000000, false);
 	DrawGraph(10, 10, weaponUIH_[player_->CurrentEquipmentNo()], true);
 	DrawBox(10, 10, 74, 74, 0xffffff, false);
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
+	collisionManager_->DebugDraw();
 }
 
 void GamePlayingScene::FadeDraw()

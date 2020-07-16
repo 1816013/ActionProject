@@ -11,6 +11,7 @@ class ProjectileManager;
 class EnemyManager;
 class Spawner;
 class CollisionManager;
+class EffectManager;
 class GamePlayingScene : public Scene
 {
 	friend TitleScene;
@@ -38,6 +39,7 @@ private:
 	std::shared_ptr<EnemyManager> enemyManager_;
 	std::vector<std::shared_ptr<Spawner>> spawners_;
 	std::shared_ptr<CollisionManager> collisionManager_;
+	std::shared_ptr<EffectManager> effectManager_;
 
 public:
 	~GamePlayingScene();

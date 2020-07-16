@@ -2,13 +2,14 @@
 #include "../Player/Player.h"
 #include <DxLib.h>
 #include "../Collider.h"
+#include "../Effect.h"
 
 namespace
 {
     int runH = -1;
     int slashH = -1;
 }
-Slasher::Slasher(const std::shared_ptr<Player>& p) : Enemy(p)
+Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em) : Enemy(p), effectManager_(em)
 {
     updater_ = &Slasher::RunUpdate;
     drawer_ = &Slasher::RunDraw;
@@ -24,7 +25,7 @@ Slasher::~Slasher()
 
 Enemy* Slasher::MakeClone()
 {
-	return new Slasher(player_);
+	return new Slasher(player_, effectManager_);
 }
 
 void Slasher::RunUpdate()
@@ -37,7 +38,7 @@ void Slasher::RunUpdate()
     pos_ += velocity_;
     ++frame_;
     animFrame_ = (animFrame_ + 1) % 15;
-    if (fabsf(pos_.x - player_->Position().x) < 50) {
+    if (fabsf(pos_.x - player_->GetPosition().x) < 50) {
         updater_ = &Slasher::SlashUpdate;
         drawer_ = &Slasher::SlashDraw;
         animFrame_ = 0;
@@ -92,9 +93,10 @@ void Slasher::Draw()
 
 void Slasher::OnHit(CollisionInfo& col)
 {
-    if (col.collider->GetTag() == "pAtk")
+    if (col.collider->GetTag() == tagPlayerAtack)
     {
         // Ž€‚Ê
+        effectManager_->EmitBlow3(pos_, velocity_.x < 0);
         isDeletable_ = true;
     }
 }

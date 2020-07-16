@@ -53,4 +53,5 @@ void BombShot::Draw()
 
 void BombShot::OnHit(CollisionInfo& c)
 {
+	isActive_ = false;
 }

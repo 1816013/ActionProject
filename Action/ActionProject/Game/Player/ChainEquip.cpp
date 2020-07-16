@@ -8,7 +8,9 @@ namespace
 {
 	int chainH = -1;
 }
-ChainEquip::ChainEquip(const Player& p): player_(p)
+ChainEquip::ChainEquip(const Player& p, std::shared_ptr<CollisionManager>cm):
+	player_(p),
+	Equipment(cm)
 {
 	frame_ = -1;	// -1‚Å‰Šú‰»
 	if (chainH == -1)
@@ -67,7 +69,7 @@ void ChainEquip::Update()
 
 void ChainEquip::Draw()
 {
-	auto pos = player_.Position();
+	auto pos = player_.GetPosition();
 	if (frame_ >= 0)
 	{
 		auto angle = atan2f(direction_.y, direction_.x);

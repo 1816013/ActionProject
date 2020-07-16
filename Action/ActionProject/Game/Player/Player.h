@@ -36,7 +36,7 @@ public:
 	void NextEquip();
 	void Update()override;
 	void Draw()override;
-	const Position2f Position()const;
+	//const Position2f Position()const;
 	size_t CurrentEquipmentNo()const;
 	Direction Direction()const;
 

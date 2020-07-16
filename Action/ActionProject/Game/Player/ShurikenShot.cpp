@@ -1,5 +1,6 @@
 #include "ShurikenShot.h"
 #include <DxLib.h>
+#include "../Collider.h"
 
 namespace
 {
@@ -10,7 +11,7 @@ ShurikenShot::ShurikenShot(const Position2f& pos, const Vector2f& vel)
 {
 	pos_ = pos;
 	vel_ = vel;
-
+	isActive_ = true;
 	if (shurikenH == -1)
 	{
 		shurikenH = LoadGraph(L"Resource/Image/Player/shuriken.png");
@@ -29,7 +30,6 @@ ShurikenShot::~ShurikenShot()
 void ShurikenShot::NomalUpdate()
 {
 	angle_ += 0.5f;
-	isActive_ = true;
 	Projectile::Update(); // java‚Ìbase.Update();
 	if (pos_.x > 800 || pos_.x < 0 || pos_.y > 600 || pos_.y < 0)
 	{
@@ -48,9 +48,13 @@ void ShurikenShot::Update()
 
 void ShurikenShot::Draw()
 {
-	DrawGraph(pos_.x, pos_.y, shurikenH, true);
+	DrawRotaGraph(pos_.x, pos_.y,1.0f, angle_, shurikenH, true);
 }
 
-void ShurikenShot::OnHit(CollisionInfo& c)
+void ShurikenShot::OnHit(CollisionInfo& info)
 {
+	if (info.collider->GetTag() == tagEnemyDamage)
+	{
+		isActive_ = false;
+	}
 }

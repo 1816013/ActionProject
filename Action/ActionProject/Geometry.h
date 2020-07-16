@@ -70,6 +70,7 @@ struct Vector2D
 		return (x / mag, y / mag);
 	}
 
+
 };
 
 
@@ -77,6 +78,9 @@ using Vector2 = Vector2D<int>;
 using Vector2f = Vector2D<float>;
 using Position2 = Vector2;
 using Position2f = Vector2f;
+
+
+float Dot(const Vector2f& va, const Vector2f& vb);
 
 struct Size
 {
@@ -117,4 +121,11 @@ struct Circle
 	float radius;		// 半径
 	Circle() :center({ 0, 0 }), radius(0.0f) {}
 	Circle(const Position2f& c, const float r) :center(c), radius(r) {}
+};
+
+struct Capsule
+{
+	Position2f start;	// 起点
+	Vector2f vecEnd;	// 起点から端点のベクトル
+	float radius;	// 半径
 };

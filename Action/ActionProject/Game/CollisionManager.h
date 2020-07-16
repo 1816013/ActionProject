@@ -15,6 +15,8 @@ public:
 	/// ‘S‚Ä‚ÌƒRƒŠƒWƒ‡ƒ“‚ð”»’è‚·‚é
 	/// </summary>
 	void Update();
+
+	void DebugDraw();
 	/// <summary>
 	/// 
 	/// </summary>

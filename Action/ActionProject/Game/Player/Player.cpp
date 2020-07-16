@@ -70,8 +70,8 @@ Player::Player( GamePlayingScene* gs)
 	collisionManager_ =  gs->GetCollisionManager();
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_));
-	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager()));
-	equipments_.emplace_back(make_shared<ChainEquip>(*this));
+	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_));
+	equipments_.emplace_back(make_shared<ChainEquip>(*this, collisionManager_));
 }
 
 
@@ -128,10 +128,10 @@ void Player::Draw()
 	}
 }
 
-const Position2f Player::Position()const
-{
-	return pos_;
-}
+//const Position2f Player::Position()const
+//{
+//	return pos_;
+//}
 
 size_t Player::CurrentEquipmentNo() const
 {

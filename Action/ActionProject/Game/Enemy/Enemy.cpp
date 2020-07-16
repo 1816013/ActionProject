@@ -7,15 +7,9 @@ Enemy::Enemy(const std::shared_ptr<Player>& p) : player_(p)
 
 void Enemy::AimPlayer()
 {
-	velocity_ = player_->Position() - pos_;
+	velocity_ = player_->GetPosition() - pos_;
 	velocity_.y = 0;
 	velocity_.Nomarize(); 
-}
-
-
-const Vector2f& Enemy::GetPosition() const
-{
-	return pos_;
 }
 
 void Enemy::SetPosition(const Vector2f& vel)
