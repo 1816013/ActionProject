@@ -54,6 +54,7 @@ void ChainEquip::Attack(const Player& player, const Input& input)
 			direction_ = { -1.0, 0.0f };
 		}
 	}
+	direction_.Nomarize();
 	
 	if (capsuleCollider_ == nullptr)
 	{
@@ -83,7 +84,7 @@ void ChainEquip::Update()
 		auto& vec = capsuleCollider_->GetCapsule().vecEnd;
 		int f = abs((frame_ + 20) % 40 - 20);
 		float w = (f * 400) / 20;
-		vec = direction_.Nomarized() * w;
+		vec = direction_ * w;
 	}
 }
 

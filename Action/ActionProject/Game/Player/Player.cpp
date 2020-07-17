@@ -47,15 +47,16 @@ Player::Player(GamePlayingScene* gs)
 			{
 			//	player_.Move({ 0, 5 });
 			}
-			if (input.IsPressed("left"))
-			{
-				player_.direction_ = Direction::LEFT;
-			//	player_.Move({ -5, 0 });
-			}
+			
 			if (input.IsPressed("right"))
 			{
 				player_.direction_ = Direction::RIGHT;
 				//player_.Move({ 5, 0 });
+			}
+			if (input.IsPressed("left"))
+			{
+				player_.direction_ = Direction::LEFT;
+				//	player_.Move({ -5, 0 });
 			}
 			if (input.IsTriggered("shot"))
 			{
