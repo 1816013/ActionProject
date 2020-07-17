@@ -20,18 +20,21 @@ private:
 	//std::shared_ptr<Scene>_scene;
 public:		
 	~SceneController() = default;
-	// シーン遷移　
-	void ChangeScene(Scene*);
+	/// <summary>
+	/// シーン遷移
+	/// </summary>
+	/// <param name="scene">次のシーン</param>
+	void ChangeScene(Scene* scene);
 	// シーンスタックの先頭に積む
-	void PushScene(Scene*);
+	void PushScene(Scene* scene);
 	// シーンスタックから先頭を取り除く
 	void PopScene();
 	// シーンスタックに積まれているものをすべてクリアしてから遷移する
 	// 前のシーンは呼出し語に削除されるため,この関数の呼び出し元が削除対象だった場合には、関数呼び出し後に処理を行ってはならない
-	void CleanChangeScene(Scene*);
+	void CleanChangeScene(Scene* scene);
 
 	// 持っている先頭シーンのUpdateを呼ぶ
-	void Update(const Input&);
+	void Update(const Input& input);
 
 	// シーンスタックに積まれているすべてのシーンのDrawを呼ぶ
 	void Draw();

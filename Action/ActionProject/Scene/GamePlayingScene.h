@@ -30,8 +30,6 @@ private:
 	using DrawerFunction_t = void (GamePlayingScene::*)();
 	DrawerFunction_t drawer_;
 
-	
-
 	std::shared_ptr<Player> player_;
 	std::unique_ptr<Background> bg_;
 	std::vector<std::shared_ptr<InputListner>> listners_;
@@ -48,5 +46,6 @@ public:
 	void Draw()override;
 	ProjectileManager& GetProjectileManager();
 	std::shared_ptr<CollisionManager> GetCollisionManager();
+	std::shared_ptr<Player>& GetPlayer();
 };
 

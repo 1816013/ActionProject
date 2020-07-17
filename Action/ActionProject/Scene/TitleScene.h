@@ -13,21 +13,42 @@ private:
 	TitleScene(SceneController&);
 
 	// Updater
-	// タイトルシーンの基本Updater
-	void TitleUpdate(const Input&);
-	// 文字の点滅が早くなるUpdater
-	void FastBlinkUpdate(const Input&);
-	// フェードアウト実行時のUpdater
-	void FadeoutUpdate(const Input&);
+	
+	/// <summary>
+	///  タイトルシーンの更新
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	void TitleUpdate(const Input& input);
 
-	void FadeinUpdate(const Input&);
+	/// <summary>
+	/// 文字の点滅が早くなる際の更新
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	void FastBlinkUpdate(const Input& input);
+
+	/// <summary>
+	///  フェードアウト実行時の更新
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	void FadeoutUpdate(const Input& input);
+
+	/// <summary>
+	/// フェードイン実行時の更新
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	void FadeinUpdate(const Input& input);
 	using UpdateFunction_t = void (TitleScene::*)(const Input&);
 	UpdateFunction_t updater_;
 
 	// Drawer
-	// タイトルシーンの基本描画
+	/// <summary>
+	/// タイトルシーンの描画
+	/// </summary>
 	void NomalDraw();
-	// フェード時の描画
+
+	/// <summary>
+	/// フェード時の描画
+	/// </summary>
 	void FadeDraw();
 	using DrawerFunction_t = void (TitleScene::*)();
 	DrawerFunction_t drawer_;

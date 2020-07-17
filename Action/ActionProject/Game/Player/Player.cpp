@@ -17,7 +17,7 @@ namespace
 	int runCount = 0;
 	
 }
-Player::Player( GamePlayingScene* gs)
+Player::Player(GamePlayingScene* gs)
 {
 	direction_ = Direction::RIGHT;
 	for (int i = 0; i < _countof(_runH); i++)
@@ -71,7 +71,7 @@ Player::Player( GamePlayingScene* gs)
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_));
-	equipments_.emplace_back(make_shared<ChainEquip>(*this, collisionManager_));
+	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), collisionManager_));
 }
 
 

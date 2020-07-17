@@ -1,8 +1,8 @@
 #include "Collider.h"
 #include "Character.h"
 
-Collider::Collider(std::shared_ptr<Character> owner, const char* tag):
-	owner_(owner), tag_(tag)
+Collider::Collider(std::shared_ptr<Character> owner, const char* tag, bool immortal):
+	owner_(owner), tag_(tag), isImmortal_(immortal)
 {
 }
 
@@ -35,5 +35,8 @@ const std::string& Collider::GetTag() const
 
 void Collider::Suside()
 {
-	isDeletable_ = true;
+	if (!isImmortal_)
+	{
+		isDeletable_ = true;
+	}
 }

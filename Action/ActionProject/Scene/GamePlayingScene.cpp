@@ -142,6 +142,11 @@ std::shared_ptr<CollisionManager> GamePlayingScene::GetCollisionManager()
 	return collisionManager_;
 }
 
+std::shared_ptr<Player>& GamePlayingScene::GetPlayer()
+{
+	return player_;
+}
+
 
 
 void GamePlayingScene::Update(const Input & input)

@@ -5,8 +5,7 @@ class CircleCollider : public Collider
 {
 private:
 	Circle circle_;
-
-	const Vector2f AcutualPosition();
+	
 public:
 	CircleCollider(std::shared_ptr<Character> owner, const char* tag = "");
 
@@ -25,6 +24,14 @@ public:
 	bool IsHit(std::shared_ptr<Collider> col)override;
 
 	void Draw()override;
+
+	const Circle& GetCircle()const;
+
+	/// <summary>
+	/// ÀÛ‚ÌÀ•W‚ğ•Ô‚·
+	/// </summary>
+	/// <returns>’†SÀ•W</returns>
+	const Vector2f AcutualPosition();
 	
 };
 

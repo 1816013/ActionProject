@@ -1,4 +1,4 @@
-#include "CircleCollider.h"]
+#include "CircleCollider.h"
 #include <DxLib.h>
 #include <assert.h>
 #include "Character.h"
@@ -48,6 +48,11 @@ void CircleCollider::Draw()
 
 	auto i = 0;
 #endif 
+}
+
+const Circle& CircleCollider::GetCircle()const
+{
+	return circle_;
 }
 
 const Vector2f CircleCollider::AcutualPosition()

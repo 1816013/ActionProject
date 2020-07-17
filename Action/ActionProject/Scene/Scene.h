@@ -5,7 +5,7 @@ class SceneController;
 class Scene
 {
 	friend SceneController;
-protected:
+protected: 
 	SceneController& controller_;
 	Scene(SceneController&);
 	Scene() = default;

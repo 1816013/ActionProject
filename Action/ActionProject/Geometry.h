@@ -18,7 +18,12 @@ struct Vector2D
 		return Vector2D(x - val.x, y - val.y);
 	}
 
-	Vector2D operator/(const float& scale)const
+	Vector2D operator*(const float scale)const
+	{
+		return Vector2D(x * scale, y * scale);
+	}
+
+	Vector2D operator/(const float scale)const
 	{
 		return Vector2D(x / scale, y / scale);
 	}
@@ -67,10 +72,8 @@ struct Vector2D
 	{
 		Vector2D vec(x, y);
 		auto mag = vec.Magnitude();
-		return (x / mag, y / mag);
+		return Vector2D(x / mag, y / mag);
 	}
-
-
 };
 
 
@@ -79,8 +82,9 @@ using Vector2f = Vector2D<float>;
 using Position2 = Vector2;
 using Position2f = Vector2f;
 
-
 float Dot(const Vector2f& va, const Vector2f& vb);
+
+float Clamp(float val, float minVal = 0.0f, float maxVal = 1);
 
 struct Size
 {
@@ -123,9 +127,15 @@ struct Circle
 	Circle(const Position2f& c, const float r) :center(c), radius(r) {}
 };
 
+/// <summary>
+/// カプセル
+/// </summary>
 struct Capsule
 {
 	Position2f start;	// 起点
 	Vector2f vecEnd;	// 起点から端点のベクトル
 	float radius;	// 半径
+
+	Capsule() : start({ 0, 0 }), vecEnd({ 0, 0 }), radius(0.0f) {};
+	Capsule(const Position2f& s, const Vector2f& v, const float r) : start(s), vecEnd(v), radius(r) {};
 };

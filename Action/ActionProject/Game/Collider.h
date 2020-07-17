@@ -13,9 +13,11 @@ class Collider
 private:
 	std::string tag_;
 	std::weak_ptr<Character> owner_;
+protected:
 	bool isDeletable_ = false;
+	bool isImmortal_ = false;
 public:
-	Collider(std::shared_ptr<Character> owner, const char* tag = "");
+	Collider(std::shared_ptr<Character> owner, const char* tag = "", bool immortal = false);
 	virtual ~Collider() = default;
 	bool OwnerIsDead()const;	
 	bool IsDeletable()const;

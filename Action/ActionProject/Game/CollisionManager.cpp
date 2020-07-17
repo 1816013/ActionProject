@@ -54,7 +54,7 @@ void CollisionManager::Update()
 			{
 				continue;
 			}
-			if (col->IsHit(other))
+			if (col->IsHit(other) || other->IsHit(col))
 			{
 				CollisionInfo colInfoOther = { other };
 				col->GetOwner()->OnHit(colInfoOther);
