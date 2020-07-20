@@ -17,6 +17,7 @@ public:
 	/// <param name="p"> プレイヤーの参照</param>
 	/// <param name="i">入力参照</param>
 	virtual void Attack(const Player& p, const Input& i) = 0;
+	virtual void ExtendAttack(const Player& player, const Input& input);
 	virtual void Update() {};
 	virtual void Draw() {};
 };

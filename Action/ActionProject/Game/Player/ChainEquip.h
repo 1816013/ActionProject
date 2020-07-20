@@ -15,6 +15,7 @@ private:
 public:
 	ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm);
 	void Attack(const Player& player, const Input& input)override;
+	void ExtendAttack(const Player& player, const Input& input)override;
 	void Update();
 	void Draw();
 };

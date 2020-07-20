@@ -66,6 +66,7 @@ Player::Player(GamePlayingScene* gs)
 			{
 				player_.NextEquip();
 			}
+			//player_.ExtendAttack(input);
 		}
 	};
 	collisionManager_ =  gs->GetCollisionManager();
@@ -87,6 +88,11 @@ Player::~Player()
 void Player::Attack(const Input& input)
 {
 	equipments_[currentEquipmentNo_]->Attack(*this, input);
+}
+
+void Player::ExtendAttack(const Input& input)
+{
+	equipments_[currentEquipmentNo_]->ExtendAttack(*this, input);
 }
 
 void Player::SetPosition(const Position2f& pos )

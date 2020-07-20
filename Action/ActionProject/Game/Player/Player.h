@@ -23,6 +23,7 @@ public:
 	/// </summary>
 	/// <param name="input">入力参照</param>
 	void Attack(const Input& input);
+	void ExtendAttack(const Input& input);
 	/// <summary>
 	/// プレイヤーの座標を設定する
 	/// </summary>
