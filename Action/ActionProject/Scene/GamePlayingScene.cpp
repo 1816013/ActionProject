@@ -16,6 +16,7 @@
 #include "../Game/Enemy/Slasher.h"
 #include "../Game/CollisionManager.h"
 #include "../Game/Effect.h"
+#include "../Stage.h"
 
 using namespace std;
 namespace 
@@ -45,6 +46,9 @@ drawer_(&GamePlayingScene::FadeDraw)
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
 	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
 	weaponUIH_[2] = LoadGraph(L"Resource/Image/UI/chain.png");
+
+	stage_ = make_shared<Stage>();
+	stage_->Load(L"Resource/level/level2.fmf");
 }
 
 GamePlayingScene::~GamePlayingScene()
@@ -113,6 +117,7 @@ void GamePlayingScene::NomalDraw()
 	enemyManager_->Draw();
 	player_->Draw();
 	effectManager_->Draw();
+	stage_->Draw();
 	// •ŠíUI•\Ž¦
 	DrawBox(10, 10, 76, 76, 0x000000, false);
 	DrawGraph(10, 10, weaponUIH_[player_->CurrentEquipmentNo()], true);
