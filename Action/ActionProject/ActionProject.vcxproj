@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game\CapsuleCollider.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\AABBCollider.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Game\CapsuleCollider.h" />
     <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\AABBCollider.h" />

@@ -18,18 +18,18 @@ CapsuleCollider::CapsuleCollider(std::shared_ptr<Character> owner, const Capsule
 bool CapsuleCollider::IsHit(std::shared_ptr<Collider> col)
 {
 	assert(col != nullptr);
-	if (capsule_.vecEnd.SQMagnitude() == 0)
+	if (capsule_.seg.vec.SQMagnitude() == 0)
 	{
 		return false;
 	}
 	auto cCol = std::dynamic_pointer_cast<CircleCollider>(col);
 	if (cCol != nullptr)
 	{
-		Capsule capsule = { AcutualPosition(), capsule_.vecEnd, capsule_.radius };
+		Capsule capsule = { {AcutualPosition(), capsule_.seg.vec}, capsule_.radius };
 		Circle circle = { cCol->AcutualPosition(), cCol->GetCircle().radius };
-		auto vecA = circle.center - capsule.start;
+		auto vecA = circle.center - capsule.seg.start;
 		
-		float sqDist = (vecA - (capsule.vecEnd * Clamp(Dot(vecA, capsule.vecEnd) / capsule.vecEnd.SQMagnitude()))).SQMagnitude();
+		float sqDist = (vecA - (capsule.seg.vec * Clamp(Dot(vecA, capsule.seg.vec) / capsule.seg.vec.SQMagnitude()))).SQMagnitude();
 		auto totalRadius = capsule.radius + circle.radius;	// îºåaÇÃçáåv
 		return  sqDist <= totalRadius * totalRadius;
 	}
@@ -38,17 +38,18 @@ bool CapsuleCollider::IsHit(std::shared_ptr<Collider> col)
 
 void CapsuleCollider::Draw()
 {
-	if (capsule_.vecEnd.SQMagnitude() == 0)
+	if (capsule_.seg.vec.SQMagnitude() == 0)
 	{
 		return;
 	}
-	Capsule capsule = { AcutualPosition(), capsule_.vecEnd , capsule_.radius };
-	auto& spos = capsule.start;
-	auto epos = capsule.start + capsule.vecEnd ;
+	Capsule capsule = { {AcutualPosition(), capsule_.seg.vec }, capsule_.radius
+};
+	auto& spos = capsule.seg.start;
+	auto epos = capsule.seg.start + capsule.seg.vec ;
 
 	DrawCircle(spos.x, spos.y, capsule.radius, 0xffffff, false);
 	
-	auto v90 = capsule.vecEnd;
+	auto v90 = capsule.seg.vec;
 	v90 = {-v90.y, v90.x};
 	v90.Nomarize();
 	v90 *= capsule.radius;
@@ -64,7 +65,7 @@ void CapsuleCollider::Draw()
 
 const Vector2f CapsuleCollider::AcutualPosition()
 {
-	return capsule_.start + GetOwner()->GetPosition();
+	return capsule_.seg.start + GetOwner()->GetPosition();
 }
 
 Capsule& CapsuleCollider::GetCapsule()

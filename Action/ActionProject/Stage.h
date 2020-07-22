@@ -2,6 +2,11 @@
 #include <tchar.h>
 #include <vector>
 
+enum class LayerType
+{
+	Base,
+	Flont
+};
 struct StageHeader
 {
 	char id[4];				// ファイル識別子(FMF_)
@@ -20,14 +25,14 @@ struct StageHeader
 class Stage
 {
 private:
-	using vector_t = std::vector<unsigned char>;
-	std::vector<vector_t>stageData_;
+	using LayerData_t = std::vector<unsigned char>;
+	std::vector<LayerData_t>stageData_;
 	StageHeader header_;
 public:
 	Stage();
 	void Load(const TCHAR* path);
 	void Update();
-	void Draw();
+	void Draw(const size_t layerNo);
 };
 
 

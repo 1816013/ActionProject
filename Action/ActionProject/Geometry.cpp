@@ -9,5 +9,5 @@ float Dot(const Vector2f& va, const Vector2f& vb)
 
 float Clamp(float val, float minVal, float maxVal)
 {
-	return max(minVal,min(maxVal, val));
+	return min(max(val, minVal), maxVal);
 }

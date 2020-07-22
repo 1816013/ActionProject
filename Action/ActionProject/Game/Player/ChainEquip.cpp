@@ -58,7 +58,7 @@ void ChainEquip::Attack(const Player& player, const Input& input)
 	
 	if (capsuleCollider_ == nullptr)
 	{
-		capsuleCollider_ = new CapsuleCollider(player_, { {0, 0}, {0, 0}, 20 }, tagPlayerAtack, true);
+		capsuleCollider_ = new CapsuleCollider(player_, { {{0, 0}, {0, 0}}, 20 }, tagPlayerAtack, true);
 		collisionManager_->AddCollider(capsuleCollider_);
 	}
 	frame_ = 0;
@@ -104,7 +104,7 @@ void ChainEquip::Update()
 	{
 		if (capsuleCollider_ != nullptr)
 		{
-			capsuleCollider_->GetCapsule().vecEnd = { 0, 0 };
+			capsuleCollider_->GetCapsule().seg.vec = { 0, 0 };
 		}
 		return;
 	}
@@ -115,7 +115,7 @@ void ChainEquip::Update()
 		{
 			frame_ = -1;
 		}
-		auto& vec = capsuleCollider_->GetCapsule().vecEnd;
+		auto& vec = capsuleCollider_->GetCapsule().seg.vec;
 		int f = abs((frame_ + 20) % 40 - 20);
 		float w = (f * 400) / 20;
 		vec = direction_ * w;

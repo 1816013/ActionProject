@@ -95,9 +95,10 @@ struct Size
 
 struct Rect 
 {
-	Position2 pos;
-	Size size;
-	Rect(const Position2& vpos, const Size& vsize) : pos(vpos),size(vsize){};
+	Position2f pos;	// 中心座標
+	Size size;		// 大きさ
+	Rect() : pos({ 0, 0 }), size({ 0, 0 }) {};
+	Rect(const Position2f& vpos, const Size& vsize) : pos(vpos),size(vsize){};
 	int Left()const
 	{
 		return pos.x - size.w / 2;
@@ -126,16 +127,29 @@ struct Circle
 	Circle() :center({ 0, 0 }), radius(0.0f) {}
 	Circle(const Position2f& c, const float r) :center(c), radius(r) {}
 };
+/// <summary>
+/// 線分
+/// </summary>
+struct Segment
+{
+	Position2f start;
+	Vector2f vec;
+
+	Segment() :start({ 0, 0 }), vec({ 0, 0 }) {};
+	Segment(Position2f s, Vector2f v) : start(s), vec(v) {};
+};
 
 /// <summary>
 /// カプセル
 /// </summary>
 struct Capsule
 {
-	Position2f start;	// 起点
-	Vector2f vecEnd;	// 起点から端点のベクトル
+	Segment seg;	// 線分
+	//Position2f start;	// 起点
+	//Vector2f vecEnd;	// 起点から端点のベクトル
 	float radius;	// 半径
 
-	Capsule() : start({ 0, 0 }), vecEnd({ 0, 0 }), radius(0.0f) {};
-	Capsule(const Position2f& s, const Vector2f& v, const float r) : start(s), vecEnd(v), radius(r) {};
+	Capsule() : seg({ {0, 0}, { 0, 0 } })/*,start({ 0, 0 }), vecEnd({ 0, 0 })*/, radius(0.0f) {};
+	//Capsule(const Position2f& s, const Vector2f& v, const float r) : start(s), vecEnd(v), radius(r) {};
+	Capsule(const Segment& s, const float r) :seg(s), radius(r) {};
 };

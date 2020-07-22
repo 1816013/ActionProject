@@ -10,7 +10,7 @@ namespace
 {
 	const Size& vpSize = Application::Instance().GetViewport().GetSize();
 	const Size rectSize = Size(400, 400);
-	Rect menuRect(Position2(vpSize.w / 2, vpSize.h / 2),Size(rectSize.w, rectSize.h));
+	Rect menuRect(Position2f(vpSize.w / 2, vpSize.h / 2),Size(rectSize.w, rectSize.h));
 	constexpr int AccordionInterval = 20;	
 	unsigned int waitTimer = 0;	
 	int IndicatorH;

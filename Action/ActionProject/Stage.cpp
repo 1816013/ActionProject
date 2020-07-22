@@ -22,9 +22,8 @@ void Stage::Load(const TCHAR* path)
 {
 	auto h = DxLib::FileRead_open(path);
 	assert( h > 0);
-//	StageHeader stgheader = {};
-	FileRead_read(&header_, sizeof(header_), h);
-
+	FileRead_read(&header_, sizeof(header_), h);	// ÉwÉbÉ_ì«Ç›çûÇ›
+	
 	auto layerSize = header_.mapH * header_.mapW;
 	stageData_.resize(header_.layerCnt);
 
@@ -40,29 +39,29 @@ void Stage::Update()
 {
 }
 
-void Stage::Draw()
+void Stage::Draw(const size_t layerNo)
 {
 	constexpr float scale = 2.0f;
 	constexpr int groundLine = 600;
 	const int yoffset = groundLine - (header_.chipH * scale * header_.mapH);
-	for (int d = 0; d < header_.layerCnt; ++d)
+
+	for (unsigned int y = 0; y < header_.mapH; ++y)
 	{
-		for (unsigned int y = 0; y < header_.mapH; ++y)
+		for (unsigned int x = 0; x < header_.mapW; ++x)
 		{
-			for (unsigned int x = 0; x < header_.mapW; ++x)
-			{
-				auto& data = stageData_[d][x + y * header_.mapW];
-				DrawRectRotaGraph(
-					x * header_.chipW * scale, yoffset + y * header_.chipH * scale,
-					(data % 16) * header_.chipW,
-					(data / 16) * header_.chipH,
-					header_.chipW,
-					header_.chipH,
-					scale,
-					0.0f,
-					stageAtlasH,
-					true);
-			}
+			auto& data = stageData_[layerNo][x + y * header_.mapW];
+			DrawRectRotaGraph2(
+				x * header_.chipW * scale,
+				yoffset + y * header_.chipH * scale,
+				(data % 16) * header_.chipW,
+				(data / 16) * header_.chipH,
+				header_.chipW,
+				header_.chipH,
+				0,0,
+				scale,
+				0.0f,
+				stageAtlasH,
+				true);
 		}
 	}
 }

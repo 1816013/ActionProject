@@ -112,12 +112,15 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 
 void GamePlayingScene::NomalDraw()
 {		
-	bg_->Draw();	
+	bg_->Draw();
+	stage_->Draw(static_cast<size_t>(LayerType::Base));
 	projectileManager_->Draw();
 	enemyManager_->Draw();
 	player_->Draw();
 	effectManager_->Draw();
-	stage_->Draw();
+	stage_->Draw(static_cast<size_t>(LayerType::Flont));
+
+	
 	// •ŠíUI•\Ž¦
 	DrawBox(10, 10, 76, 76, 0x000000, false);
 	DrawGraph(10, 10, weaponUIH_[player_->CurrentEquipmentNo()], true);
