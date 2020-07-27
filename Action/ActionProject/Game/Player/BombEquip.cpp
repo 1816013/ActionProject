@@ -5,10 +5,11 @@
 #include "BombShot.h"
 #include "../CollisionManager.h"
 #include "../CircleCollider.h"
+#include "../../Camera.h"
 
-BombEquip::BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col) : 
+BombEquip::BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col, std::shared_ptr<Camera> c) :
 	pm_(pm),
-	Equipment(col)
+	Equipment(col, c)
 {
 }
 
@@ -42,7 +43,7 @@ void BombEquip::Attack(const Player& player, const Input& input)
 			vel = { -5, 0 };
 		}
 	}
-	auto bomb = new BombShot(player.GetPosition(), vel);
+	auto bomb = new BombShot(player.GetPosition(), vel, camera_);
 	
 	pm_.AddProjectile(bomb);
 	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), tagPlayerAtack, {0, 0}, 24));

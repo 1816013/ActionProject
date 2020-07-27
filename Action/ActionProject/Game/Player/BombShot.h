@@ -13,7 +13,7 @@ private:
 	UpdateFunction_t updater_;
 
 public:
-	BombShot(const Position2f& pos, const Vector2f& vel);
+	BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera>c);
 	~BombShot();
 	
 	void Update()override;

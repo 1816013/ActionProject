@@ -11,12 +11,14 @@ enum class Direction
 
 class Input;
 struct CollisionInfo;
+class Camera;
 class Character
 {
 protected:
 	Position2f pos_;
+	std::shared_ptr<Camera>camera_;
 public:
-	Character();
+	Character(std::shared_ptr<Camera> camera);
 	virtual ~Character() = default;
 	/// <summary>
 	/// キャラクターの更新を行う

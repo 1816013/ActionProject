@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "../Player/Player.h"
 
-Enemy::Enemy(const std::shared_ptr<Player>& p) : player_(p)
+Enemy::Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c) : player_(p), Character(c)
 {
 }
 

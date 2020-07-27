@@ -8,6 +8,7 @@
 #include "BombEquip.h"
 #include "ShurikenEquip.h"
 #include "ChainEquip.h"
+#include "../../Camera.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ namespace
 	int runCount = 0;
 	
 }
-Player::Player(GamePlayingScene* gs)
+Player::Player(GamePlayingScene* gs) : Character(gs->GetCamera())
 {
 	direction_ = Direction::RIGHT;
 	for (int i = 0; i < _countof(_runH); i++)
@@ -51,12 +52,12 @@ Player::Player(GamePlayingScene* gs)
 			if (input.IsPressed("right"))
 			{
 				player_.direction_ = Direction::RIGHT;
-				//player_.Move({ 5, 0 });
+				player_.Move({ 5, 0 });
 			}
 			if (input.IsPressed("left"))
 			{
 				player_.direction_ = Direction::LEFT;
-				//	player_.Move({ -5, 0 });
+				player_.Move({ -5, 0 });
 			}
 			if (input.IsTriggered("shot"))
 			{
@@ -66,14 +67,14 @@ Player::Player(GamePlayingScene* gs)
 			{
 				player_.NextEquip();
 			}
-			//player_.ExtendAttack(input);
+			player_.ExtendAttack(input);
 		}
 	};
 	collisionManager_ =  gs->GetCollisionManager();
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
-	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_));
-	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_));
-	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), collisionManager_));
+	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
+	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
+	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), collisionManager_, camera_));
 }
 
 
@@ -121,17 +122,18 @@ void Player::Update()
 
 void Player::Draw()
 {
+	auto& offset = camera_->ViewOffset();
 	for (auto e : equipments_)
 	{
 		e->Draw();
 	}
 	if (direction_ == Direction::RIGHT)
 	{
-		DrawRotaGraph(pos_.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true);
+		DrawRotaGraph(pos_.x + offset.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true);
 	}
 	else
 	{
-		DrawRotaGraph(pos_.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true, true);
+		DrawRotaGraph(pos_.x + offset.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true, true);
 	}
 }
 

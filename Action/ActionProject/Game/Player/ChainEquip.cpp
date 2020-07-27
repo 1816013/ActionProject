@@ -5,14 +5,15 @@
 #include "../../Input.h"
 #include "../CollisionManager.h"
 #include "../CapsuleCollider.h"
+#include "../../Camera.h"
 
 namespace
 {
 	int chainH = -1;
 }
-ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm):
+ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm ,std::shared_ptr<Camera> c):
 	player_(p),
-	Equipment(cm)
+	Equipment(cm, c)
 {
 	frame_ = -1;	// -1‚Å‰Šú‰»
 	if (chainH == -1)
@@ -127,10 +128,11 @@ void ChainEquip::Draw()
 	auto pos = player_->GetPosition();
 	if (frame_ >= 0)
 	{
+		auto offset = camera_->ViewOffset();
 		auto angle = atan2f(direction_.y, direction_.x);
 		int f = abs((frame_ + 20) % 40 - 20);
 		int w = (f * 400) / 20;
 		//DrawRectGraph(pos.x, pos.y, 400 - w, 0, w, 48, chainH, true);
-		DrawRectRotaGraph2(pos.x, pos.y, 400 - w, 0, w, 48, 0, 24,  1.0f, angle, chainH, true);
+		DrawRectRotaGraph2(pos.x + offset.x, pos.y, 400 - w, 0, w, 48, 0, 24,  1.0f, angle, chainH, true);
 	}
 }

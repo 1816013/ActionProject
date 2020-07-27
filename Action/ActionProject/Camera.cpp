@@ -7,12 +7,12 @@
 Camera::Camera()
 {
 	stageSize_ = { 800, 600 };
+	pos_ = { stageSize_.w / 2.0f, stageSize_.h / 2.0f };
 }
 
 void Camera::SetPlayer(std::shared_ptr<Player> player)
 {
 	player_ = player;
-
 }
 
 void Camera::SetStageSize(const Size& size)
@@ -26,7 +26,7 @@ void Camera::Update()
 	auto& viewPort = app.GetViewport();
 	const auto& cameraSize = viewPort.GetSize();
 	pos_ = player_->GetPosition();
-	pos_.x = std::clamp(pos_.x, 0 + cameraSize.w / 2.0f, stageSize_.w - cameraSize.w / 2.0f);
+	pos_.x = Clamp(pos_.x, 0 + cameraSize.w / 2.0f, stageSize_.w - cameraSize.w / 2.0f);
 }
 
 const Position2f& Camera::GetPosition() const
@@ -36,10 +36,16 @@ const Position2f& Camera::GetPosition() const
 
 const Rect Camera::GetViewRange() const
 {
+	auto& app = Application::Instance();
+	auto& viewPort = app.GetViewport();
+	const auto& cameraSize = viewPort.GetSize();
 	return Rect(pos_, stageSize_);
 }
 
 const Vector2f Camera::ViewOffset() const
 {
-	return Vector2f(-pos_.x, -pos_.y);
+	auto& app = Application::Instance();
+	auto& viewPort = app.GetViewport();
+	const auto& cameraSize = viewPort.GetSize();
+	return Vector2f(cameraSize.w / 2 - pos_.x,cameraSize.h / 2 - pos_.y);
 }

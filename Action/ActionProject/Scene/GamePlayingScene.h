@@ -13,6 +13,7 @@ class Spawner;
 class CollisionManager;
 class EffectManager;
 class Stage;
+class Camera;
 class GamePlayingScene : public Scene
 {
 	friend TitleScene;
@@ -40,7 +41,7 @@ private:
 	std::shared_ptr<CollisionManager> collisionManager_;
 	std::shared_ptr<EffectManager> effectManager_;
 	std::shared_ptr<Stage> stage_;
-
+	std::shared_ptr<Camera> camera_;
 public:
 	~GamePlayingScene();
 	void AddListner(std::shared_ptr<InputListner> listner);
@@ -49,5 +50,6 @@ public:
 	ProjectileManager& GetProjectileManager();
 	std::shared_ptr<CollisionManager> GetCollisionManager();
 	std::shared_ptr<Player>& GetPlayer();
+	std::shared_ptr<Camera>& GetCamera();
 };
 

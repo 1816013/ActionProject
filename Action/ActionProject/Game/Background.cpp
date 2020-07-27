@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iomanip>
 #include "../Geometry.h"
+#include "../Camera.h"
 
 using namespace std;
 namespace
@@ -11,7 +12,7 @@ namespace
 	Rect rect = { {400, 300}, {800, 600} };
 }
 
-Background::Background()
+Background::Background(std::shared_ptr<Camera> c) : camera_(c)
 {
 	bgH_.resize(11);
 	int skipNo[2] = { 4 , 7 };
@@ -54,11 +55,13 @@ void Background::Draw()
 	
 	for (int i = 0; i < bgH_.size(); i++)
 	{
+		auto offset = camera_->ViewOffset();
 		int scroll = frame_ / 2 * (i + 1) % rect.size.w;
+		auto cameraScroll = offset.x / 10 * ((i + 1) % rect.size.w);
 		//DrawRectExtendGraph(rect.Left(), rect.Top(), rect.Right(), rect.Bottom(), frame_, 0, rect.size.w, rect.size.h, h, true);
-		DrawExtendGraph(-scroll % rect.size.w, 0, rect.size.w - scroll % rect.size.w, rect.size.h, bgH_[i], true);
+		DrawExtendGraph((int)cameraScroll % rect.size.w, 0, rect.size.w + (int)cameraScroll % rect.size.w, rect.size.h, bgH_[i], true);
 
 		//DrawRectExtendGraph(rect.Left(), rect.Top(), rect.Right(), rect.Bottom(), rect.size.w + frame_, 0, rect.size.w, rect.size.h, h, true);
-		DrawExtendGraph(rect.size.w - scroll % rect.size.w, 0, rect.size.w * 2 - scroll % rect.size.w, rect.size.h, bgH_[i], true);
+		DrawExtendGraph(rect.size.w + (int)cameraScroll % rect.size.w, 0, rect.size.w * 2 + (int)cameraScroll % rect.size.w, rect.size.h, bgH_[i], true);
 	}
 }

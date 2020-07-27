@@ -4,12 +4,14 @@
 class Player;
 class Input;
 class CollisionManager;
+class Camera;
 class Equipment
 {
 protected:
 	std::shared_ptr<CollisionManager>collisionManager_;
+	std::shared_ptr<Camera> camera_;
 public:
-	Equipment(std::shared_ptr<CollisionManager>cm);
+	Equipment(std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c);
 	virtual ~Equipment() = default;
 	/// <summary>
 	/// ¡‚Ì•Ší‚ÅUŒ‚‚·‚é

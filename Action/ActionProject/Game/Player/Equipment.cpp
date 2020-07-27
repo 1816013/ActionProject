@@ -1,7 +1,9 @@
 #include "Equipment.h"
 
-Equipment::Equipment(std::shared_ptr<CollisionManager> cm):
-	collisionManager_(cm)
+
+Equipment::Equipment(std::shared_ptr<CollisionManager> cm, std::shared_ptr<Camera> c):
+	collisionManager_(cm),
+	camera_(c)
 {
 }
 

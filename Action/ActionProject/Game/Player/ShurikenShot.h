@@ -13,7 +13,7 @@ private:
 	UpdateFunction_t updater_;
 
 public:
-	ShurikenShot(const Position2f& pos, const Vector2f& vel);
+	ShurikenShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera> c);
 	~ShurikenShot();
 
 	void Update()override;

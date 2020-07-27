@@ -23,6 +23,10 @@ public:
 	/// </summary>
 	/// <param name="input">入力参照</param>
 	void Attack(const Input& input);
+	/// <summary>
+	/// 追加攻撃(今は鎖鎌のみ)
+	/// </summary>
+	/// <param name="input">入力参照</param>
 	void ExtendAttack(const Input& input);
 	/// <summary>
 	/// プレイヤーの座標を設定する
@@ -34,8 +38,17 @@ public:
 	/// </summary>
 	/// <param name="v">移動ベクトル</param>
 	void Move(const Vector2f& v);
+	/// <summary>
+	/// 武器変更
+	/// </summary>
 	void NextEquip();
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update()override;
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw()override;
 	//const Position2f Position()const;
 	size_t CurrentEquipmentNo()const;

@@ -1,6 +1,7 @@
 #pragma once
 #include <tchar.h>
 #include <vector>
+#include <memory>
 
 enum class LayerType
 {
@@ -19,6 +20,7 @@ struct StageHeader
 	unsigned char bitCnt;	// レイヤーデータのビットカウント
 };
 
+class Camera;
 /// <summary>
 /// ステージデータ管理
 /// </summary>
@@ -28,8 +30,10 @@ private:
 	using LayerData_t = std::vector<unsigned char>;
 	std::vector<LayerData_t>stageData_;
 	StageHeader header_;
+	std::shared_ptr<Camera>camera_;
+	float scale_;
 public:
-	Stage();
+	Stage(std::shared_ptr<Camera>c);
 	void Load(const TCHAR* path);
 	void Update();
 	void Draw(const size_t layerNo);

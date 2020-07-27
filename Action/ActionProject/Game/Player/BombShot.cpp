@@ -1,12 +1,13 @@
 #include "BombShot.h"
 #include <DxLib.h>
 #include "Projectile.h"
+#include "../../Camera.h"
 
 namespace
 {
 	int bombH = -1;
 }
-BombShot::BombShot(const Position2f& pos, const Vector2f& vel)
+BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera>c) : Projectile(c)
 {
 	pos_ = pos;
 	vel_ = vel;
@@ -30,7 +31,8 @@ void BombShot::NomalUpdate()
 {
 	angle_ += 0.5f;
 	Projectile::Update(); // java‚Ìbase.Update();
-	if (pos_.x > 800 || pos_.x < 0 || pos_.y > 600 || pos_.y < 0)
+	auto viewRect = camera_->GetViewRange();
+	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.Bottom() || pos_.y < viewRect.Top())
 	{
 		updater_ = &BombShot::DestroyUpdate;
 	}
@@ -48,7 +50,8 @@ void BombShot::Update()
 
 void BombShot::Draw()
 {
-	DrawRotaGraph(pos_.x, pos_.y, 0.5f, angle_, bombH, true);
+	auto offset = camera_->ViewOffset();
+	DrawRotaGraph(pos_.x + offset.x, pos_.y, 0.5f, angle_, bombH, true);
 }
 
 void BombShot::OnHit(CollisionInfo& c)

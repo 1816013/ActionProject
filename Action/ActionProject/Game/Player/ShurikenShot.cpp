@@ -1,13 +1,15 @@
 #include "ShurikenShot.h"
 #include <DxLib.h>
 #include "../Collider.h"
+#include "../../Camera.h"
 
 namespace
 {
 	int shurikenH = -1;
 }
 
-ShurikenShot::ShurikenShot(const Position2f& pos, const Vector2f& vel)
+ShurikenShot::ShurikenShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera> c):
+	Projectile(c)
 {
 	pos_ = pos;
 	vel_ = vel;
@@ -31,7 +33,8 @@ void ShurikenShot::NomalUpdate()
 {
 	angle_ += 0.5f;
 	Projectile::Update(); // java‚Ìbase.Update();
-	if (pos_.x > 800 || pos_.x < 0 || pos_.y > 600 || pos_.y < 0)
+	auto viewRect = camera_->GetViewRange();
+	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.Bottom() || pos_.y < viewRect.Top())
 	{
 		updater_ = &ShurikenShot::DestroyUpdate;
 	}
@@ -48,7 +51,8 @@ void ShurikenShot::Update()
 
 void ShurikenShot::Draw()
 {
-	DrawRotaGraph(pos_.x, pos_.y,1.0f, angle_, shurikenH, true);
+	auto offset = camera_->ViewOffset();
+	DrawRotaGraph(pos_.x + offset.x, pos_.y,1.0f, angle_, shurikenH, true);
 }
 
 void ShurikenShot::OnHit(CollisionInfo& info)

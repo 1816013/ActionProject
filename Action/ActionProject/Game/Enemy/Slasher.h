@@ -22,7 +22,7 @@ private:
     std::shared_ptr<EffectManager>effectManager_;
 
 public:
-	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em);
+	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c);
     ~Slasher();
 	void OnDamage(int damage);
 

@@ -7,8 +7,8 @@
 #include "../CollisionManager.h"
 #include "../CircleCollider.h"
 
-ShurikenEquip::ShurikenEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>cm)
-	: pm_(pm), Equipment(cm)
+ShurikenEquip::ShurikenEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c)
+	: pm_(pm), Equipment(cm, c)
 {
 }
 
@@ -44,6 +44,6 @@ void ShurikenEquip::Attack(const Player& player, const Input& input)
 	}
 	vel.Nomarize();
 	vel *= 15;
-	pm_.AddProjectile(new ShurikenShot(player.GetPosition(), vel));
+	pm_.AddProjectile(new ShurikenShot(player.GetPosition(), vel, camera_));
 	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), tagPlayerAtack, Circle{ {0, 0}, 10 }));
 }

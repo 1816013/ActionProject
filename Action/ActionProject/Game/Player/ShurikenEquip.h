@@ -9,7 +9,7 @@ class ShurikenEquip :
 private:
 	ProjectileManager& pm_;
 public:
-	ShurikenEquip(ProjectileManager& pm,std::shared_ptr<CollisionManager>cm );
+	ShurikenEquip(ProjectileManager& pm,std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c);
 
 	/// <summary>
 	/// è— Œ•UŒ‚

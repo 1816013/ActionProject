@@ -1,22 +1,23 @@
 #include "Effect.h"
 #include <DxLib.h>
+#include "../Camera.h"
 
 namespace
 {
 	int blowH = -1;
 }
 
-void EffectManager::EmitBlood(const Position2f& p, bool isTurn)
+void EffectManager::EmitBlood(const Position2f& p, bool isTurn, std::shared_ptr<Camera>c)
 {
 	//effects_.emplace_back
 }
 
-void EffectManager::EmitBlow3(const Position2f& p, bool isTurn)
+void EffectManager::EmitBlow3(const Position2f& p, bool isTurn, std::shared_ptr<Camera>c)
 {
 	std::uniform_int_distribution<int> dst(-10, 10);
-	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn));
-	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, 5));
-	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn,10));
+	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c));
+	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c, 5));
+	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c, 10));
 }
 
 void EffectManager::Update()
@@ -36,7 +37,7 @@ void EffectManager::Draw()
 	}
 }
 
-Blood::Blood(const Position2f& p, bool isTurn)
+Blood::Blood(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c) : Effect(c)
 {
 	pos_ = p;
 	isTurn_ = isTurn;
@@ -52,8 +53,7 @@ void Blood::Draw()
 }
 
 
-Blow::Blow(const Position2f& p, bool isTurn
-, float delay)
+Blow::Blow(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c, float delay) : Effect(c)
 {
 	frame_ = 0.0f;
 	pos_ = p;
@@ -79,8 +79,13 @@ void Blow::Draw()
 {
 	if (delay_ < frame_)
 	{
-		DrawRectRotaGraph(pos_.x, pos_.y, ((frame_ / 3)) * 32, 0, 32, 32, 2.0f, 0.0f, blowH, true, isTurn_);
+		auto offset = camera_->ViewOffset();
+		DrawRectRotaGraph(pos_.x + offset.x, pos_.y, ((frame_ / 3)) * 32, 0, 32, 32, 2.0f, 0.0f, blowH, true, isTurn_);
 	}
+}
+
+Effect::Effect(std::shared_ptr<Camera> c) : camera_(c)
+{
 }
 
 bool Effect::IsDeletable()

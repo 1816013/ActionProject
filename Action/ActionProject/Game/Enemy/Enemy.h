@@ -3,6 +3,7 @@
 
 class Player;
 class Spawner;
+class Camera;
 class Enemy : public Character
 {
 	friend Spawner;
@@ -19,7 +20,7 @@ protected:
 	virtual Enemy* MakeClone() = 0;
 	virtual void AimPlayer();
 public:
-	Enemy(const std::shared_ptr<Player>& p);
+	Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c);
 	virtual ~Enemy() = default;
 
 	/// <summary>

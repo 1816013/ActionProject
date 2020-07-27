@@ -1,6 +1,6 @@
 #include "Character.h"
 
-Character::Character()
+Character::Character(std::shared_ptr<Camera> camera):camera_(camera)
 {
 }
 

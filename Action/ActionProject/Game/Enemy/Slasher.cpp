@@ -3,13 +3,16 @@
 #include <DxLib.h>
 #include "../Collider.h"
 #include "../Effect.h"
+#include "../../Camera.h"
 
 namespace
 {
     int runH = -1;
     int slashH = -1;
 }
-Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em) : Enemy(p), effectManager_(em)
+Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c) :
+    Enemy(p, c),
+    effectManager_(em)
 {
     updater_ = &Slasher::RunUpdate;
     drawer_ = &Slasher::RunDraw;
@@ -25,7 +28,7 @@ Slasher::~Slasher()
 
 Enemy* Slasher::MakeClone()
 {
-	return new Slasher(player_, effectManager_);
+	return new Slasher(player_, effectManager_, camera_);
 }
 
 void Slasher::RunUpdate()
@@ -58,15 +61,17 @@ void Slasher::SlashUpdate()
 
 void Slasher::RunDraw()
 {
+    auto offset = camera_->ViewOffset();
     DrawRectRotaGraph(
-        pos_.x, pos_.y,(animFrame_ / 5) * 36, 0, 36, 26,
+        pos_.x + offset.x, pos_.y,(animFrame_ / 5) * 36, 0, 36, 26,
         4.0f, 0.0f, runH, true,
         velocity_.x < 0);
 }
 
 void Slasher::SlashDraw()
 {
-    DrawRectRotaGraph(pos_.x, pos_.y,
+    auto offset = camera_->ViewOffset();
+    DrawRectRotaGraph(pos_.x + offset.x, pos_.y,
         (animFrame_ / 5) * 42, 0, 42, 26,
         4.0f, 0.0f, slashH, true,
         velocity_.x < 0);
@@ -96,7 +101,7 @@ void Slasher::OnHit(CollisionInfo& col)
     if (col.collider->GetTag() == tagPlayerAtack)
     {
         // Ž€‚Ê
-        effectManager_->EmitBlow3(pos_, velocity_.x < 0);
+        effectManager_->EmitBlow3(pos_, velocity_.x < 0, camera_);
         isDeletable_ = true;
     }
 }

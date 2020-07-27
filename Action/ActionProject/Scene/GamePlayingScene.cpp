@@ -17,6 +17,7 @@
 #include "../Game/CollisionManager.h"
 #include "../Game/Effect.h"
 #include "../Stage.h"
+#include "../Camera.h"
 
 using namespace std;
 namespace 
@@ -33,21 +34,23 @@ drawer_(&GamePlayingScene::FadeDraw)
 {
 	
 	waitTimer = 0;
+	camera_ = make_shared<Camera>();
 	collisionManager_ = make_shared<CollisionManager>();
 	effectManager_ = make_shared<EffectManager>();
-	bg_ = make_unique<Background>();
+	bg_ = make_unique<Background>(camera_);
 	projectileManager_ = make_unique<ProjectileManager>();
 	player_ = make_shared<Player>(this);
 	player_->SetPosition({ 350, 500 });
+	camera_->SetPlayer(player_);
 	enemyManager_ = make_shared<EnemyManager>();
-	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_), enemyManager_, collisionManager_));
+	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_), enemyManager_, collisionManager_, camera_));
 	
 
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
 	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
 	weaponUIH_[2] = LoadGraph(L"Resource/Image/UI/chain.png");
 
-	stage_ = make_shared<Stage>();
+	stage_ = make_shared<Stage>(camera_);
 	stage_->Load(L"Resource/level/level2.fmf");
 }
 
@@ -64,6 +67,7 @@ void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)
 
 void GamePlayingScene::GamePlayUpdate(const Input& input)
 {
+	camera_->Update();
 	if (input.IsTriggered("OK"))
 	{
 		updater_ = &GamePlayingScene::FadeoutUpdate;
@@ -90,6 +94,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	}
 
 	effectManager_->Update();
+
 }
 
 
@@ -153,6 +158,11 @@ std::shared_ptr<CollisionManager> GamePlayingScene::GetCollisionManager()
 std::shared_ptr<Player>& GamePlayingScene::GetPlayer()
 {
 	return player_;
+}
+
+std::shared_ptr<Camera>& GamePlayingScene::GetCamera()
+{
+	return camera_;
 }
 
 
