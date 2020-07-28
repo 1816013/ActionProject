@@ -23,7 +23,7 @@ public:
 	CircleCollider(std::shared_ptr<Character> owner, const char* tag, const Position2f& p, const float r);
 	bool IsHit(std::shared_ptr<Collider> col)override;
 
-	void Draw()override;
+	void Draw(std::shared_ptr<Camera>c)override;
 
 	const Circle& GetCircle()const;
 

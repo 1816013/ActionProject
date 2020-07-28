@@ -63,11 +63,11 @@ void PauseScene::PauseUpdate(const Input& input)
 	}
 	if (input.IsTriggered("down"))
 	{
-		currentSelectNo_ = (currentSelectNo_ + 1) % menuItems_.size();
+		currentSelectNo_ = (static_cast<size_t>(currentSelectNo_) + 1) % menuItems_.size();
 	}
 	if (input.IsTriggered("up"))
 	{
-		currentSelectNo_ = (currentSelectNo_ - 1 + menuItems_.size()) % menuItems_.size();
+		currentSelectNo_ = (static_cast<size_t>(currentSelectNo_) - 1 + menuItems_.size()) % menuItems_.size();
 	}
 
 	for (auto& m : menuItems_)

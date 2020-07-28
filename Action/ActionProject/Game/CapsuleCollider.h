@@ -10,7 +10,7 @@ public:
 	CapsuleCollider(std::shared_ptr<Character> owner, const Capsule& cap,  const char* tag = "", bool immortal = false);
 
 	bool IsHit(std::shared_ptr<Collider> col)override;
-	void Draw()override;
+	void Draw(std::shared_ptr<Camera>c)override;
 	/// <summary>
 	/// ÀÛ‚ÌÀ•W‚ğ•Ô‚·
 	/// </summary>

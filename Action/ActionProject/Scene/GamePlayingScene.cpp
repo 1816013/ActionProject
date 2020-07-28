@@ -18,6 +18,7 @@
 #include "../Game/Effect.h"
 #include "../Stage.h"
 #include "../Camera.h"
+#include "../Debugger.h"
 
 using namespace std;
 namespace 
@@ -94,7 +95,6 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	}
 
 	effectManager_->Update();
-
 }
 
 
@@ -131,7 +131,7 @@ void GamePlayingScene::NomalDraw()
 	DrawGraph(10, 10, weaponUIH_[player_->CurrentEquipmentNo()], true);
 	DrawBox(10, 10, 74, 74, 0xffffff, false);
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
-	collisionManager_->DebugDraw();
+	collisionManager_->DebugDraw(camera_);
 }
 
 void GamePlayingScene::FadeDraw()

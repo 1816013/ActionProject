@@ -3,6 +3,7 @@
 #include <cassert>
 #include <DxLib.h>
 #include "Character.h"
+#include "../Camera.h"
 
 CapsuleCollider::CapsuleCollider(std::shared_ptr<Character> owner, const char* tag, bool immortal)
 	: Collider(owner, tag, immortal)
@@ -36,14 +37,14 @@ bool CapsuleCollider::IsHit(std::shared_ptr<Collider> col)
 	return false;
 }
 
-void CapsuleCollider::Draw()
+void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 {
+	auto offset = c->ViewOffset();
 	if (capsule_.seg.vec.SQMagnitude() == 0)
 	{
 		return;
 	}
-	Capsule capsule = { {AcutualPosition(), capsule_.seg.vec }, capsule_.radius
-};
+	Capsule capsule = { {AcutualPosition(), capsule_.seg.vec }, capsule_.radius};
 	auto& spos = capsule.seg.start;
 	auto epos = capsule.seg.start + capsule.seg.vec ;
 
@@ -58,9 +59,9 @@ void CapsuleCollider::Draw()
 	auto p2 = epos + v90;	// âEè„
 	auto p3 = epos - v90;	// âEâ∫
 	auto p4 = spos - v90;	// ç∂â∫
-	DrawQuadrangleAA(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y, 0xffffff, false);
+	DrawQuadrangleAA(p1.x + offset.x, p1.y, p2.x + offset.x, p2.y, p3.x + offset.x, p3.y, p4.x + offset.x, p4.y, 0xffffff, false);
 
-	DrawCircle(epos.x, epos.y, capsule.radius, 0xffffff, false);
+	DrawCircle(epos.x + offset.x, epos.y, capsule.radius, 0xffffff, false);
 }
 
 const Vector2f CapsuleCollider::AcutualPosition()

@@ -3,6 +3,7 @@
 #include <memory>
 
 class Collider;
+class Camera;
 /// <summary>
 /// Õ“Ë”»’è‚ğŠÇ—‚·‚é
 /// </summary>
@@ -16,7 +17,7 @@ public:
 	/// </summary>
 	void Update();
 
-	void DebugDraw();
+	void DebugDraw(std::shared_ptr<Camera>c);
 	/// <summary>
 	/// 
 	/// </summary>

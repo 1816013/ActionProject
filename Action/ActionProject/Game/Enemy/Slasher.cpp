@@ -41,7 +41,7 @@ void Slasher::RunUpdate()
     pos_ += velocity_;
     ++frame_;
     animFrame_ = (animFrame_ + 1) % 15;
-    if (fabsf(pos_.x - player_->GetPosition().x) < 50) {
+    if (abs(pos_.x - player_->GetPosition().x) < 50 && frame_ > 60) {
         updater_ = &Slasher::SlashUpdate;
         drawer_ = &Slasher::SlashDraw;
         animFrame_ = 0;
@@ -93,6 +93,11 @@ void Slasher::Update()
 
 void Slasher::Draw()
 {
+    auto rc = camera_->GetViewRange();
+    constexpr int xmargin = 25;
+    if (pos_.x < rc.Left() + xmargin || rc.Right() - xmargin < pos_.x) {
+        return;
+    }
     (this->*drawer_)();
 }
 

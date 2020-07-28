@@ -6,7 +6,7 @@
 constexpr const char* tagPlayerAtack = "pAtk";
 constexpr const char* tagEnemyDamage = "eDmg";
 
-
+class Camera;
 class Character;
 class Collider
 {
@@ -32,7 +32,7 @@ public:
 
 	void Suside();
 
-	virtual void Draw() {};
+	virtual void Draw(std::shared_ptr<Camera>c) {};
 };
 
 struct CollisionInfo

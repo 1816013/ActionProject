@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include <assert.h>
 #include "Character.h"
+#include "../Camera.h"
 
 CircleCollider::CircleCollider(std::shared_ptr<Character> owner, const char* tag)
 	: Collider(owner, tag)
@@ -33,18 +34,18 @@ bool CircleCollider::IsHit(std::shared_ptr<Collider> col)
 	return false;
 }
 
-void CircleCollider::Draw()
+void CircleCollider::Draw(std::shared_ptr<Camera>c)
 {
 #ifdef _DEBUG 
 	if (OwnerIsDead())return;
 	auto& pos = AcutualPosition() ;
-
+	auto offset = c->ViewOffset();
 	uint32_t col = 0xffffff;
 	if (GetTag() == "pAtk") {
 		col = 0xffaaaa;
 	}
 
-	DrawCircle(pos.x, pos.y,circle_.radius, col,0, 2);
+	DrawCircle(pos.x + offset.x, pos.y,circle_.radius, col,0, 2);
 
 	auto i = 0;
 #endif 

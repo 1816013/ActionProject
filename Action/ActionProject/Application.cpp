@@ -4,6 +4,7 @@
 #include "Scene/Scene.h"
 #include "Input.h"
 #include "Geometry.h"
+#include "Debugger.h"
 
 namespace
 {
@@ -35,13 +36,16 @@ bool Application::Initialize()
 void Application::Run()
 {
 	Input input;
+	auto& dInstanse = Debugger::Instance();
 	while (ProcessMessage() == 0 && !CheckHitKey(KEY_INPUT_ESCAPE))
 	{
 		ClsDrawScreen();	
 		
+		dInstanse.Update();
 		input.Update();
 		sceneController_->Update(input);
 		sceneController_->Draw();
+		dInstanse.DisplayPerformance();
 		ScreenFlip();
 		if (isExit_)
 		{

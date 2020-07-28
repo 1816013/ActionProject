@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include <algorithm>
 #include "Character.h"
+#include "../Debugger.h"
 
 namespace
 {
@@ -68,19 +69,21 @@ void CollisionManager::Update()
 	
 }
 
-void CollisionManager::DebugDraw()
+void CollisionManager::DebugDraw(std::shared_ptr<Camera>c)
 {
-	if (!debugDisp_)
+#ifdef _DEBUG
+	if (!Debugger::Instance().IsDebugMode())
 	{
 		return;
 	}
 	for (auto col : colliders_)
 	{
-		col->Draw();
+		col->Draw(c);
 	}
 
 	// 当たり判定情報を出力
 	DrawFormatString(300, 30, 0xffffff, L"コライダー数 = %d", colliders_.size());
+#endif // _DEBUG
 }
 
 void CollisionManager::AddCollider(Collider* collider)

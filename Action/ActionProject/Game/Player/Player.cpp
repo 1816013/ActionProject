@@ -18,7 +18,9 @@ namespace
 	int runCount = 0;
 	
 }
-Player::Player(GamePlayingScene* gs) : Character(gs->GetCamera())
+Player::Player(GamePlayingScene* gs) : 
+	Character(gs->GetCamera()), 
+	jampUpdater_(&Player::FallUpdate)
 {
 	direction_ = Direction::RIGHT;
 	for (int i = 0; i < _countof(_runH); i++)
@@ -68,6 +70,10 @@ Player::Player(GamePlayingScene* gs) : Character(gs->GetCamera())
 				player_.NextEquip();
 			}
 			player_.ExtendAttack(input);
+			if (input.IsTriggered("jump"))
+			{
+				player_.Jump();
+			}
 		}
 	};
 	collisionManager_ =  gs->GetCollisionManager();
@@ -106,6 +112,34 @@ void Player::Move(const Vector2f& v)
 	pos_ += v;
 }
 
+void Player::Jump()
+{
+	gravity_ = 1.0f;
+	velY_ = -25.0f;
+	jampUpdater_ = &Player::RiseUpdate;
+}
+
+void Player::RiseUpdate()
+{
+	velY_ += gravity_;
+	pos_.y += velY_;
+	if (velY_ >= 0.0f)
+	{
+		jampUpdater_ = &Player::FallUpdate;
+	}
+}
+
+void Player::FallUpdate()
+{
+	velY_ += gravity_;
+	pos_.y += velY_;
+	if (500 < pos_.y)
+	{
+		velY_ = 0.0f;
+		pos_.y = 500;
+	}
+}
+
 void Player::NextEquip()
 {
 	currentEquipmentNo_ = (currentEquipmentNo_ + 1) % equipments_.size();
@@ -118,6 +152,7 @@ void Player::Update()
 	{
 		e->Update();
 	}
+	(this->*jampUpdater_)();
 }
 
 void Player::Draw()
@@ -136,11 +171,6 @@ void Player::Draw()
 		DrawRotaGraph(pos_.x + offset.x, pos_.y, 3.0f, 0.0f, _runH[runCount / 5 % _countof(_runH)], true, true);
 	}
 }
-
-//const Position2f Player::Position()const
-//{
-//	return pos_;
-//}
 
 size_t Player::CurrentEquipmentNo() const
 {

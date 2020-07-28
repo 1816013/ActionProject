@@ -15,12 +15,11 @@ namespace
 	InputStateTable_t _inputStateTable;	// 入力格納テーブル
 
 	/// <summary>
-/// 次の入力バッファインデックスを返す
-/// </summary>
+	/// 次の入力バッファインデックスを返す
+	/// </summary>
 	int GetNextIndexBufferIndex()
 	{
 		return  (static_cast<int>(currentInputIndex + 1)) % static_cast<int>(_inputStateTable.size());
-
 	}
 	/// <summary>
 	/// 次の入力情報を返す
@@ -62,6 +61,7 @@ Input::Input()
 	keyPair_.emplace_back(make_pair("right", KEY_INPUT_RIGHT));
 	keyPair_.emplace_back(make_pair("shot", KEY_INPUT_LSHIFT));
 	keyPair_.emplace_back(make_pair("change", KEY_INPUT_C));
+	keyPair_.emplace_back(make_pair("jump", KEY_INPUT_SPACE));
 	//auto& currentTbl = _inputStateTable[currentInputIndex];
 	for (auto& currentTbl : _inputStateTable)
 	{
