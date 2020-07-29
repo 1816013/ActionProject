@@ -46,6 +46,15 @@ struct Vector2D
 		y *= scale;
 	}
 
+	bool operator==(const Vector2D& v)
+	{
+		return x == v.x && y == v.y;
+	}
+	bool operator!=(const Vector2D& v)
+	{
+		return x != v.x || y != v.y;
+	}
+
 	float Magnitude()const
 	{
 		return hypot(x, y);

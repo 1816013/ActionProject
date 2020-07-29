@@ -2,6 +2,7 @@
 #include "../Character.h"
 #include <memory>
 #include <vector>
+#include <array>
 
 // プレイヤークラス
 class GamePlayingScene;
@@ -14,8 +15,32 @@ private:
 	size_t currentEquipmentNo_ = 0;
 	Direction direction_;
 	std::shared_ptr<CollisionManager>collisionManager_;
-	float gravity_ = 0.0f;
-	float velY_ = 0.0f;
+	std::array<Position2f, 41>moveHistory_;
+	size_t currentMoveIndex_ = 0;
+
+	using Updater_t = void(Player::*)();
+	Updater_t updater_;
+
+	using Drawer_t = void(Player::*)(Vector2f, bool);
+
+	Drawer_t drawer_;
+
+	void NomalUpdate();
+
+	void RiseUpdate();
+
+	void FallUpdate();
+
+	void RunDraw(Vector2f offset, bool isRight);
+
+	void RizeDraw(Vector2f offset, bool isRight);
+
+	void FallDraw(Vector2f offset, bool isRight);
+
+	void LoadGraphPlayer(const char* key, int* handle, int size);
+
+	void SetCurrentPosition();
+	const Position2f& GetBackTimePosition(size_t t)const;
 public:
 	Player(GamePlayingScene* g);
 	Player() = default;
@@ -45,6 +70,8 @@ public:
 	/// <param name="v">移動ベクトル</param>
 	void Move(const Vector2f& v);
 
+	void Jump();
+
 	/// <summary>
 	/// 武器変更
 	/// </summary>
@@ -60,18 +87,13 @@ public:
 	/// </summary>
 	void Draw()override;
 
-	void Jump();
-
-	void RiseUpdate();
-
-	void FallUpdate();
-
-	using func_t = void(Player::*)();
-	func_t jampUpdater_;
-	//const Position2f Position()const;
+	
 	size_t CurrentEquipmentNo()const;
 	Direction Direction()const;
 
 	void OnHit(CollisionInfo& c);
+
+	float gravity_ = 0.0f;
+	float velY_ = 0.0f;
 };
 

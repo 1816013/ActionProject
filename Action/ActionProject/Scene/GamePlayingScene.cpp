@@ -41,7 +41,7 @@ drawer_(&GamePlayingScene::FadeDraw)
 	bg_ = make_unique<Background>(camera_);
 	projectileManager_ = make_unique<ProjectileManager>();
 	player_ = make_shared<Player>(this);
-	player_->SetPosition({ 350, 500 });
+	player_->SetPosition({ 350, 450 });
 	camera_->SetPlayer(player_);
 	enemyManager_ = make_shared<EnemyManager>();
 	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_), enemyManager_, collisionManager_, camera_));
