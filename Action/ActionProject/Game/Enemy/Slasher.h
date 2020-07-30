@@ -2,6 +2,7 @@
 #include "Enemy.h"
 
 class EffectManager;
+class Stage;
 class Slasher : public Enemy
 {
 private:
@@ -20,9 +21,10 @@ private:
     Func_t drawer_;
 
     std::shared_ptr<EffectManager>effectManager_;
+    std::shared_ptr<Stage>stage_;
 
 public:
-	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c);
+	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c, std::shared_ptr<Stage>s);
     ~Slasher();
 	void OnDamage(int damage);
 

@@ -51,5 +51,6 @@ public:
 	std::shared_ptr<CollisionManager> GetCollisionManager();
 	std::shared_ptr<Player>& GetPlayer();
 	std::shared_ptr<Camera>& GetCamera();
+	std::shared_ptr<Stage>& GetStage();
 };
 

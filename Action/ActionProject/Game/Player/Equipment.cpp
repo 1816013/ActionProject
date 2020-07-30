@@ -7,6 +7,6 @@ Equipment::Equipment(std::shared_ptr<CollisionManager> cm, std::shared_ptr<Camer
 {
 }
 
-void Equipment::ExtendAttack(const Player& player, const Input& input)
+void Equipment::ExtensionAttack(const Player& player, const Input& input)
 {
 }

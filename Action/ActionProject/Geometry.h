@@ -83,6 +83,8 @@ struct Vector2D
 		auto mag = vec.Magnitude();
 		return Vector2D(x / mag, y / mag);
 	}
+	static const Vector2D<float>ZERO;
+	static const Vector2D<float>NIL;
 };
 
 
@@ -146,6 +148,8 @@ struct Segment
 
 	Segment() :start({ 0, 0 }), vec({ 0, 0 }) {};
 	Segment(Position2f s, Vector2f v) : start(s), vec(v) {};
+
+	Segment(float x, float y, float vx, float vy) : start(x, y), vec(vx, vy) {};
 };
 
 /// <summary>

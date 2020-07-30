@@ -40,19 +40,20 @@ drawer_(&GamePlayingScene::FadeDraw)
 	effectManager_ = make_shared<EffectManager>();
 	bg_ = make_unique<Background>(camera_);
 	projectileManager_ = make_unique<ProjectileManager>();
+	stage_ = make_shared<Stage>(camera_);
+	stage_->Load(L"Resource/level/level2.fmf");
 	player_ = make_shared<Player>(this);
-	player_->SetPosition({ 350, 450 });
+	player_->SetPosition({ 350, 480 });
 	camera_->SetPlayer(player_);
 	enemyManager_ = make_shared<EnemyManager>();
-	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_), enemyManager_, collisionManager_, camera_));
+	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_, stage_), enemyManager_, collisionManager_, camera_));
 	
 
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
 	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
 	weaponUIH_[2] = LoadGraph(L"Resource/Image/UI/chain.png");
 
-	stage_ = make_shared<Stage>(camera_);
-	stage_->Load(L"Resource/level/level2.fmf");
+	
 }
 
 GamePlayingScene::~GamePlayingScene()
@@ -132,6 +133,7 @@ void GamePlayingScene::NomalDraw()
 	DrawBox(10, 10, 74, 74, 0xffffff, false);
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
 	collisionManager_->DebugDraw(camera_);
+	stage_->DebugDraw();
 }
 
 void GamePlayingScene::FadeDraw()
@@ -163,6 +165,11 @@ std::shared_ptr<Player>& GamePlayingScene::GetPlayer()
 std::shared_ptr<Camera>& GamePlayingScene::GetCamera()
 {
 	return camera_;
+}
+
+std::shared_ptr<Stage>& GamePlayingScene::GetStage()
+{
+	return stage_;
 }
 
 

@@ -4,15 +4,17 @@
 #include "../Collider.h"
 #include "../Effect.h"
 #include "../../Camera.h"
+#include "../../Stage.h"
 
 namespace
 {
     int runH = -1;
     int slashH = -1;
 }
-Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c) :
+Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c,std::shared_ptr<Stage>s) :
     Enemy(p, c),
-    effectManager_(em)
+    effectManager_(em),
+    stage_(s)
 {
     updater_ = &Slasher::RunUpdate;
     drawer_ = &Slasher::RunDraw;
@@ -28,7 +30,7 @@ Slasher::~Slasher()
 
 Enemy* Slasher::MakeClone()
 {
-	return new Slasher(player_, effectManager_, camera_);
+	return new Slasher(player_, effectManager_, camera_, stage_);
 }
 
 void Slasher::RunUpdate()
@@ -47,6 +49,8 @@ void Slasher::RunUpdate()
         animFrame_ = 0;
         frame_ = 0;
     }
+    auto groundY = stage_->GetGroundY(pos_);
+    pos_.y = groundY;
 }
 
 void Slasher::SlashUpdate()
@@ -62,8 +66,9 @@ void Slasher::SlashUpdate()
 void Slasher::RunDraw()
 {
     auto offset = camera_->ViewOffset();
-    DrawRectRotaGraph(
-        pos_.x + offset.x, pos_.y,(animFrame_ / 5) * 36, 0, 36, 26,
+    DrawRectRotaGraph2(
+        pos_.x + offset.x, pos_.y,(animFrame_ / 5) * 36,0, 36, 26,
+        18, 25,
         4.0f, 0.0f, runH, true,
         velocity_.x < 0);
 }
@@ -71,8 +76,9 @@ void Slasher::RunDraw()
 void Slasher::SlashDraw()
 {
     auto offset = camera_->ViewOffset();
-    DrawRectRotaGraph(pos_.x + offset.x, pos_.y,
+    DrawRectRotaGraph2(pos_.x + offset.x, pos_.y,
         (animFrame_ / 5) * 42, 0, 42, 26,
+        18, 25,
         4.0f, 0.0f, slashH, true,
         velocity_.x < 0);
 }

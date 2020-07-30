@@ -2,11 +2,13 @@
 #include <tchar.h>
 #include <vector>
 #include <memory>
+#include "Geometry.h"
 
 enum class LayerType
 {
 	Base,
-	Flont
+	Flont,
+	Collision
 };
 struct StageHeader
 {
@@ -31,12 +33,18 @@ private:
 	std::vector<LayerData_t>stageData_;
 	StageHeader header_;
 	std::shared_ptr<Camera>camera_;
-	float scale_;
+	
+	std::vector<Segment>terrainSegment_;
+
+	void CreateSegment(Position2f& lastPos, const Position2f& pos);
 public:
 	Stage(std::shared_ptr<Camera>c);
 	void Load(const TCHAR* path);
 	void Update();
 	void Draw(const size_t layerNo);
+	void DebugDraw();
+
+	float GetGroundY(const Position2f& pos)const;
 };
 
 

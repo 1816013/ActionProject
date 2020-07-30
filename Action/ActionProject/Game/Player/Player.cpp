@@ -10,6 +10,7 @@
 #include "ShurikenEquip.h"
 #include "ChainEquip.h"
 #include "../../Camera.h"
+#include "../../Stage.h"
 
 using namespace std;
 
@@ -20,10 +21,11 @@ namespace
 	int fallH_[2] = {};
 	int shadowMaskH = -1;
 	int frame_ = 0;
-	constexpr int groundLine = 500;
+	//constexpr int groundLine = 480;
 	constexpr float maxGraviry = 1.0f;
 	constexpr float jampPower = 25.0f;
 	constexpr float jampGravityRate = 10.0f;
+	constexpr float epsilon = 0.01f;
 	Position2f lastPos_;
 }
 
@@ -32,6 +34,8 @@ Player::Player(GamePlayingScene* gs) :
 	updater_(&Player::NomalUpdate),
 	drawer_(&Player::RunDraw)
 {
+	gs_ = gs;
+	gravity_ = maxGraviry;
 	direction_ = Direction::RIGHT;
 	LoadGraphPlayer("run", runH_, _countof(runH_));
 	LoadGraphPlayer("jump", jumpH_, _countof(jumpH_ ));
@@ -61,21 +65,25 @@ Player::Player(GamePlayingScene* gs) :
 			if (input.IsPressed("up"))
 			{
 			//	player_.Move({ 0, -5 });
+				player_.ExtendAttack(input);
 			}
 			if (input.IsPressed("down"))
 			{
 			//	player_.Move({ 0, 5 });
+				player_.ExtendAttack(input);
 			}
 			
 			if (input.IsPressed("right"))
 			{
 				player_.direction_ = Direction::RIGHT;
 				player_.Move({ 5, 0 });
+				player_.ExtendAttack(input);
 			}
 			if (input.IsPressed("left"))
 			{
 				player_.direction_ = Direction::LEFT;
 				player_.Move({ -5, 0 });
+				player_.ExtendAttack(input);
 			}
 			if (input.IsTriggered("shot"))
 			{
@@ -85,7 +93,7 @@ Player::Player(GamePlayingScene* gs) :
 			{
 				player_.NextEquip();
 			}
-			player_.ExtendAttack(input);
+			
 			if (input.IsTriggered("jump"))
 			{
 				player_.Jump();
@@ -107,6 +115,7 @@ Player::Player(GamePlayingScene* gs) :
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), collisionManager_, camera_));
+	
 }
 
 
@@ -125,7 +134,7 @@ void Player::Attack(const Input& input)
 
 void Player::ExtendAttack(const Input& input)
 {
-	equipments_[currentEquipmentNo_]->ExtendAttack(*this, input);
+	equipments_[currentEquipmentNo_]->ExtensionAttack(*this, input);
 }
 
 void Player::SetPosition(const Position2f& pos )
@@ -183,8 +192,16 @@ void Player::Update()
 
 void Player::NomalUpdate()
 {
-
-
+	auto groundLine = gs_->GetStage()->GetGroundY(pos_);
+	if (groundLine < pos_.y)
+	{
+		pos_.y = groundLine;
+	}
+	if (groundLine > pos_.y)
+	{
+		updater_ = &Player::FallUpdate;
+		drawer_ = &Player::FallDraw;
+	}
 }
 
 void Player::RiseUpdate()
@@ -202,6 +219,7 @@ void Player::FallUpdate()
 {
 	velY_ += gravity_;
 	pos_.y += velY_;
+	auto groundLine = gs_->GetStage()->GetGroundY(pos_);
 	if (groundLine < pos_.y)
 	{
 		velY_ = 0.0f;
@@ -238,14 +256,17 @@ void Player::Draw()
 	auto rc = camera_->GetViewRange();
 	CreateMaskScreen();
 	//DrawFillMask(rc.Left(), rc.Top(), rc.Right(),rc.Bottom(), shadowMaskH);
-
+	auto idx = frame_ / 5 % _countof(runH_);
+	auto gH = runH_[idx];
+	int w = 0, h = 0;
+	GetGraphSize(gH, &w, &h);
 	auto& fpos = GetBackTimePosition(20);	
 	DrawFillMask(fpos.x + offset.x - 100, fpos.y -50, fpos.x + offset.x + 100, fpos.y + 50, shadowMaskH);
-	DrawRotaGraph(fpos.x + offset.x, fpos.y, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
+	DrawRotaGraph2(fpos.x + offset.x, fpos.y, w / 2, h - 1, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 
 	auto& spos = GetBackTimePosition(40);
 	DrawFillMask(spos.x + offset.x - 100, spos.y - 50, spos.x + offset.x + 100, spos.y + 50, shadowMaskH);
-	DrawRotaGraph(spos.x + offset.x, spos.y, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
+	DrawRotaGraph2(spos.x + offset.x, spos.y,w / 2, h - 1, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 	
 	DeleteMaskScreen();
 	(this->*drawer_)(offset, isRight);
@@ -253,17 +274,29 @@ void Player::Draw()
 
 void Player::RunDraw(Vector2f offset, bool isRight)
 {	
-	DrawRotaGraph(pos_.x + offset.x, pos_.y, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
+	auto idx = frame_ / 5 % _countof(runH_);
+	auto gH = runH_[idx];
+	int w = 0, h = 0;
+	GetGraphSize(gH, &w, &h);
+	DrawRotaGraph2(pos_.x + offset.x, pos_.y,w / 2, h - 1, 3.0f, 0.0f, runH_[idx], true, !isRight);
 }
 
 void Player::RizeDraw(Vector2f offset, bool isRight)
 {
-	DrawRotaGraph(pos_.x + offset.x, pos_.y, 3.0f, 0.0f, jumpH_[min(frame_ / 10, _countof(jumpH_) - 1)], true, !isRight);
+	auto idx = min(frame_ / 10, _countof(jumpH_) - 1);
+	auto gH = jumpH_[idx];
+	int w = 0, h = 0;
+	GetGraphSize(gH, &w, &h);
+	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1,  3.0f, 0.0f, jumpH_[idx], true, !isRight);
 }
 
 void Player::FallDraw(Vector2f offset, bool isRight)
 {
-	DrawRotaGraph(pos_.x + offset.x, pos_.y, 3.0f, 0.0f, fallH_[min(frame_ / 10, _countof(fallH_) - 1)], true, !isRight);
+	auto idx = frame_ / 5 % _countof(fallH_);
+	auto gH = fallH_[idx];
+	int w = 0, h = 0;
+	GetGraphSize(gH, &w, &h);
+	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1, 3.0f, 0.0f, fallH_[idx], true, !isRight);
 }
 
 size_t Player::CurrentEquipmentNo() const
