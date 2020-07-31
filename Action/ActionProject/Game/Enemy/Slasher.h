@@ -14,6 +14,7 @@ private:
 
     void RunUpdate();
     void SlashUpdate();
+    void JumpUpdate();
     Func_t updater_;
 
     void RunDraw();

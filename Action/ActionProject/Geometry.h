@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <cassert>
 
 template<typename T>
 struct Vector2D
@@ -48,11 +49,14 @@ struct Vector2D
 
 	bool operator==(const Vector2D& v)
 	{
+		//assert(!(isnan(v.x) && isnan(v.y)));
 		return x == v.x && y == v.y;
 	}
+
 	bool operator!=(const Vector2D& v)
 	{
-		return x != v.x || y != v.y;
+		//assert(!(isnan(v.x) && isnan(v.y)));
+		return !(x == v.x && y == v.y);
 	}
 
 	float Magnitude()const
@@ -73,16 +77,24 @@ struct Vector2D
 	{
 		Vector2D vec(x, y);
 		auto mag = vec.Magnitude();
+		assert(mag != 0.0f);
 		x /= mag;
 		y /= mag;
 	}
 
-	Vector2D Nomarized()
+	const Vector2D Nomarized() const
 	{
-		Vector2D vec(x, y);
+		Vector2D vec(x, y);		
 		auto mag = vec.Magnitude();
+		assert(mag != 0.0f);
 		return Vector2D(x / mag, y / mag);
 	}
+
+	bool IsNil()const
+	{
+		return isnan(x) || isnan(y);
+	}
+
 	static const Vector2D<float>ZERO;
 	static const Vector2D<float>NIL;
 };
@@ -94,6 +106,8 @@ using Position2 = Vector2;
 using Position2f = Vector2f;
 
 float Dot(const Vector2f& va, const Vector2f& vb);
+
+float Closs(const Vector2f& va, const Vector2f& vb);
 
 float Clamp(float val, float minVal = 0.0f, float maxVal = 1);
 
@@ -148,8 +162,12 @@ struct Segment
 
 	Segment() :start({ 0, 0 }), vec({ 0, 0 }) {};
 	Segment(Position2f s, Vector2f v) : start(s), vec(v) {};
-
 	Segment(float x, float y, float vx, float vy) : start(x, y), vec(vx, vy) {};
+
+	static const Segment ZERO;
+	static const Segment NIL;
+	bool IsNil();
+	Position2f End();
 };
 
 /// <summary>

@@ -2,6 +2,7 @@
 #include <tchar.h>
 #include <vector>
 #include <memory>
+#include <array>
 #include "Geometry.h"
 
 enum class LayerType
@@ -45,6 +46,16 @@ public:
 	void DebugDraw();
 
 	float GetGroundY(const Position2f& pos)const;
+	
+	/// <summary>
+	/// •Ç‚Ö‚Ì‚ß‚è‚İ—Ê‚ğ•Ô‚·
+	/// </summary>
+	/// <param name="pos">’†SÀ•W</param>
+	/// <param name="r">”¼Œa</param>
+	/// <returns>‚ß‚è‚İ—Ê</returns>
+	Vector2f GetOverlapWall(const Position2f& pos, float r)const;
+
+	std::array<Segment, 3>GetThreeSegment(const Position2f& pos)const;
 };
 
 

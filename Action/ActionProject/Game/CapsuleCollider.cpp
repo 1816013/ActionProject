@@ -40,10 +40,7 @@ bool CapsuleCollider::IsHit(std::shared_ptr<Collider> col)
 void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 {
 	auto offset = c->ViewOffset();
-	if (capsule_.seg.vec.SQMagnitude() == 0)
-	{
-		return;
-	}
+	if (capsule_.seg.vec.SQMagnitude() == 0)return;
 	Capsule capsule = { {AcutualPosition(), capsule_.seg.vec }, capsule_.radius};
 	auto& spos = capsule.seg.start;
 	auto epos = capsule.seg.start + capsule.seg.vec ;

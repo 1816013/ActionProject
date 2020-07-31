@@ -1,6 +1,7 @@
 #include "Slasher.h"
 #include "../Player/Player.h"
 #include <DxLib.h>
+#include <cassert>
 #include "../Collider.h"
 #include "../Effect.h"
 #include "../../Camera.h"
@@ -10,6 +11,7 @@ namespace
 {
     int runH = -1;
     int slashH = -1;
+    constexpr float narakuY = 1000.0f;
 }
 Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c,std::shared_ptr<Stage>s) :
     Enemy(p, c),
@@ -49,8 +51,38 @@ void Slasher::RunUpdate()
         animFrame_ = 0;
         frame_ = 0;
     }
-    auto groundY = stage_->GetGroundY(pos_);
-    pos_.y = groundY;
+    //auto groundY = stage_->GetGroundY(pos_);
+    auto seg3 = stage_->GetThreeSegment(pos_);
+    if (seg3[1].IsNil())
+    {
+        pos_.y = narakuY;
+    }
+    else
+    {
+        assert(seg3[1].vec.x > 0.0f);
+        auto yVariation = seg3[1].vec.y / seg3[1].vec.x;
+        pos_.y = seg3[1].start.y + yVariation * (pos_.x - seg3[1].start.x);      
+    }
+    //ƒWƒƒƒ“ƒv”»’f 
+    if (velocity_.x > 0) {
+        if (seg3[2].IsNil()) {
+            auto diff = seg3[1].End().x - pos_.x;
+            if (0 < diff && diff <= fabsf(velocity_.x)) {
+                velocity_.y = -15.0f;
+                updater_ = &Slasher::JumpUpdate;
+            }
+        }
+    }
+    else {
+        if (seg3[0].IsNil()) {
+            auto diff = pos_.x - seg3[1].start.x;
+            if (0 < diff && diff <= fabsf(velocity_.x)) {
+                velocity_.y = -15.0f;
+                updater_ = &Slasher::JumpUpdate;
+            }
+        }
+    }
+   
 }
 
 void Slasher::SlashUpdate()
@@ -60,6 +92,18 @@ void Slasher::SlashUpdate()
         frame_ = 1;
         updater_ = &Slasher::RunUpdate;
         drawer_ = &Slasher::RunDraw;
+    }
+}
+
+void Slasher::JumpUpdate()
+{
+    velocity_.y += 0.75f;
+    pos_ += velocity_;
+    auto groundy = stage_->GetGroundY(pos_);
+    if (groundy < pos_.y) {
+        pos_.y = groundy;
+        updater_ = &Slasher::RunUpdate;
+        frame_ = 0;
     }
 }
 

@@ -11,6 +11,7 @@ namespace
 {
 	int chainH = -1;
 	bool extensionF = false;
+	Direction retDir;
 }
 void ChainEquip::NomalUpdate()
 {
@@ -38,20 +39,26 @@ void ChainEquip::NomalUpdate()
 }
 void ChainEquip::ExtensionUpdate()
 {
-	if (++extensionFrame_ < 21)
+	if (++extensionFrame_ <= 20)
 	{	
-		angle += variationAngle / 20.0f;
+		auto variation = variationAngle;
+		if (fabsf(variation) > DX_PI)
+		{
+			variation = (fabsf(variation) - DX_PI * 2) * -1.0f;
+		}
+		//retDir
+		angle += variation / 20.0f;
 	}
 	else
 	{
+		frame_ = 40 - frame_;
 		updater_ = &ChainEquip::NomalUpdate;
 		extensionFrame_ = 0;
 	}
 	auto& vec = capsuleCollider_->GetCapsule().seg.vec;
 	int f = abs((frame_ + 20) % 40 - 20);
 	float w = (f * 400) / 20;
-	auto radian = angle * 180 / DX_PI;
-	vec = Vector2f(cos(radian), sin(radian)) * w;
+	vec = Vector2f(cos(angle), sin(angle)) * w;
 }
 ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm ,std::shared_ptr<Camera> c):
 	player_(p),
@@ -70,6 +77,7 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 void ChainEquip::Attack(const Player& player, const Input& input)
 {
 	if (frame_ >= 0)return;
+	
 	direction_ = {};
 	if (input.IsPressed("left"))
 	{
@@ -112,7 +120,8 @@ void ChainEquip::Attack(const Player& player, const Input& input)
 }
 void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 {
-	if (frame_ < 10 || extensionF)return;
+	if (frame_ < 10  || extensionF)return;
+	auto oldDir = direction_;
 	direction_ = {};
 	if (input.IsPressed("left"))
 	{
@@ -143,9 +152,11 @@ void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 		}
 	}
 	direction_.Nomarize();
+	if (direction_ == oldDir)return;
 	variationAngle = atan2f(direction_.y, direction_.x);
 	variationAngle -= angle;
 	updater_ = &ChainEquip::ExtensionUpdate;
+	retDir = player.Direction();
 	extensionF = true;
 }
 void ChainEquip::Update()

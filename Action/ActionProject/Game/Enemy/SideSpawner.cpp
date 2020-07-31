@@ -30,6 +30,6 @@ void SideSpawner::Update()
 		}
 		fromRight = !fromRight;
 		enemyManager_->AddEnemy(enemy);
-		collisionManeger_->AddCollider(new CircleCollider(enemyManager_->Enemies().back(), tagEnemyDamage, Circle({ 0, 0 }, 50)));
+		collisionManeger_->AddCollider(new CircleCollider(enemyManager_->Enemies().back(), tagEnemyDamage, Circle({ -18, -25 }, 50)));
 	}
 }

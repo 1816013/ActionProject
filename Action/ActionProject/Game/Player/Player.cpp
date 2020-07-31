@@ -147,6 +147,8 @@ void Player::SetPosition(const Position2f& pos )
 void Player::Move(const Vector2f& v)
 {
 	pos_ += v;
+	auto vec = gs_->GetStage()->GetOverlapWall(pos_, 50);
+	pos_ += vec;
 }
 
 void Player::Jump()
