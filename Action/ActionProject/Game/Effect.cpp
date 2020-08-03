@@ -1,10 +1,14 @@
 #include "Effect.h"
 #include <DxLib.h>
-#include "../Camera.h"
+#include "Camera.h"
 
 namespace
 {
 	int blowH = -1;
+	constexpr int random_min = -10;
+	constexpr int random_max = 10;
+	constexpr int effect_blow_x = 32;
+	constexpr int effect_blow_y = 32;
 }
 
 void EffectManager::EmitBlood(const Position2f& p, bool isTurn, std::shared_ptr<Camera>c)
@@ -14,7 +18,7 @@ void EffectManager::EmitBlood(const Position2f& p, bool isTurn, std::shared_ptr<
 
 void EffectManager::EmitBlow3(const Position2f& p, bool isTurn, std::shared_ptr<Camera>c)
 {
-	std::uniform_int_distribution<int> dst(-10, 10);
+	std::uniform_int_distribution<int> dst(random_min, random_max);
 	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c));
 	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c, 5));
 	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c, 10));
@@ -80,7 +84,11 @@ void Blow::Draw()
 	if (delay_ < frame_)
 	{
 		auto offset = camera_->ViewOffset();
-		DrawRectRotaGraph(pos_.x + offset.x, pos_.y, ((frame_ / 3)) * 32, 0, 32, 32, 2.0f, 0.0f, blowH, true, isTurn_);
+		DrawRectRotaGraph(pos_.x + offset.x, pos_.y,
+			((frame_ / 3)) * effect_blow_x, 0,
+			effect_blow_x, effect_blow_y, 
+			2.0f,0.0f,
+			blowH, true, isTurn_);
 	}
 }
 

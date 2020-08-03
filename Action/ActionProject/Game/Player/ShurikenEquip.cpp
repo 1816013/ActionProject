@@ -1,11 +1,17 @@
 #include "ShurikenEquip.h"
 #include "../../Geometry.h"
-#include "../../Input.h"
+#include "../../System/Input.h"
 #include "ProjectileManager.h"
 #include "Player.h"
 #include "ShurikenShot.h"
-#include "../CollisionManager.h"
-#include "../CircleCollider.h"
+#include "../Collision/CollisionManager.h"
+#include "../Collision/CircleCollider.h"
+
+namespace
+{
+	constexpr int shuriken_speed = 15;
+}
+
 
 ShurikenEquip::ShurikenEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c)
 	: pm_(pm), Equipment(cm, c)
@@ -43,7 +49,7 @@ void ShurikenEquip::Attack(const Player& player, const Input& input)
 		}
 	}
 	vel.Nomarize();
-	vel *= 15;
+	vel *= shuriken_speed;
 	pm_.AddProjectile(new ShurikenShot(player.GetPosition(), vel, camera_));
 	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), tagPlayerAtack, Circle{ {0, 0}, 10 }));
 }

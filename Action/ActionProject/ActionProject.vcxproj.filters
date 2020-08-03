@@ -27,12 +27,15 @@
       <UniqueIdentifier>{f0caeef0-59d2-43c0-9d13-b0f02028cda9}</UniqueIdentifier>
       <Extensions>*Scene*.cpp</Extensions>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Collision">
+      <UniqueIdentifier>{d545ec71-b8e5-49d3-8df5-4d2693b0badd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Collision">
+      <UniqueIdentifier>{e41fe00e-f82e-40aa-9eee-3d6277c7dac9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneController.cpp">
@@ -52,12 +55,6 @@
     </ClCompile>
     <ClCompile Include="Scene\GameOver.cpp">
       <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\PauseScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
@@ -113,35 +110,41 @@
     <ClCompile Include="Game\Character.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Collider.cpp">
+    <ClCompile Include="Game\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\CircleCollider.cpp">
+    <ClCompile Include="Game\Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\AABBCollider.cpp">
+    <ClCompile Include="Debug\Debugger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\CollisionManager.cpp">
+    <ClCompile Include="Game\Collision\AABBCollider.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CapsuleCollider.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CircleCollider.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\Collider.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Application.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\CapsuleCollider.cpp">
+    <ClCompile Include="System\Input.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Debugger.cpp">
+    <ClCompile Include="Geometry.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneController.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
@@ -159,12 +162,6 @@
     </ClInclude>
     <ClInclude Include="Scene\GamePlayingScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Scene\PauseScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
@@ -220,28 +217,37 @@
     <ClInclude Include="Game\Character.h">
       <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Collider.h">
+    <ClInclude Include="Game\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\CircleCollider.h">
+    <ClInclude Include="Game\Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\AABBCollider.h">
+    <ClInclude Include="Debug\Debugger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\CollisionManager.h">
+    <ClInclude Include="Game\Collision\AABBCollider.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CapsuleCollider.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CircleCollider.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\Collider.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision\CollisionManager.h">
+      <Filter>ヘッダー ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Application.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\CapsuleCollider.h">
+    <ClInclude Include="System\Input.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Debugger.h">
+    <ClInclude Include="Geometry.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

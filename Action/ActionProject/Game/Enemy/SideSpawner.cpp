@@ -1,9 +1,9 @@
 #include "SideSpawner.h"
 #include "EnemyManager.h"
 #include "Enemy.h"
-#include "../CollisionManager.h"
-#include "../CircleCollider.h"
-#include "../../Camera.h"
+#include "../Collision/CollisionManager.h"
+#include "../Collision/CircleCollider.h"
+#include "../Camera.h"
 
 SideSpawner::SideSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager>& em, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera>c)
 	: Spawner(pos, prototype, em, c), collisionManeger_(cm)

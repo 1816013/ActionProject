@@ -2,10 +2,10 @@
 #include "../Player/Player.h"
 #include <DxLib.h>
 #include <cassert>
-#include "../Collider.h"
+#include "../Collision/Collider.h"
 #include "../Effect.h"
-#include "../../Camera.h"
-#include "../../Stage.h"
+#include "../Camera.h"
+#include "../Stage.h"
 
 namespace
 {
@@ -51,8 +51,8 @@ void Slasher::RunUpdate()
         animFrame_ = 0;
         frame_ = 0;
     }
-    //auto groundY = stage_->GetGroundY(pos_);
     auto seg3 = stage_->GetThreeSegment(pos_);
+    // 床判定（床があれば床まで座標を上げる）
     if (seg3[1].IsNil())
     {
         pos_.y = narakuY;
@@ -65,7 +65,7 @@ void Slasher::RunUpdate()
     }
     //ジャンプ判断 
     if (velocity_.x > 0) {
-        if (seg3[2].IsNil()) {
+        if (seg3[2].IsNil() || seg3[2].vec.x == 0) {
             auto diff = seg3[1].End().x - pos_.x;
             if (0 < diff && diff <= fabsf(velocity_.x)) {
                 velocity_.y = -15.0f;
@@ -74,7 +74,7 @@ void Slasher::RunUpdate()
         }
     }
     else {
-        if (seg3[0].IsNil()) {
+        if (seg3[0].IsNil() || seg3[0].vec.x == 0) {
             auto diff = pos_.x - seg3[1].start.x;
             if (0 < diff && diff <= fabsf(velocity_.x)) {
                 velocity_.y = -15.0f;
@@ -83,6 +83,18 @@ void Slasher::RunUpdate()
         }
     }
    
+}
+
+void Slasher::FallUpdate()
+{
+    velocity_.y += 0.75f;
+    pos_ += velocity_;
+    auto groundy = stage_->GetGroundY(pos_);
+    if (groundy < pos_.y) {
+        pos_.y = groundy;
+        updater_ = &Slasher::RunUpdate;
+        frame_ = 0;
+    }
 }
 
 void Slasher::SlashUpdate()
@@ -99,10 +111,8 @@ void Slasher::JumpUpdate()
 {
     velocity_.y += 0.75f;
     pos_ += velocity_;
-    auto groundy = stage_->GetGroundY(pos_);
-    if (groundy < pos_.y) {
-        pos_.y = groundy;
-        updater_ = &Slasher::RunUpdate;
+    if (velocity_.y <= 0.0f) {
+        updater_ = &Slasher::FallUpdate;
         frame_ = 0;
     }
 }

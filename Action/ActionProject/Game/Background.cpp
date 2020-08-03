@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <iomanip>
 #include "../Geometry.h"
-#include "../Camera.h"
+#include "Camera.h"
 
 using namespace std;
 namespace
@@ -58,10 +58,7 @@ void Background::Draw()
 		auto offset = camera_->ViewOffset();
 		int scroll = frame_ / 2 * (i + 1) % rect.size.w;
 		auto cameraScroll = offset.x / 10 * ((i + 1) % rect.size.w);
-		//DrawRectExtendGraph(rect.Left(), rect.Top(), rect.Right(), rect.Bottom(), frame_, 0, rect.size.w, rect.size.h, h, true);
 		DrawExtendGraph((int)cameraScroll % rect.size.w, 0, rect.size.w + (int)cameraScroll % rect.size.w, rect.size.h, bgH_[i], true);
-
-		//DrawRectExtendGraph(rect.Left(), rect.Top(), rect.Right(), rect.Bottom(), rect.size.w + frame_, 0, rect.size.w, rect.size.h, h, true);
 		DrawExtendGraph(rect.size.w + (int)cameraScroll % rect.size.w, 0, rect.size.w * 2 + (int)cameraScroll % rect.size.w, rect.size.h, bgH_[i], true);
 	}
 }

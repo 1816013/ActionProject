@@ -2,16 +2,20 @@
 #include <DxLib.h>
 #include <cmath>
 #include "Player.h"
-#include "../../Input.h"
-#include "../CollisionManager.h"
-#include "../CapsuleCollider.h"
-#include "../../Camera.h"
+#include "../../System/Input.h"
+#include "../Collision/CollisionManager.h"
+#include "../Collision/CapsuleCollider.h"
+#include "../Camera.h"
 
 namespace
 {
 	int chainH = -1;
 	bool extensionF = false;
 	Direction retDir;
+
+	constexpr int attack_frame = 40;
+	constexpr int chain_length = 400;
+	constexpr int chain_y = 48;
 }
 void ChainEquip::NomalUpdate()
 {
@@ -26,38 +30,37 @@ void ChainEquip::NomalUpdate()
 	if (frame_ >= 0)
 	{
 		++frame_;
-		if (frame_ > 40)
+		if (frame_ > attack_frame)
 		{
 			frame_ = -1;
 			extensionF = false;
 		}
 		auto& vec = capsuleCollider_->GetCapsule().seg.vec;
-		int f = abs((frame_ + 20) % 40 - 20);
-		float w = (f * 400) / 20;
+		int f = abs((frame_ + (attack_frame / 2)) % attack_frame - (attack_frame / 2));
+		float w = (f * chain_length) / (attack_frame / 2);
 		vec = direction_ * w;
 	}
 }
 void ChainEquip::ExtensionUpdate()
 {
-	if (++extensionFrame_ <= 20)
+	if (++extensionFrame_ <= attack_frame / 2)
 	{	
 		auto variation = variationAngle;
 		if (fabsf(variation) > DX_PI)
 		{
 			variation = (fabsf(variation) - DX_PI * 2) * -1.0f;
 		}
-		//retDir
-		angle += variation / 20.0f;
+		angle += variation / (attack_frame / 2);
 	}
 	else
 	{
-		frame_ = 40 - frame_;
+		frame_ = attack_frame - frame_;
 		updater_ = &ChainEquip::NomalUpdate;
 		extensionFrame_ = 0;
 	}
 	auto& vec = capsuleCollider_->GetCapsule().seg.vec;
-	int f = abs((frame_ + 20) % 40 - 20);
-	float w = (f * 400) / 20;
+	int f = abs((frame_ + (attack_frame / 2)) % attack_frame - (attack_frame / 2));
+	float w = (f * chain_length) / (attack_frame / 2);
 	vec = Vector2f(cos(angle), sin(angle)) * w;
 }
 ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm ,std::shared_ptr<Camera> c):
@@ -71,7 +74,6 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 	{
 		chainH = LoadGraph(L"Resource/Image/Player/chainsickle.png");
 	}
-	
 }
 
 void ChainEquip::Attack(const Player& player, const Input& input)
@@ -79,35 +81,7 @@ void ChainEquip::Attack(const Player& player, const Input& input)
 	if (frame_ >= 0)return;
 	
 	direction_ = {};
-	if (input.IsPressed("left"))
-	{
-		direction_ += {-1.0f, 0.0f};
-	}
-	if (input.IsPressed("right"))
-	{
-		direction_ += {1.0f, 0.0f};
-	}
-	if (input.IsPressed("up"))
-	{
-		direction_ += {0.0f, -1.0f};
-	}
-	if (input.IsPressed("down"))
-	{
-		direction_ += {0.0f, 1.0f};
-	}
-	// ‰½‚à‰Ÿ‚µ‚Ä‚¢‚È‚¢‚Æ‚«
-	if (direction_.x == 0.0f && direction_.y == 0.0f)
-	{
-		if (player.Direction() == Direction::RIGHT)
-		{
-			direction_ = { 1.0, 0.0f };
-		}
-		if (player.Direction() == Direction::LEFT)
-		{
-			direction_ = { -1.0, 0.0f };
-		}
-	}
-	direction_.Nomarize();
+	SetDirection(input, player);
 	angle = atan2f(direction_.y, direction_.x);
 	
 	if (capsuleCollider_ == nullptr)
@@ -122,6 +96,17 @@ void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 {
 	if (frame_ < 10  || extensionF)return;
 	auto oldDir = direction_;
+	SetDirection(input, player);
+	if (direction_ == oldDir)return;
+	variationAngle = atan2f(direction_.y, direction_.x);
+	variationAngle -= angle;
+	updater_ = &ChainEquip::ExtensionUpdate;
+	retDir = player.Direction();
+	extensionF = true;
+}
+
+void ChainEquip::SetDirection(const Input& input, const Player& player)
+{
 	direction_ = {};
 	if (input.IsPressed("left"))
 	{
@@ -152,12 +137,6 @@ void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 		}
 	}
 	direction_.Nomarize();
-	if (direction_ == oldDir)return;
-	variationAngle = atan2f(direction_.y, direction_.x);
-	variationAngle -= angle;
-	updater_ = &ChainEquip::ExtensionUpdate;
-	retDir = player.Direction();
-	extensionF = true;
 }
 void ChainEquip::Update()
 {
@@ -170,10 +149,8 @@ void ChainEquip::Draw()
 	if (frame_ >= 0)
 	{
 		auto offset = camera_->ViewOffset();
-		//angle = atan2f(direction_.y, direction_.x);
-		int f = abs((frame_ + 20) % 40 - 20);
-		int w = (f * 400) / 20;
-		//DrawRectGraph(pos.x, pos.y, 400 - w, 0, w, 48, chainH, true);
-		DrawRectRotaGraph2(pos.x + offset.x, pos.y, 400 - w, 0, w, 48, 0, 24,  1.0f, angle, chainH, true);
+		int f = abs((frame_ + (attack_frame / 2)) % attack_frame - (attack_frame / 2));
+		int w = (f * chain_length) / (attack_frame / 2);
+		DrawRectRotaGraph2(pos.x + offset.x, pos.y, chain_length - w, 0, w, chain_y, 0, chain_y / 2,  1.0f, angle, chainH, true);
 	}
 }

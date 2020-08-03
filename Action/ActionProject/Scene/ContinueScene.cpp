@@ -2,11 +2,14 @@
 #include <DxLib.h>
 #include "SceneController.h"
 #include "TitleScene.h"
-#include "../Input.h"
+#include "../System/Input.h"
+#include "../System/Application.h"
+#include "../Geometry.h"
 
 namespace
 {
 	constexpr uint32_t FadeInterval = 45;
+	constexpr int brend_max = 45;
 	unsigned int waitTimer = 0;
 }
 
@@ -52,9 +55,10 @@ void ContinueScene::NomalDraw()
 void ContinueScene::FadeDraw()
 {
 	NomalDraw();
-	auto blendParam = static_cast<int>(255 * static_cast<float>(FadeInterval - waitTimer) / FadeInterval);
+	auto blendParam = static_cast<int>(brend_max * static_cast<float>(FadeInterval - waitTimer) / FadeInterval);
 	SetDrawBlendMode(DX_BLENDMODE_MULA, blendParam);
-	DrawBox(0, 0, 800, 600, 0x000000, true);
+	auto scSize = Application::Instance().GetViewport().GetSize();
+	DrawBox(0, 0, scSize.w, scSize.h, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 }

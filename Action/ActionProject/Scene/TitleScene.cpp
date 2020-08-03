@@ -2,8 +2,8 @@
 #include "SceneController.h"
 #include "GamePlayingScene.h"
 #include <DxLib.h>
-#include "../Input.h"
-#include "../Application.h"
+#include "../System/Input.h"
+#include "../System/Application.h"
 #include "../Geometry.h"
 
 namespace{

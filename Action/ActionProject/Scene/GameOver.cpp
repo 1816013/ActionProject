@@ -2,7 +2,9 @@
 #include <DxLib.h>
 #include "SceneController.h"
 #include "ContinueScene.h"
-#include "../Input.h"
+#include "../System/Input.h"
+#include "../System/Application.h"
+#include "../Geometry.h"
 
 namespace
 {
@@ -55,7 +57,8 @@ void GameOverScene::FadeDraw()
 	NomalDraw();
 	auto blendParam = static_cast<int>(255 * static_cast<float>(FadeInterval - waitTimer) / FadeInterval);
 	SetDrawBlendMode(DX_BLENDMODE_MULA, blendParam);
-	DrawBox(0, 0, 800, 600, 0x000000, true);
+	auto scSize = Application::Instance().GetViewport().GetSize();
+	DrawBox(0, 0, scSize.w, scSize.h, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <assert.h>
-#include "../Input.h"
+#include "../System/Input.h"
 #include "PauseScene.h"
 #include "../Game/Player/Player.h"
 #include "../Game/Background.h"
@@ -14,11 +14,11 @@
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/SideSpawner.h"
 #include "../Game/Enemy/Slasher.h"
-#include "../Game/CollisionManager.h"
+#include "../Game/Collision/CollisionManager.h"
 #include "../Game/Effect.h"
-#include "../Stage.h"
-#include "../Camera.h"
-#include "../Debugger.h"
+#include "../Game/Stage.h"
+#include "../Game/Camera.h"
+#include "../Debug/Debugger.h"
 
 using namespace std;
 namespace 
@@ -69,7 +69,9 @@ void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)
 
 void GamePlayingScene::GamePlayUpdate(const Input& input)
 {
+	
 	camera_->Update();
+
 	if (input.IsTriggered("OK"))
 	{
 		updater_ = &GamePlayingScene::FadeoutUpdate;
@@ -94,8 +96,12 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	{
 		spw->Update();
 	}
-
+	if (stage_->IsBossMode())
+	{
+		camera_->Lock();
+	}
 	effectManager_->Update();
+	
 }
 
 
@@ -118,7 +124,9 @@ void GamePlayingScene::FadeinUpdate(const Input& input )
 
 void GamePlayingScene::NomalDraw()
 {		
+
 	bg_->Draw();
+	stage_->Draw(static_cast<size_t>(LayerType::Back));
 	stage_->Draw(static_cast<size_t>(LayerType::Base));
 	projectileManager_->Draw();
 	enemyManager_->Draw();
@@ -134,6 +142,11 @@ void GamePlayingScene::NomalDraw()
 	DrawString(100, 100, L"GamePlayingScene", 0xffffff);
 	collisionManager_->DebugDraw(camera_);
 	stage_->DebugDraw();
+
+	if (stage_->IsBossMode())
+	{
+		DrawString(360, 280, L"Boss Mode", 0xff0000);
+	}
 }
 
 void GamePlayingScene::FadeDraw()

@@ -13,6 +13,7 @@ private:
     using Func_t = void (Slasher::*)();
 
     void RunUpdate();
+    void FallUpdate();
     void SlashUpdate();
     void JumpUpdate();
     Func_t updater_;

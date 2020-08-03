@@ -6,8 +6,7 @@ Projectile::Projectile(std::shared_ptr<Camera> c): Character(c), camera_(c)
 
 void Projectile::Update()
 {
-	pos_.x += vel_.x;
-	pos_.y += vel_.y;
+	pos_ += vel_;
 }
 
 bool Projectile::IsDead() const

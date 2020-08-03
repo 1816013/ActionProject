@@ -4,13 +4,13 @@
 #include <iomanip>
 #include <cassert>
 #include "../../Geometry.h"
-#include "../../Input.h"
+#include "../../System/Input.h"
 #include "../../Scene/GamePlayingScene.h"
 #include "BombEquip.h"
 #include "ShurikenEquip.h"
 #include "ChainEquip.h"
-#include "../../Camera.h"
-#include "../../Stage.h"
+#include "../Camera.h"
+#include "../Stage.h"
 
 using namespace std;
 
@@ -146,8 +146,11 @@ void Player::SetPosition(const Position2f& pos )
 
 void Player::Move(const Vector2f& v)
 {
+	auto rc = camera_->GetViewRange();
+	auto movePos = pos_ + v;
+	if (movePos.x - 30 < rc.Left() || rc.Right() < movePos.x + 30)return;
 	pos_ += v;
-	auto vec = gs_->GetStage()->GetOverlapWall(pos_, 50);
+	auto vec = gs_->GetStage()->ComputeOverlapWall(pos_, 24);
 	pos_ += vec;
 }
 

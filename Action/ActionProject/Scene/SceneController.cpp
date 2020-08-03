@@ -33,7 +33,6 @@ void SceneController::PopScene()
 		scene_.erase(scene_.begin());
 		assert(!scene_.empty());
 	};
-	
 }
 
 void SceneController::CleanChangeScene(Scene* scene)

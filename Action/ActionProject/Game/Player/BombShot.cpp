@@ -1,7 +1,7 @@
 #include "BombShot.h"
 #include <DxLib.h>
 #include "Projectile.h"
-#include "../../Camera.h"
+#include "../Camera.h"
 
 namespace
 {

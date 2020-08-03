@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include <DxLib.h>
 #include <algorithm>
-#include "..\Input.h"
+#include "../System/Input.h"
 
 using namespace std;
 
