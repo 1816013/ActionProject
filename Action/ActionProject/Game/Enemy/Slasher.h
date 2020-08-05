@@ -6,7 +6,8 @@ class Stage;
 class Slasher : public Enemy
 {
 private:
-
+    int runH = -1;
+    int slashH = -1;
     int frame_ = 0;
     int animFrame_ = 0;
 	Enemy* MakeClone() override;

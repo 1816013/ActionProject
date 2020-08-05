@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "Projectile.h"
 #include "../Camera.h"
+#include "../../System/FileManager.h"
 
 namespace
 {
@@ -11,6 +12,7 @@ BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<C
 {
 	pos_ = pos;
 	vel_ = vel;
+	auto& fileMng = FileManager::Instance();
 	if (bombH == -1)
 	{
 		bombH = LoadGraph(L"Resource/Image/Player/bombshot2.png");

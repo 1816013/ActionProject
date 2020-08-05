@@ -9,9 +9,13 @@ class GamePlayingScene;
 class Equipment;
 class CollisionManager;
 class Stage;
+class FileManager;
 class Player : public Character
 {
 private:
+	int runH_[6] = {};
+	int jumpH_[4] = {};
+	int fallH_[2] = {};
 	std::vector<std::shared_ptr<Equipment>>equipments_;
 	size_t currentEquipmentNo_ = 0;
 	Direction direction_;
@@ -39,7 +43,7 @@ private:
 
 	void FallDraw(Vector2f offset, bool isRight);
 
-	void LoadGraphPlayer(const char* key, int* handle, int size);
+	void LoadGraphPlayer(const char* key, int* handle, int size, FileManager& fmanager);
 
 	void SetCurrentPosition();
 	const Position2f& GetBackTimePosition(size_t t)const;

@@ -6,6 +6,8 @@
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CapsuleCollider.h"
 #include "../Camera.h"
+#include "../../System/FileManager.h"
+#include "../../System/File.h"
 
 namespace
 {
@@ -70,6 +72,7 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 {
 	frame_ = -1;	// -1‚Å‰Šú‰»
 	extensionFrame_ = 0;
+	auto& fileMng = FileManager::Instance();
 	if (chainH == -1)
 	{
 		chainH = LoadGraph(L"Resource/Image/Player/chainsickle.png");

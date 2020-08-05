@@ -19,6 +19,8 @@
 #include "../Game/Stage.h"
 #include "../Game/Camera.h"
 #include "../Debug/Debugger.h"
+#include "../System/FileManager.h"
+#include "../System/File.h"
 
 using namespace std;
 namespace 
@@ -48,6 +50,7 @@ drawer_(&GamePlayingScene::FadeDraw)
 	enemyManager_ = make_shared<EnemyManager>();
 	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_, stage_), enemyManager_, collisionManager_, camera_));
 	
+	auto& fileMng = FileManager::Instance();
 
 	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
 	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
@@ -58,7 +61,11 @@ drawer_(&GamePlayingScene::FadeDraw)
 
 GamePlayingScene::~GamePlayingScene()
 {
-	
+	for (int i = 0; i < 3; i++)
+	{
+		DeleteGraph(weaponUIH_[i]);
+	}
+	FileManager::Instance().DeleteAllResources();
 }
 
 void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)

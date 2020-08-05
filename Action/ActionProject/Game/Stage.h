@@ -47,11 +47,33 @@ private:
 	void CreateSegment(Position2f& lastPos, const Position2f& pos);
 public:
 	Stage(std::shared_ptr<Camera>c);
+	/// <summary>
+	/// マップデータの読み込みデータの縦横変換
+	/// </summary>
+	/// <param name="path">マップデータのパス</param>
 	void Load(const TCHAR* path);
+
+	/// <summary>
+	/// ステージ更新
+	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// ステージ描画
+	/// </summary>
+	/// <param name="layerNo">レイヤー番号</param>
 	void Draw(const size_t layerNo);
+
+	/// <summary>
+	/// 床のデバッグ描画
+	/// </summary>
 	void DebugDraw();
 
+	/// <summary>
+	/// 座標から今いる床の高さを返す
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <returns>床の高さ</returns>
 	float GetGroundY(const Position2f& pos)const;
 	
 	/// <summary>

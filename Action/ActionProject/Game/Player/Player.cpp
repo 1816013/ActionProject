@@ -11,14 +11,14 @@
 #include "ChainEquip.h"
 #include "../Camera.h"
 #include "../Stage.h"
+#include "../../System/FileManager.h"
+#include "../../System/File.h"
 
 using namespace std;
 
 namespace
 {
-	int runH_[6] = {};
-	int jumpH_[4] = {};
-	int fallH_[2] = {};
+	
 	int shadowMaskH = -1;
 	int frame_ = 0;
 	//constexpr int groundLine = 480;
@@ -37,9 +37,10 @@ Player::Player(GamePlayingScene* gs) :
 	gs_ = gs;
 	gravity_ = maxGraviry;
 	direction_ = Direction::RIGHT;
-	LoadGraphPlayer("run", runH_, _countof(runH_));
-	LoadGraphPlayer("jump", jumpH_, _countof(jumpH_ ));
-	LoadGraphPlayer("fall", fallH_, _countof(fallH_));
+	auto& fileMng = FileManager::Instance();
+	LoadGraphPlayer("run", runH_, _countof(runH_), fileMng);
+	LoadGraphPlayer("jump", jumpH_, _countof(jumpH_ ), fileMng);
+	LoadGraphPlayer("fall", fallH_, _countof(fallH_), fileMng);
 	/*for (int i = 0; i < _countof(runH_); i++)
 	{
 		wstringstream wss;
@@ -234,7 +235,7 @@ void Player::FallUpdate()
 	}
 }
 
-void Player::LoadGraphPlayer(const char* key, int* handle, int size)
+void Player::LoadGraphPlayer(const char* key, int* handle, int size, FileManager& fmanager)
 {
 	for (int i = 0; i < size; i++)
 	{
@@ -242,7 +243,7 @@ void Player::LoadGraphPlayer(const char* key, int* handle, int size)
 		wss << L"Resource/Image/Player/adventurer-" << key << "-";
 		wss << setw(2) << setfill(L'0') << i;
 		wss << ".png";
-		handle[i] = LoadGraph(wss.str().c_str());
+		handle[i] = fmanager.Load(wss.str().c_str())->Handle();
 	}
 }
 

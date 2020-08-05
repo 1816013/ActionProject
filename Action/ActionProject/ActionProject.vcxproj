@@ -142,8 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game\Camera.cpp" />
     <ClCompile Include="Debug\Debugger.cpp" />
+    <ClCompile Include="System\File.cpp" />
+    <ClCompile Include="System\FileManager.cpp" />
+    <ClCompile Include="Game\Camera.cpp" />
     <ClCompile Include="Game\Collision\CapsuleCollider.cpp" />
     <ClCompile Include="Game\Collision\CollisionManager.cpp" />
     <ClCompile Include="Game\Collision\AABBCollider.cpp" />
@@ -180,8 +182,10 @@
     <ClCompile Include="Game\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\Camera.h" />
     <ClInclude Include="Debug\Debugger.h" />
+    <ClInclude Include="System\File.h" />
+    <ClInclude Include="System\FileManager.h" />
+    <ClInclude Include="Game\Camera.h" />
     <ClInclude Include="Game\Collision\CapsuleCollider.h" />
     <ClInclude Include="Game\Collision\CollisionManager.h" />
     <ClInclude Include="Game\Collision\AABBCollider.h" />

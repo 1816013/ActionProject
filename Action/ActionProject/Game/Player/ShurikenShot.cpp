@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../Collision/Collider.h"
 #include "../Camera.h"
+#include "../../System/FileManager.h"
 
 namespace
 {
@@ -15,6 +16,8 @@ ShurikenShot::ShurikenShot(const Position2f& pos, const Vector2f& vel, std::shar
 	pos_ = pos;
 	vel_ = vel;
 	isActive_ = true;
+
+	auto& fileMng = FileManager::Instance();
 	if (shurikenH == -1)
 	{
 		shurikenH = LoadGraph(L"Resource/Image/Player/shuriken.png");

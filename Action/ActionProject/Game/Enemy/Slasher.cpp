@@ -6,11 +6,12 @@
 #include "../Effect.h"
 #include "../Camera.h"
 #include "../Stage.h"
+#include "../../System/FileManager.h"
+#include "../../System/File.h"
 
 namespace
 {
-    int runH = -1;
-    int slashH = -1;
+  
     constexpr float narakuY = 1000.0f;
 }
 Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c,std::shared_ptr<Stage>s) :
@@ -20,9 +21,15 @@ Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager
 {
     updater_ = &Slasher::RunUpdate;
     drawer_ = &Slasher::RunDraw;
-    runH = LoadGraph(L"Resource/Image/Enemy/Slasher/run.png");
-    slashH = LoadGraph(L"Resource/Image/Enemy/Slasher/slash.png");
-   
+    auto& fileMng = FileManager::Instance();
+    if (runH == -1)
+    {
+        runH = fileMng.Load(L"Resource/Image/Enemy/Slasher/run.png")->Handle();
+    }
+    if (slashH == -1)
+    {
+        slashH = fileMng.Load(L"Resource/Image/Enemy/Slasher/slash.png")->Handle();
+    }
 }
 
 Slasher::~Slasher()

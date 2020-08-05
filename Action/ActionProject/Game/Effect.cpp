@@ -1,6 +1,7 @@
 #include "Effect.h"
 #include <DxLib.h>
 #include "Camera.h"
+#include "../System/FileManager.h"
 
 namespace
 {
@@ -63,6 +64,7 @@ Blow::Blow(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c, float de
 	pos_ = p;
 	isTurn_ = isTurn_;
 	delay_ = delay;
+	auto& fileMng = FileManager::Instance();
 	if (blowH == -1)
 	{
 		blowH = LoadGraph(L"Resource/Image/Effect/dron.png");

@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "../Geometry.h"
 #include "Camera.h"
+#include "../System/FileManager.h"
 
 using namespace std;
 namespace
@@ -17,6 +18,7 @@ Background::Background(std::shared_ptr<Camera> c) : camera_(c)
 	bgH_.resize(11);
 	int skipNo[2] = { 4 , 7 };
 	int no = 9;
+	auto& fileMng = FileManager::Instance();
 	for (int i = 0; i < bgH_.size(); i++)
 	{
 		wstringstream wss;

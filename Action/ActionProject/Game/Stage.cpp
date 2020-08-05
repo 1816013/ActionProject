@@ -4,6 +4,7 @@
 #include <cassert>
 #include "Camera.h"
 #include "../Debug/Debugger.h"
+#include ".././System/FileManager.h"
 using namespace std;
 
 
@@ -32,6 +33,7 @@ void Stage::CreateSegment(Position2f& startPos, const Position2f& endPos)
 Stage::Stage(std::shared_ptr<Camera>c) : camera_(c)
 {
 	header_ = {};
+	auto& fileMng = FileManager::Instance();
 	stageAtlasH = LoadGraph(L"Resource/Image/BackGround/level/Atlas.png");
 }
 

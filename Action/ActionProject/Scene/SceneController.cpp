@@ -1,7 +1,8 @@
 #include "SceneController.h"
 #include "Scene.h"
 #include "TitleScene.h"
-#include <assert.h>
+#include <cassert>
+#include "../System/FileManager.h"
 
 SceneController::SceneController() 
 {
