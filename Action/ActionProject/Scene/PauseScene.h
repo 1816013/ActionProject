@@ -21,8 +21,13 @@ class PauseScene : public Scene
 {
 	friend GamePlayingScene;
 private:
+	std::vector<MenuItem>menuItems_;
+	int IndicatorH = -1;
+
 	PauseScene() = default;
 	PauseScene(SceneController&);
+	using DrawerFunction_t = void (PauseScene::*)();
+	DrawerFunction_t drawer_;
 
 	// updater
 	// ポーズの基本Updater
@@ -39,13 +44,10 @@ private:
 	void NomalDraw();
 	// ポーズのメニューの開閉する際のdrawer
 	void OpenCloseDraw();
-	using DrawerFunction_t = void (PauseScene::*)();
-	DrawerFunction_t drawer_;
-
-
+	
 	void CloseMenu();
 
-	std::vector<MenuItem>menuItems_;
+
 public:
 	~PauseScene();
 	void Update(const Input&)override;

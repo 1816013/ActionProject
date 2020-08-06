@@ -5,6 +5,7 @@
 #include "../System/Application.h"
 #include "TitleScene.h"
 #include "../System/FileManager.h"
+#include "../System/File.h"
 
 
 namespace
@@ -14,7 +15,7 @@ namespace
 	Rect menuRect(Position2f(vpSize.w / 2, vpSize.h / 2),Size(rectSize.w, rectSize.h));
 	constexpr int AccordionInterval = 20;	
 	unsigned int waitTimer = 0;	
-	int IndicatorH = -1;
+	
 	int indicatorWidth_ = 0;
 	constexpr int pauseTitle_y = 32;	// メニュー上からタイトルまでのオフセット
 	constexpr int menubase_y = 96;		// メニューのタイトルからのオフセット
@@ -39,7 +40,7 @@ drawer_(&PauseScene::OpenCloseDraw)
 	auto& fileMng = FileManager::Instance();
 	if (IndicatorH == -1)
 	{
-		IndicatorH = LoadGraph(L"Resource/Image/UI/indicator.png");
+		IndicatorH = fileMng.Load(L"Resource/Image/UI/indicator.png")->Handle();
 	}
 
 	int y = menubase_y;

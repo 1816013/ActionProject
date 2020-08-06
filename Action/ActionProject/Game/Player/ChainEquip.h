@@ -17,6 +17,7 @@ private:
 	float variationAngle = 0.0f;
 	using func_t = void(ChainEquip::*)();
 	func_t updater_;
+	int chainH = -1;
 
 	void NomalUpdate();
 	void ExtensionUpdate();

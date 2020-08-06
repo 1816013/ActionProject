@@ -6,6 +6,7 @@
 #include "../System/Application.h"
 #include "../Geometry.h"
 #include "../System/FileManager.h"
+#include "../System/File.h"
 
 namespace{
 	constexpr uint32_t FadeInterval = 45;
@@ -25,8 +26,8 @@ drawer_(&TitleScene::FadeDraw)
 	waitTimer = 0;
 	blinkInterval = BlinkIntervalNomal;
 	auto& fileMng = FileManager::Instance();
-	titleH = LoadGraph(L"Resource/Image/Title/Title.png");
-	startH = LoadGraph(L"Resource/Image/Title/pressstart.png");
+	titleH = fileMng.Load(L"Resource/Image/Title/Title.png")->Handle();
+	startH = fileMng.Load(L"Resource/Image/Title/pressstart.png")->Handle();
 }
 
 

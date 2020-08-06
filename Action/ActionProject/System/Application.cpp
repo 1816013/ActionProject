@@ -52,6 +52,7 @@ void Application::Run()
 			break;
 		}
 	}
+	sceneController_->ClearScene();
 }
 
 void Application::Terminate()

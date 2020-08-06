@@ -32,6 +32,8 @@ public:
 	/// <returns></returns>
 	std::shared_ptr<File> Load(const wchar_t* filePath, const char* tag = "");
 
+
+	void Delete(std::shared_ptr<File> f);
 	/// <summary>
 	/// 
 	/// </summary>

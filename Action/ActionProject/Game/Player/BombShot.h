@@ -5,6 +5,7 @@ class BombShot : public Projectile
 {
 private:
 	float angle_;
+	int bombH = -1;
 
 	void NomalUpdate();
 	void DestroyUpdate();

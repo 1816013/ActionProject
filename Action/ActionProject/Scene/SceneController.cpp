@@ -61,3 +61,8 @@ void SceneController::Draw()
 	postDrawExecuter_();
 	postDrawExecuter_ = []() {};
 }
+
+void SceneController::ClearScene()
+{
+	scene_.clear();
+}

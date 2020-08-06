@@ -3,10 +3,10 @@
 #include "../Collision/Collider.h"
 #include "../Camera.h"
 #include "../../System/FileManager.h"
+#include "../../System/File.h"
 
 namespace
 {
-	int shurikenH = -1;
 	constexpr float angle_rate = 0.5f;
 }
 
@@ -20,7 +20,7 @@ ShurikenShot::ShurikenShot(const Position2f& pos, const Vector2f& vel, std::shar
 	auto& fileMng = FileManager::Instance();
 	if (shurikenH == -1)
 	{
-		shurikenH = LoadGraph(L"Resource/Image/Player/shuriken.png");
+		shurikenH = fileMng.Load(L"Resource/Image/Player/shuriken.png")->Handle();
 	}
 	angle_ = 0.0f;
 	updater_ = &ShurikenShot::NomalUpdate;
@@ -38,7 +38,7 @@ void ShurikenShot::NomalUpdate()
 	angle_ += angle_rate;
 	Projectile::Update(); // java‚Ìbase.Update();
 	auto viewRect = camera_->GetViewRange();
-	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.Bottom() || pos_.y < viewRect.Top())
+	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.size.h || pos_.y < 0.0f)
 	{
 		updater_ = &ShurikenShot::DestroyUpdate;
 	}

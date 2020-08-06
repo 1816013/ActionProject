@@ -11,8 +11,10 @@
 
 namespace
 {
-  
     constexpr float narakuY = 1000.0f;
+    constexpr int change_AI_intarval = 150;
+    constexpr int speed = 5;
+    constexpr float jump_power = 25.0f;
 }
 Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c,std::shared_ptr<Stage>s) :
     Enemy(p, c),
@@ -44,10 +46,10 @@ Enemy* Slasher::MakeClone()
 
 void Slasher::RunUpdate()
 {
-    if (frame_ % 150 == 0)
+    if (frame_ % change_AI_intarval == 0)
     {
         AimPlayer();
-        velocity_ *= 5;
+        velocity_ *= speed;
     }
     pos_ += velocity_;
     ++frame_;
@@ -59,7 +61,7 @@ void Slasher::RunUpdate()
         frame_ = 0;
     }
     auto seg3 = stage_->GetThreeSegment(pos_);
-    // 床判定（床があれば床まで座標を上げる）
+    // 床判定（床があれば床まで座標を床に補正）
     if (seg3[1].IsNil())
     {
         pos_.y = narakuY;
@@ -68,14 +70,15 @@ void Slasher::RunUpdate()
     {
         assert(seg3[1].vec.x > 0.0f);
         auto yVariation = seg3[1].vec.y / seg3[1].vec.x;
+        if(updater_ == &Slasher::RunUpdate)
         pos_.y = seg3[1].start.y + yVariation * (pos_.x - seg3[1].start.x);      
     }
     //ジャンプ判断 
     if (velocity_.x > 0) {
         if (seg3[2].IsNil() || seg3[2].vec.x == 0) {
             auto diff = seg3[1].End().x - pos_.x;
-            if (0 < diff && diff <= fabsf(velocity_.x)) {
-                velocity_.y = -15.0f;
+            if (0 < diff && diff <= fabsf(velocity_.x) * 10) {
+                velocity_.y = -jump_power;
                 updater_ = &Slasher::JumpUpdate;
             }
         }
@@ -83,8 +86,8 @@ void Slasher::RunUpdate()
     else {
         if (seg3[0].IsNil() || seg3[0].vec.x == 0) {
             auto diff = pos_.x - seg3[1].start.x;
-            if (0 < diff && diff <= fabsf(velocity_.x)) {
-                velocity_.y = -15.0f;
+            if (0 < diff && diff <= fabsf(velocity_.x) * 10) {
+                velocity_.y = -jump_power;
                 updater_ = &Slasher::JumpUpdate;
             }
         }
@@ -162,7 +165,7 @@ void Slasher::Draw()
 {
     auto rc = camera_->GetViewRange();
     constexpr int xmargin = 25;
-    if (pos_.x < rc.Left() + xmargin || rc.Right() - xmargin < pos_.x) {
+    if (pos_.x < rc.Left() - xmargin || rc.Right() + xmargin < pos_.x) {
         return;
     }
     (this->*drawer_)();

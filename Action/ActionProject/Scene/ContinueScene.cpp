@@ -9,7 +9,7 @@
 namespace
 {
 	constexpr uint32_t FadeInterval = 45;
-	constexpr int brend_max = 45;
+	constexpr int brend_max = 255;
 	unsigned int waitTimer = 0;
 }
 

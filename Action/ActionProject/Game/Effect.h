@@ -12,6 +12,7 @@ protected:
 	Position2f pos_;
 	bool isDeleatable = false;
 	std::shared_ptr<Camera>camera_;
+	int blowH = -1;
 public:
 	Effect(std::shared_ptr<Camera> c);
 	virtual void Update() = 0;

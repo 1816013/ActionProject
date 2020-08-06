@@ -42,6 +42,8 @@ private:
 	std::shared_ptr<EffectManager> effectManager_;
 	std::shared_ptr<Stage> stage_;
 	std::shared_ptr<Camera> camera_;
+
+	int weaponUIH_[3];
 public:
 	~GamePlayingScene();
 	void AddListner(std::shared_ptr<InputListner> listner);

@@ -19,7 +19,7 @@ using namespace std;
 namespace
 {
 	
-	int shadowMaskH = -1;
+
 	int frame_ = 0;
 	//constexpr int groundLine = 480;
 	constexpr float maxGraviry = 1.0f;
@@ -50,7 +50,7 @@ Player::Player(GamePlayingScene* gs) :
 		runH_[i] = LoadGraph(wss.str().c_str());
 	}*/
 
-	shadowMaskH = LoadMask(L"Resource/Image/Player/shadow_mask.bmp");
+	shadowMaskH = fileMng.Load(L"Resource/Image/Player/shadow_mask.bmp")->Handle();
 	class PlayerInputListner : public InputListner
 	{
 	public:
@@ -119,13 +119,8 @@ Player::Player(GamePlayingScene* gs) :
 	
 }
 
-
 Player::~Player()
 {
-	for (auto& run : runH_)
-	{
-		DeleteGraph(run);
-	}
 }
 
 void Player::Attack(const Input& input)
@@ -267,11 +262,11 @@ void Player::Draw()
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
 	auto& fpos = GetBackTimePosition(20);	
-	DrawFillMask(fpos.x + offset.x - 100, fpos.y -50, fpos.x + offset.x + 100, fpos.y + 50, shadowMaskH);
+	DrawFillMask(fpos.x + offset.x - 100, fpos.y -100, fpos.x + offset.x + 100, fpos.y, shadowMaskH);
 	DrawRotaGraph2(fpos.x + offset.x, fpos.y, w / 2, h - 1, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 
 	auto& spos = GetBackTimePosition(40);
-	DrawFillMask(spos.x + offset.x - 100, spos.y - 50, spos.x + offset.x + 100, spos.y + 50, shadowMaskH);
+	DrawFillMask(spos.x + offset.x - 100, spos.y - 100, spos.x + offset.x + 100, spos.y, shadowMaskH);
 	DrawRotaGraph2(spos.x + offset.x, spos.y,w / 2, h - 1, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 	
 	DeleteMaskScreen();

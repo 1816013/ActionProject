@@ -5,6 +5,7 @@ class ShurikenShot :
 {
 private:
 	float angle_;
+	int shurikenH = -1;
 
 	void NomalUpdate();
 	void DestroyUpdate();

@@ -21,14 +21,6 @@ BombEquip::BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col
 void BombEquip::Attack(const Player& player, const Input& input)
 {
 	Vector2f vel(0, 0);
-	if (input.IsPressed("right"))
-	{
-		vel = { 1, 0 };
-	}
-	if (input.IsPressed("left"))
-	{
-		vel = { -1, 0 };
-	}
 	if (input.IsPressed("up"))
 	{
 		vel = { 0, -1 };
@@ -37,6 +29,15 @@ void BombEquip::Attack(const Player& player, const Input& input)
 	{
 		vel = { 0, 1 };
 	}
+	if (input.IsPressed("right"))
+	{
+		vel = { 1, 0 };
+	}
+	if (input.IsPressed("left"))
+	{
+		vel = { -1, 0 };
+	}
+	
 	if (vel.x == 0 && vel.y == 0)
 	{
 		if (player.Direction() == Direction::RIGHT)

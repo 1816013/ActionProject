@@ -16,6 +16,7 @@ private:
 	int runH_[6] = {};
 	int jumpH_[4] = {};
 	int fallH_[2] = {};
+	int shadowMaskH = -1;
 	std::vector<std::shared_ptr<Equipment>>equipments_;
 	size_t currentEquipmentNo_ = 0;
 	Direction direction_;

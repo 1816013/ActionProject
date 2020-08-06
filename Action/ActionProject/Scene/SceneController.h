@@ -38,5 +38,7 @@ public:
 
 	// シーンスタックに積まれているすべてのシーンのDrawを呼ぶ
 	void Draw();
+
+	void ClearScene();
 };
 

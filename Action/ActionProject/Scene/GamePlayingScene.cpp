@@ -27,7 +27,7 @@ namespace
 {
 	constexpr uint32_t FadeInterval = 45;
 	unsigned int waitTimer = 0;
-	int weaponUIH_[3];
+
 }
 
 
@@ -52,19 +52,15 @@ drawer_(&GamePlayingScene::FadeDraw)
 	
 	auto& fileMng = FileManager::Instance();
 
-	weaponUIH_[0] = LoadGraph(L"Resource/Image/UI/bomb.png");
-	weaponUIH_[1] = LoadGraph(L"Resource/Image/UI/shuriken.png");
-	weaponUIH_[2] = LoadGraph(L"Resource/Image/UI/chain.png");
+	weaponUIH_[0] = fileMng.Load(L"Resource/Image/UI/bomb.png")->Handle();
+	weaponUIH_[1] = fileMng.Load(L"Resource/Image/UI/shuriken.png")->Handle();
+	weaponUIH_[2] = fileMng.Load(L"Resource/Image/UI/chain.png")->Handle();
 
 	
 }
 
 GamePlayingScene::~GamePlayingScene()
 {
-	for (int i = 0; i < 3; i++)
-	{
-		DeleteGraph(weaponUIH_[i]);
-	}
 	FileManager::Instance().DeleteAllResources();
 }
 

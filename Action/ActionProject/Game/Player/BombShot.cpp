@@ -3,11 +3,8 @@
 #include "Projectile.h"
 #include "../Camera.h"
 #include "../../System/FileManager.h"
+#include "../../System/File.h"
 
-namespace
-{
-	int bombH = -1;
-}
 BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera>c) : Projectile(c)
 {
 	pos_ = pos;
@@ -15,7 +12,7 @@ BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<C
 	auto& fileMng = FileManager::Instance();
 	if (bombH == -1)
 	{
-		bombH = LoadGraph(L"Resource/Image/Player/bombshot2.png");
+		bombH = fileMng.Load(L"Resource/Image/Player/bombshot2.png")->Handle();
 	}
 	updater_ = &BombShot::NomalUpdate;
 	isActive_ = true;
@@ -34,7 +31,7 @@ void BombShot::NomalUpdate()
 	angle_ += 0.5f;
 	Projectile::Update(); // java‚Ìbase.Update();
 	auto viewRect = camera_->GetViewRange();
-	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.Bottom() || pos_.y < viewRect.Top())
+	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.size.h || pos_.y < 0.0f)
 	{
 		updater_ = &BombShot::DestroyUpdate;
 	}

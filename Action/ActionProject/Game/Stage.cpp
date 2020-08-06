@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "../Debug/Debugger.h"
 #include ".././System/FileManager.h"
+#include ".././System/File.h"
 using namespace std;
 
 
@@ -34,14 +35,18 @@ Stage::Stage(std::shared_ptr<Camera>c) : camera_(c)
 {
 	header_ = {};
 	auto& fileMng = FileManager::Instance();
-	stageAtlasH = LoadGraph(L"Resource/Image/BackGround/level/Atlas.png");
+	stageAtlasH = fileMng.Load(L"Resource/Image/BackGround/level/Atlas.png")->Handle();
 }
 
 void Stage::Load(const TCHAR* path)
 {
-	auto h = DxLib::FileRead_open(path);
-	assert( h > 0);
-	FileRead_read(&header_, sizeof(header_), h);	// ヘッダ読み込み
+	auto& fileMng = FileManager::Instance();
+	auto file = fileMng.Load(path);
+	file->CopyRead(header_);
+
+	//auto h = FileRead_open(path);
+	//assert( h > 0);
+	//FileRead_read(&header_, sizeof(header_), h);	// ヘッダ読み込み
 	
 	auto layerSize = header_.mapH * header_.mapW;
 	stageData_.resize(header_.layerCnt);
@@ -50,8 +55,10 @@ void Stage::Load(const TCHAR* path)
 	{
 		stageData_[i].resize(layerSize);
 		rawStageData[i].resize(layerSize);
-		FileRead_read(rawStageData[i].data(), layerSize, h);
+	//	FileRead_read(rawStageData[i].data(), layerSize, h);
+		file->CopyRead(rawStageData[i].data(), layerSize);
 	}
+	fileMng.Delete(file);
 	for (size_t i = 0; i < header_.layerCnt; ++i)
 	{
 		for (unsigned int y = 0; y < header_.mapH; ++y)
@@ -62,7 +69,7 @@ void Stage::Load(const TCHAR* path)
 			}
 		}
 	}
-	FileRead_close(h);
+	//FileRead_close(h);
 	camera_->SetStageSize(Size(header_.mapW * header_.chipW * scale_, header_.mapH * header_.chipH * scale_));
 
 	//最後のレイヤーを「線」のデータに変換 

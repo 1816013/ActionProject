@@ -2,10 +2,11 @@
 #include <DxLib.h>
 #include "Camera.h"
 #include "../System/FileManager.h"
+#include "../System/File.h"
 
 namespace
 {
-	int blowH = -1;
+
 	constexpr int random_min = -10;
 	constexpr int random_max = 10;
 	constexpr int effect_blow_x = 32;
@@ -67,7 +68,7 @@ Blow::Blow(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c, float de
 	auto& fileMng = FileManager::Instance();
 	if (blowH == -1)
 	{
-		blowH = LoadGraph(L"Resource/Image/Effect/dron.png");
+		blowH = fileMng.Load(L"Resource/Image/Effect/dron.png")->Handle();
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "../Geometry.h"
 #include "Camera.h"
 #include "../System/FileManager.h"
+#include "../System/File.h"
 
 using namespace std;
 namespace
@@ -34,7 +35,7 @@ Background::Background(std::shared_ptr<Camera> c) : camera_(c)
 			--no;
 		}
 		wss << ".png";
-		bgH_[bgH_.size() - 1 - i] = LoadGraph(wss.str().c_str());
+		bgH_[bgH_.size() - 1 - i] = fileMng.Load(wss.str().c_str())->Handle();
 	}
 	frame_ = 0;
 }

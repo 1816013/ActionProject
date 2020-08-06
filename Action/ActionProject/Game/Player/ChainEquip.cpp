@@ -11,7 +11,6 @@
 
 namespace
 {
-	int chainH = -1;
 	bool extensionF = false;
 	Direction retDir;
 
@@ -75,7 +74,7 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 	auto& fileMng = FileManager::Instance();
 	if (chainH == -1)
 	{
-		chainH = LoadGraph(L"Resource/Image/Player/chainsickle.png");
+		chainH = fileMng.Load(L"Resource/Image/Player/chainsickle.png")->Handle();
 	}
 }
 

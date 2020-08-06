@@ -18,18 +18,7 @@ void ProjectileManager::Update()
 	{
 		p->Update();
 	}
-	projectiles_.remove_if([](std::shared_ptr<Projectile>&p) {return p->IsDead(); });
-	/*auto it = std::remove_if(projectiles_.begin(), projectiles_.end(),
-		[](std::shared_ptr<Projectile>& p)
-		{
-			return p->IsDead(); 
-		});
-
-	if (it != projectiles_.end())
-	{
-		projectiles_.erase(it, projectiles_.end());
-	}*/
-	
+	projectiles_.remove_if([](std::shared_ptr<Projectile>&p) {return p->IsDead(); });	
 }
 
 void ProjectileManager::Draw()
