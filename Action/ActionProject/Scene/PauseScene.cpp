@@ -6,6 +6,7 @@
 #include "TitleScene.h"
 #include "../System/FileManager.h"
 #include "../System/File.h"
+#include "KeyConfigScene.h"
 
 
 namespace
@@ -21,7 +22,7 @@ namespace
 	constexpr int menubase_y = 96;		// メニューのタイトルからのオフセット
 	constexpr int indicater_y = 32;
 	constexpr int menuInterval_y = 48;	// メニューの文字間隔
-	const wchar_t* pauseTitle = L"Pause Menu";
+	const wchar_t* titleName = L"Pause Menu";
 
 	int currentSelectNo_;
 }
@@ -48,6 +49,10 @@ drawer_(&PauseScene::OpenCloseDraw)
 	menuItems_.emplace_back(MenuItem(L"ゲームに戻る", 
 		{ menubase_y, y},
 		[this]() { CloseMenu();}));
+	y += menuInterval_y;
+	menuItems_.emplace_back(MenuItem(L"キーコンフィグ",
+		{ menubase_y, y },
+		[this]() { controller_.PushScene(new KeyConfigScene(controller_)); }));
 	y += menuInterval_y;
 	menuItems_.emplace_back(MenuItem(L"タイトルに戻る",
 		{ menubase_y, y },
@@ -131,8 +136,8 @@ void PauseScene::NomalDraw()
 	DrawBox(menuRect.Left(), menuRect.Top(), menuRect.Right(), menuRect.Bottom(), 0xffffff, false);
 
 	// メニュー文字表示
-	int titleW =GetDrawStringWidth(pauseTitle, static_cast<int>(wcslen(pauseTitle)));
-	DrawString(menuRect.pos.x - titleW / 2, menuRect.Top() + pauseTitle_y, pauseTitle, 0xffffff);
+	int titleW =GetDrawStringWidth(titleName, static_cast<int>(wcslen(titleName)));
+	DrawString(menuRect.pos.x - titleW / 2, menuRect.Top() + pauseTitle_y, titleName, 0xffffff);
 	for(auto m : menuItems_)
 	{
 		uint32_t col = 0xffffff;

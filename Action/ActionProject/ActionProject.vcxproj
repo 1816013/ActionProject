@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Debug\Debugger.cpp" />
+    <ClCompile Include="Scene\KeyConfigScene.cpp" />
     <ClCompile Include="System\File.cpp" />
     <ClCompile Include="System\FileManager.cpp" />
     <ClCompile Include="Game\Camera.cpp" />
@@ -183,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug\Debugger.h" />
+    <ClInclude Include="Scene\KeyConfigScene.h" />
     <ClInclude Include="System\File.h" />
     <ClInclude Include="System\FileManager.h" />
     <ClInclude Include="Game\Camera.h" />

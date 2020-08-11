@@ -29,8 +29,16 @@ public:
 	/// キャラクターの描画を行う
 	/// </summary>
 	virtual void Draw() = 0;	
+	/// <summary>
+	/// キャラクターの座標を返す
+	/// </summary>
+	/// <returns>キャラクターの現在座標(今は足元)</returns>
 	virtual const Position2f GetPosition()const;
 
+	/// <summary>
+	/// 何かに当たったら
+	/// </summary>
+	/// <param name="c">コリジョン情報</param>
 	virtual void OnHit(CollisionInfo& c) = 0;
 };
 

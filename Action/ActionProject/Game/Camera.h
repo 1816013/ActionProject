@@ -19,8 +19,15 @@ public:
 	/// </summary>
 	/// <param name="size">ステージ全体のサイズ</param>
 	void SetStageSize(const Size& size);
+	/// <summary>
+	/// 毎フレーム更新
+	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// カメラの現在座標を返す
+	/// </summary>
+	/// <returns>カメラの現在座標</returns>
 	const Position2f& GetPosition()const;
 
 	/// <summary>
@@ -35,6 +42,10 @@ public:
 	/// <returns>カメラの現在座標</returns>
 	const Vector2f ViewOffset()const;
 
+	/// <summary>
+	/// スクロールを止めるかどうかを返す
+	/// </summary>
+	/// <returns>true:停止</returns>
 	bool Lock();
 };
 

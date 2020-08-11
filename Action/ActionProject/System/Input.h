@@ -6,20 +6,26 @@
 #include <unordered_map>
 
 constexpr int inputRecordSize = 2;	// 入力バッファ格納数
-enum class PeriphiralType
+
+enum class PeripheralType
 {
-	keybord,
-	pad
+	keyboard,
+	gamepad
 };
-struct PeriphiralInfo
+
+struct PeripheralInfo
 {
-	PeriphiralType type;
+	PeripheralType type;
 	int index;
 };
+
+using PeripheralRefarenceTable_t = std::unordered_map<std::string, std::vector<PeripheralInfo>>;
+class KeyConfigScene;
 class Input
 {
+friend KeyConfigScene;
 private:
-	std::unordered_map<std::string, std::vector<PeriphiralType>>inputRefarenceTable_;
+	PeripheralRefarenceTable_t peripheralReferenceTable_;
 	int currentInputIndex = 0;	// 現在の入力バッファを指すインデックス
 	using InputStateTable_t = std::unordered_map<std::string, bool>;
 	std::array <InputStateTable_t, inputRecordSize>_inputStateTable;	// 入力格納テーブル
@@ -44,8 +50,16 @@ private:
 	/// </summary>
 	bool LastIndex(const std::string& cmd)const;
 
+	/// <summary>
+	/// イベントに対応する機器入力を登録する
+	/// </summary>
+	/// <param name="eventname">入力イベントの名前</param>
+	/// <param name="peri">入力情報</param>
+	void RegistAcceptPeripheral(const char* eventname, const std::vector<PeripheralInfo>& peri);
+	bool CheckPressed(const char* eventname, const char* keystate, int padstate);
+	//void SetPeripheral(const char* eventnname)
 	
-	std::vector<std::pair<std::string, unsigned int>>keyPair_; // <keyname, keycode>
+	//std::vector<std::pair<std::string, unsigned int>>keyPair_; // <keyname, keycode>
 public:
 	Input();
 	Input(const Input&) = delete;
