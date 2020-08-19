@@ -24,6 +24,7 @@ Input::Input()
 	RegistAcceptPeripheral("jump", { {PeripheralType::keyboard,KEY_INPUT_SPACE}, {PeripheralType::gamepad,PAD_INPUT_C} });
 	RegistAcceptPeripheral("change", { {PeripheralType::keyboard,KEY_INPUT_C}, {PeripheralType::gamepad,PAD_INPUT_A} });
 	currentInputIndex = 0;
+	
 	//keyPair_.emplace_back(make_pair("OK", KEY_INPUT_RETURN));
 	//keyPair_.emplace_back(make_pair("pause", KEY_INPUT_P));
 	//keyPair_.emplace_back(make_pair("cancel", KEY_INPUT_BACK));
@@ -52,7 +53,6 @@ void Input::Update()
 	if (GetJoypadNum() > 0)
 	{
 		pad = GetJoypadInputState(DX_INPUT_PAD1);
-
 	}
 	char keyState[keyBufferSize];
 	GetHitKeyStateAll(keyState);
@@ -60,6 +60,20 @@ void Input::Update()
 	{
 		CurrentInput(refTbl.first) = CheckPressed(refTbl.first.c_str(), keyState, pad);
 	}
+	if (isRawMode_ && CheckHitKeyAll())
+	{
+		if (GetJoypadNum() > 0)
+		{
+			rawPadState_ = GetJoypadInputState(DX_INPUT_PAD1);
+		}
+		rawKeyState_.resize(keyBufferSize);
+		for (int i = 0; i < keyBufferSize; i++)
+		{
+			rawKeyState_[i] = keyState[i];
+		}
+	}
+
+	
 }
 
 bool Input::IsPressed(const char * cmd) const
@@ -130,4 +144,40 @@ bool Input::CheckPressed(const char* eventname, const char* keystate, int padsta
 		}
 	}
 	return ret;
+}
+
+const std::vector<char>& Input::GetRawKeyboardState() const
+{
+	assert(isRawMode_);
+	return rawKeyState_;
+}
+
+const int Input::GetRawPadState() const
+{
+	assert(isRawMode_);
+	return rawPadState_;
+}
+
+void Input::UnLockRawMode() const
+{
+	isRawMode_ = true;
+}
+
+void Input::LockRawMode() const
+{
+	rawPadState_ = 0;
+	rawKeyState_.clear();
+	isRawMode_ = false;
+}
+
+void Input::SetPeripheralReferenceTable(const PeripheralReferenceTable_t& prt) const
+{
+	for (auto& p : prt)
+	{
+		if (peripheralReferenceTable_.find(p.first) != peripheralReferenceTable_.end())
+		{
+			peripheralReferenceTable_[p.first] = p.second;
+		}
+	}
+	
 }

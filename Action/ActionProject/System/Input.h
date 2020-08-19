@@ -19,16 +19,21 @@ struct PeripheralInfo
 	int index;
 };
 
-using PeripheralRefarenceTable_t = std::unordered_map<std::string, std::vector<PeripheralInfo>>;
+using PeripheralReferenceTable_t = std::unordered_map<std::string, std::vector<PeripheralInfo>>;
 class KeyConfigScene;
 class Input
 {
 friend KeyConfigScene;
 private:
-	PeripheralRefarenceTable_t peripheralReferenceTable_;
+	//PeripheralReferenceTable_t peripheralReferenceTable_;
 	int currentInputIndex = 0;	// 現在の入力バッファを指すインデックス
 	using InputStateTable_t = std::unordered_map<std::string, bool>;
 	std::array <InputStateTable_t, inputRecordSize>_inputStateTable;	// 入力格納テーブル
+	mutable bool isRawMode_ = false;	// 生モード
+	mutable std::vector<char> rawKeyState_;	// 生キーボード情報
+	mutable int rawPadState_;	//生パッドステート(1コンのみ)
+	mutable PeripheralReferenceTable_t peripheralReferenceTable_;///外側からいじれる用
+
 	/// <summary>
 	/// 次の入力バッファインデックスを返す
 	/// </summary>
@@ -56,10 +61,36 @@ private:
 	/// <param name="eventname">入力イベントの名前</param>
 	/// <param name="peri">入力情報</param>
 	void RegistAcceptPeripheral(const char* eventname, const std::vector<PeripheralInfo>& peri);
-	bool CheckPressed(const char* eventname, const char* keystate, int padstate);
-	//void SetPeripheral(const char* eventnname)
+	bool CheckPressed(const char* eventname, const char* keystate = 0, int padstate = 0);
 	
-	//std::vector<std::pair<std::string, unsigned int>>keyPair_; // <keyname, keycode>
+	
+	/// <summary>
+	/// 生キーボード情報を取得する
+	/// ロック中は中身が空
+	/// </summary>
+	/// <returns>生キーボード情報配列</returns>
+	const std::vector<char>& GetRawKeyboardState()const;
+
+	/// <summary>
+	/// 生パッド情報を取得
+	/// 一回だけ
+	/// </summary>
+	/// <returns>生パッド情報</returns>
+	const int GetRawPadState()const;
+
+	/// <summary>
+	/// 生モードをアンロックする
+	/// 生キーボード、生パッド情報が保持され参照できるようになる
+	/// </summary>
+	void UnLockRawMode()const;
+
+	/// <summary>
+	/// 生モードをロックする
+	/// このモードで生データにアクセスしようとするとアサーションを起こす
+	/// </summary>
+	void LockRawMode()const;
+
+	void SetPeripheralReferenceTable(const PeripheralReferenceTable_t& prt)const;
 public:
 	Input();
 	Input(const Input&) = delete;

@@ -180,3 +180,8 @@ void Slasher::OnHit(CollisionInfo& col)
         isDeletable_ = true;
     }
 }
+
+const std::vector<Circle>& Slasher::GetCircles() const
+{
+    return circles_;
+}

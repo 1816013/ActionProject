@@ -142,6 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Arithmetic.cpp" />
+    <ClCompile Include="Game\Enemy\Ashura.cpp" />
+    <ClCompile Include="Game\Enemy\BossSpawner.cpp" />
+    <ClCompile Include="Game\Enemy\Boss.cpp" />
     <ClCompile Include="Debug\Debugger.cpp" />
     <ClCompile Include="Scene\KeyConfigScene.cpp" />
     <ClCompile Include="System\File.cpp" />
@@ -183,6 +187,10 @@
     <ClCompile Include="Game\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arithmetic.h" />
+    <ClInclude Include="Game\Enemy\Ashura.h" />
+    <ClInclude Include="Game\Enemy\BossSpawner.h" />
+    <ClInclude Include="Game\Enemy\Boss.h" />
     <ClInclude Include="Debug\Debugger.h" />
     <ClInclude Include="Scene\KeyConfigScene.h" />
     <ClInclude Include="System\File.h" />

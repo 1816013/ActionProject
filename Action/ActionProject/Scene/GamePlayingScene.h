@@ -20,6 +20,7 @@ class GamePlayingScene : public Scene
 private:
 	GamePlayingScene(SceneController&);
 
+	void InitializeUpdate(const Input& input);
 	void FadeoutUpdate(const Input&);
 	void FadeinUpdate(const Input&);
 	void GamePlayUpdate(const Input&);
@@ -43,7 +44,7 @@ private:
 	std::shared_ptr<Stage> stage_;
 	std::shared_ptr<Camera> camera_;
 
-	int weaponUIH_[3];
+	
 public:
 	~GamePlayingScene();
 	void AddListner(std::shared_ptr<InputListner> listner);
@@ -51,8 +52,10 @@ public:
 	void Draw()override;
 	ProjectileManager& GetProjectileManager();
 	std::shared_ptr<CollisionManager> GetCollisionManager();
+	std::shared_ptr<EnemyManager> GetEnemyManager();
 	std::shared_ptr<Player>& GetPlayer();
 	std::shared_ptr<Camera>& GetCamera();
 	std::shared_ptr<Stage>& GetStage();
+	void AddSpawner(Spawner* spawer);
 };
 

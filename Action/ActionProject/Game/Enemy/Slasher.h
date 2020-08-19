@@ -26,6 +26,8 @@ private:
     std::shared_ptr<EffectManager>effectManager_;
     std::shared_ptr<Stage>stage_;
 
+   
+
 public:
 	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c, std::shared_ptr<Stage>s);
     ~Slasher();
@@ -39,5 +41,7 @@ public:
     /// </summary>
     /// <param name="c">“–‚½‚Á‚½‘Šè‚ÌƒRƒŠƒWƒ‡ƒ“î•ñ</param>
     void OnHit(CollisionInfo& c)override;
+
+    const std::vector<Circle>& GetCircles()const override;
 };
 

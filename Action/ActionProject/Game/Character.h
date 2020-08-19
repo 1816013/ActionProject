@@ -17,6 +17,7 @@ class Character
 protected:
 	Position2f pos_;
 	std::shared_ptr<Camera>camera_;
+	bool isActive_ = false;
 public:
 	Character(std::shared_ptr<Camera> camera);
 	virtual ~Character() = default;
@@ -40,5 +41,6 @@ public:
 	/// </summary>
 	/// <param name="c">ƒRƒŠƒWƒ‡ƒ“î•ñ</param>
 	virtual void OnHit(CollisionInfo& c) = 0;
+	bool IsActive()const { return isActive_; }
 };
 

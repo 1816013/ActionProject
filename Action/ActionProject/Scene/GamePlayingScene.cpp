@@ -21,42 +21,22 @@
 #include "../Debug/Debugger.h"
 #include "../System/FileManager.h"
 #include "../System/File.h"
+#include "../Game/Enemy/BossSpawner.h"
+#include "../Game/Enemy/Ashura.h"
 
 using namespace std;
 namespace 
 {
 	constexpr uint32_t FadeInterval = 45;
 	unsigned int waitTimer = 0;
-
+	int weaponUIH_[3];
 }
 
 
 GamePlayingScene::GamePlayingScene(SceneController & c) : Scene(c),
-updater_(&GamePlayingScene::FadeinUpdate),
+updater_(&GamePlayingScene::InitializeUpdate),
 drawer_(&GamePlayingScene::FadeDraw)
 {
-	
-	waitTimer = 0;
-	camera_ = make_shared<Camera>();
-	collisionManager_ = make_shared<CollisionManager>();
-	effectManager_ = make_shared<EffectManager>();
-	bg_ = make_unique<Background>(camera_);
-	projectileManager_ = make_unique<ProjectileManager>();
-	stage_ = make_shared<Stage>(camera_);
-	stage_->Load(L"Resource/level/level2.fmf");
-	player_ = make_shared<Player>(this);
-	player_->SetPosition({ 350, 480 });
-	camera_->SetPlayer(player_);
-	enemyManager_ = make_shared<EnemyManager>();
-	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_, stage_), enemyManager_, collisionManager_, camera_));
-	
-	auto& fileMng = FileManager::Instance();
-
-	weaponUIH_[0] = fileMng.Load(L"Resource/Image/UI/bomb.png")->Handle();
-	weaponUIH_[1] = fileMng.Load(L"Resource/Image/UI/shuriken.png")->Handle();
-	weaponUIH_[2] = fileMng.Load(L"Resource/Image/UI/chain.png")->Handle();
-
-	
 }
 
 GamePlayingScene::~GamePlayingScene()
@@ -67,6 +47,29 @@ GamePlayingScene::~GamePlayingScene()
 void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)
 {
 	listners_.push_back(listner);
+}
+
+void GamePlayingScene::InitializeUpdate(const Input& input)
+{
+	auto& fileMng = FileManager::Instance();
+	collisionManager_ = make_shared<CollisionManager>();
+	enemyManager_ = make_shared<EnemyManager>();
+	waitTimer = 0;
+	camera_ = make_shared<Camera>();
+	effectManager_ = make_shared<EffectManager>();
+	bg_ = make_unique<Background>(camera_);
+	projectileManager_ = make_unique<ProjectileManager>();
+	stage_ = make_shared<Stage>(camera_, this);
+	stage_->Load(L"Resource/level/level2.fmf");
+	player_ = make_shared<Player>(this);
+	player_->SetPosition({ 350, 480 });
+	camera_->SetPlayer(player_);
+	
+	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_, stage_), enemyManager_, collisionManager_, camera_));
+	weaponUIH_[0] = fileMng.Load(L"Resource/Image/UI/bomb.png")->Handle();
+	weaponUIH_[1] = fileMng.Load(L"Resource/Image/UI/shuriken.png")->Handle();
+	weaponUIH_[2] = fileMng.Load(L"Resource/Image/UI/chain.png")->Handle();
+	updater_ = &GamePlayingScene::FadeinUpdate;
 }
 
 
@@ -104,7 +107,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 		camera_->Lock();
 	}
 	effectManager_->Update();
-	
+	stage_->Update();
 }
 
 
@@ -130,9 +133,9 @@ void GamePlayingScene::NomalDraw()
 
 	bg_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Back));
+	enemyManager_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Base));
 	projectileManager_->Draw();
-	enemyManager_->Draw();
 	player_->Draw();
 	effectManager_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Flont));
@@ -173,6 +176,11 @@ std::shared_ptr<CollisionManager> GamePlayingScene::GetCollisionManager()
 	return collisionManager_;
 }
 
+std::shared_ptr<EnemyManager> GamePlayingScene::GetEnemyManager()
+{
+	return enemyManager_;
+}
+
 std::shared_ptr<Player>& GamePlayingScene::GetPlayer()
 {
 	return player_;
@@ -186,6 +194,11 @@ std::shared_ptr<Camera>& GamePlayingScene::GetCamera()
 std::shared_ptr<Stage>& GamePlayingScene::GetStage()
 {
 	return stage_;
+}
+
+void GamePlayingScene::AddSpawner(Spawner* spawer)
+{
+	spawners_.emplace_back(spawer);
 }
 
 

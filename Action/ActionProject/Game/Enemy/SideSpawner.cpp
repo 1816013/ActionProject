@@ -11,8 +11,8 @@ namespace
 	constexpr int spawn_intarval = 40;
 	constexpr float spawn_offset = 36;
 }
-SideSpawner::SideSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager>& em, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera>c)
-	: Spawner(pos, prototype, em, c), collisionManeger_(cm)
+SideSpawner::SideSpawner(const Position2f& pos, Enemy* prototype,  std::shared_ptr<EnemyManager> em, std::shared_ptr<CollisionManager> cm, std::shared_ptr<Camera>c)
+	: Spawner(pos, prototype, em, cm,  c)
 {
 	frame_ = 0;
 }

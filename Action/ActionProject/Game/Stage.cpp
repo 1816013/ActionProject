@@ -6,6 +6,10 @@
 #include "../Debug/Debugger.h"
 #include ".././System/FileManager.h"
 #include ".././System/File.h"
+#include "../Scene/GamePlayingScene.h"
+#include "Enemy/BossSpawner.h"
+#include "Enemy/Ashura.h"
+#include "Enemy/EnemyManager.h"
 using namespace std;
 
 
@@ -15,6 +19,25 @@ namespace
 	constexpr float scale_ = 2.0f;
 	constexpr int groundLine = 600;
 	constexpr float narakuY = 1000.0f;
+}
+
+void Stage::NomalUpdate()
+{
+	CheckBossMode();
+	if (isBossMode_)
+	{
+		gameScene_->AddSpawner(
+			new BossSpawner(Position2f(0, 0),
+				new Ashura(gameScene_),
+				gameScene_->GetEnemyManager(),
+				gameScene_->GetCollisionManager(),
+				camera_));
+		updater_ = &Stage::BossUpdate;
+	}
+}
+
+void Stage::BossUpdate()
+{
 }
 
 void Stage::CreateSegment(Position2f& startPos, const Position2f& endPos)
@@ -31,7 +54,22 @@ void Stage::CreateSegment(Position2f& startPos, const Position2f& endPos)
 	startPos = endPos;
 }
 
-Stage::Stage(std::shared_ptr<Camera>c) : camera_(c)
+void Stage::CheckBossMode()
+{
+	constexpr uint8_t boss_no = 255;
+	auto rc = camera_->GetViewRange();
+	size_t xLeft = rc.Left() / (header_.chipW * scale_);
+	size_t xRight = rc.Right() / (header_.chipW * scale_);
+	auto itBegin = stageData_[static_cast<int>(LayerType::Enemy)].begin();
+	isBossMode_ = count(next(itBegin, xLeft * header_.mapH),
+		next(itBegin, xRight * header_.mapH),
+		boss_no) > 0;
+}
+
+Stage::Stage(std::shared_ptr<Camera>c, GamePlayingScene* gs) : 
+	camera_(c),
+	gameScene_(gs),
+	updater_(&Stage::NomalUpdate)
 {
 	header_ = {};
 	auto& fileMng = FileManager::Instance();
@@ -122,6 +160,7 @@ void Stage::Load(const TCHAR* path)
 
 void Stage::Update()
 {
+	(this->*updater_)();
 }
 
 void Stage::Draw(const size_t layerNo)
@@ -248,16 +287,5 @@ std::array<Segment, 3> Stage::GetThreeSegment(const Position2f& pos) const
 
 bool Stage::IsBossMode() const
 {
-	constexpr uint8_t boss_no = 255;
-	auto rc = camera_->GetViewRange();
-	size_t xLeft = rc.Left() / (header_.chipW * scale_);
-	size_t xRight = rc.Right() / (header_.chipW * scale_);
-	auto itBegin = stageData_[static_cast<int>(LayerType::Enemy)].begin();
-	auto it = count(next(itBegin, xLeft * header_.mapH),
-		next(itBegin, xRight * header_.mapH),
-		boss_no);
-	/*auto it = find(next(itBegin, xLeft * header_.mapH),
-		next(itBegin, xRight * header_.mapH),
-		boss_no);*/
-	return it > 0;
+	return isBossMode_;
 }

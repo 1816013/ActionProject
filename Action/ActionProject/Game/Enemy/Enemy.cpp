@@ -5,6 +5,11 @@ Enemy::Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c) : play
 {
 }
 
+Enemy* Enemy::MakeClone()
+{
+	return nullptr;
+}
+
 void Enemy::AimPlayer()
 {
 	velocity_ = player_->GetPosition() - pos_;

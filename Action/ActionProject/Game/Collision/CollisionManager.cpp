@@ -59,14 +59,32 @@ void CollisionManager::Update()
 			{
 				CollisionInfo colInfoOther = { other };
 				col->GetOwner()->OnHit(colInfoOther);
-				col->Suside();
+				if (col->GetOwner()->IsActive())
+				{
+					col->Sleep();
+				}
+				else
+				{
+					col->Suside();
+				}
+				
 				CollisionInfo colInfoOwn = { col };
 				other->GetOwner()->OnHit(colInfoOwn);
-				other->Suside();
+				if (other->GetOwner()->IsActive())
+				{
+					other->Sleep();
+				}
+				else
+				{
+					other->Suside();
+				}
 			}
 		}
 	}
-	
+	for (auto& col : colliders_) {
+		if (col->IsDeletable() || col->OwnerIsDead())continue;
+		col->Awake();
+	}
 }
 
 void CollisionManager::DebugDraw(std::shared_ptr<Camera>c)

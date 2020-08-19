@@ -40,3 +40,18 @@ void Collider::Suside()
 		isDeletable_ = true;
 	}
 }
+
+void Collider::Sleep()
+{
+	isActive_ = false;
+}
+
+void Collider::Awake()
+{
+	isActive_ = true;
+}
+
+bool Collider::IsAcrive()const
+{
+	return isActive_;
+}

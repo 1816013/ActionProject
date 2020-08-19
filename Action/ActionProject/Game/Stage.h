@@ -16,8 +16,6 @@ enum class LayerType
 	Enemy		// 敵配置
 };
 
-
-
 struct StageHeader
 {
 	char id[4];				// ファイル識別子(FMF_)
@@ -31,6 +29,7 @@ struct StageHeader
 };
 
 class Camera;
+class GamePlayingScene;
 /// <summary>
 /// ステージデータ管理
 /// </summary>
@@ -44,9 +43,17 @@ private:
 	
 	std::vector<Segment>terrainSegment_;
 
+	GamePlayingScene* gameScene_;
+	bool isBossMode_ = false;
+	using Update_t = void(Stage::*)();
+	Update_t updater_;
+	void NomalUpdate();
+	void BossUpdate();
+
 	void CreateSegment(Position2f& lastPos, const Position2f& pos);
+	void CheckBossMode();
 public:
-	Stage(std::shared_ptr<Camera>c);
+	Stage(std::shared_ptr<Camera>c,GamePlayingScene* gs);
 	/// <summary>
 	/// マップデータの読み込みデータの縦横変換
 	/// </summary>

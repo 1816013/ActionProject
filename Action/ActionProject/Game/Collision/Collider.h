@@ -14,8 +14,9 @@ private:
 	std::string tag_;
 	std::weak_ptr<Character> owner_;
 protected:
-	bool isDeletable_ = false;
-	bool isImmortal_ = false;
+	bool isDeletable_ = false;	// 消えてよいフラグ
+	bool isImmortal_ = false;	// 不滅フラグ
+	bool isActive_ = true;	// アクティブなフラグ
 public:
 	Collider(std::shared_ptr<Character> owner, const char* tag = "", bool immortal = false);
 	virtual ~Collider() = default;
@@ -31,6 +32,12 @@ public:
 	const std::string& GetTag()const;
 
 	void Suside();
+
+	void Sleep();
+
+	void Awake();
+
+	bool IsAcrive()const;
 
 	virtual void Draw(std::shared_ptr<Camera>c) {};
 };

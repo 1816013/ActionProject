@@ -1,5 +1,6 @@
 #pragma once
 #include "../Character.h"
+#include <vector>
 
 class Player;
 class Spawner;
@@ -15,10 +16,12 @@ protected:
 	bool isDeletable_ = false;
 	// Œ»İ‚Ì‘¬“x
 	Vector2f velocity_;
+	std::vector<Circle>circles_;
 
 	// ©•ª‚ÌƒNƒ[ƒ“‚ğ•Ô‚·
 	virtual Enemy* MakeClone() = 0;
 	virtual void AimPlayer();
+	
 public:
 	Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c);
 	virtual ~Enemy() = default;
@@ -42,6 +45,7 @@ public:
 
 	virtual bool IsDead()const;
 	virtual bool IsDeletable()const;
+	virtual const std::vector<Circle>& GetCircles()const = 0;
 
 	void OnHit(CollisionInfo& c)override;
 };
