@@ -6,7 +6,6 @@
 
 namespace
 {
-
 	constexpr int random_min = -10;
 	constexpr int random_max = 10;
 	constexpr int effect_blow_x = 32;

@@ -46,14 +46,34 @@ private:
 	// 開閉する際のdrawer
 	void OpenCloseDraw();
 
+	/// <summary>
+	/// メニューを閉じる
+	/// </summary>
 	void CloseMenu();
 
+	/// <summary>
+	/// string型からwstring型へ変更
+	/// </summary>
+	/// <param name="str">変更する文字列</param>
+	/// <returns>wstring型になった文字列</returns>
 	std::wstring GetWideStringFromString(const std::string str);
 
+	/// <summary>
+	/// エディットしたキーを反映させる
+	/// </summary>
+	/// <param name="input">入力情報</param>
 	void CommitCurrentKeyConfig(const Input& input);
 public:
 	~KeyConfigScene();
-	void Update(const Input&)override;
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	void Update(const Input& input)override;
+
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw()override;
 
 };

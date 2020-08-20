@@ -7,27 +7,11 @@
 
 namespace
 {
-	bool keyF1Pressed_ = false;
-	bool debugDisp_ = false;
 	std::pair<std::string, std::string> hitConbinationTable[] = { {tagEnemyDamage,tagPlayerAtack } };
 }
 
 void CollisionManager::Update()
 {
-	if (CheckHitKey(KEY_INPUT_F1))
-	{
-		if (!keyF1Pressed_)
-		{
-			debugDisp_ = !debugDisp_;
-		}
-		keyF1Pressed_ = true;
-	}
-	else
-	{
-		keyF1Pressed_ = false;
-	}
-	
-
 	colliders_.remove_if([](std::shared_ptr<Collider>& c)
 		{
 			return  c->OwnerIsDead() || c->IsDeletable();

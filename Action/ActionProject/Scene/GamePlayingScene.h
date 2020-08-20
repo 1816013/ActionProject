@@ -47,9 +47,27 @@ private:
 	
 public:
 	~GamePlayingScene();
+	/// <summary>
+	/// 入力通知を受け取るものを追加する
+	/// 現在はプレイヤーの入力通知のみ
+	/// </summary>
+	/// <param name="listner">入力通知を受け取るもの</param>
 	void AddListner(std::shared_ptr<InputListner> listner);
-	void Update(const Input&)override;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	void Update(const Input& input)override;
+
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw()override;
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
 	ProjectileManager& GetProjectileManager();
 	std::shared_ptr<CollisionManager> GetCollisionManager();
 	std::shared_ptr<EnemyManager> GetEnemyManager();

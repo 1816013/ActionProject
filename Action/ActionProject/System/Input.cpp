@@ -13,29 +13,27 @@ namespace
 Input::Input()
 {
 	const char* eventname = "OK";
-	RegistAcceptPeripheral("OK", { {PeripheralType::keyboard,KEY_INPUT_RETURN}, {PeripheralType::gamepad,PAD_INPUT_M} });
-	RegistAcceptPeripheral("pause", { {PeripheralType::keyboard,KEY_INPUT_P}, {PeripheralType::gamepad,PAD_INPUT_START} });
-	RegistAcceptPeripheral("cancel", { {PeripheralType::keyboard,KEY_INPUT_BACK}, {PeripheralType::gamepad,PAD_INPUT_H} });
+	RegistAcceptPeripheral("OK", { {PeripheralType::keyboard,KEY_INPUT_RETURN}, {PeripheralType::gamepad,PAD_INPUT_R} });
+	RegistAcceptPeripheral("pause", { {PeripheralType::keyboard,KEY_INPUT_P}, {PeripheralType::gamepad,PAD_INPUT_L} });
+	RegistAcceptPeripheral("cancel", { {PeripheralType::keyboard,KEY_INPUT_BACK}, {PeripheralType::gamepad,PAD_INPUT_Z} });
 	RegistAcceptPeripheral("up", { {PeripheralType::keyboard,KEY_INPUT_UP}, {PeripheralType::gamepad,PAD_INPUT_UP} });
 	RegistAcceptPeripheral("down", { {PeripheralType::keyboard,KEY_INPUT_DOWN}, {PeripheralType::gamepad,PAD_INPUT_DOWN} });
 	RegistAcceptPeripheral("left", { {PeripheralType::keyboard,KEY_INPUT_LEFT}, {PeripheralType::gamepad,PAD_INPUT_LEFT} });
 	RegistAcceptPeripheral("right", { {PeripheralType::keyboard,KEY_INPUT_RIGHT}, {PeripheralType::gamepad,PAD_INPUT_RIGHT} });
-	RegistAcceptPeripheral("shot", { {PeripheralType::keyboard,KEY_INPUT_LSHIFT}, {PeripheralType::gamepad,PAD_INPUT_B} });
-	RegistAcceptPeripheral("jump", { {PeripheralType::keyboard,KEY_INPUT_SPACE}, {PeripheralType::gamepad,PAD_INPUT_C} });
-	RegistAcceptPeripheral("change", { {PeripheralType::keyboard,KEY_INPUT_C}, {PeripheralType::gamepad,PAD_INPUT_A} });
+	RegistAcceptPeripheral("shot", { {PeripheralType::keyboard,KEY_INPUT_LSHIFT}, {PeripheralType::gamepad,PAD_INPUT_A} });
+	RegistAcceptPeripheral("jump", { {PeripheralType::keyboard,KEY_INPUT_SPACE}, {PeripheralType::gamepad,PAD_INPUT_B} });
+	RegistAcceptPeripheral("change", { {PeripheralType::keyboard,KEY_INPUT_C}, {PeripheralType::gamepad,PAD_INPUT_X} });
 	currentInputIndex = 0;
-	
-	//keyPair_.emplace_back(make_pair("OK", KEY_INPUT_RETURN));
-	//keyPair_.emplace_back(make_pair("pause", KEY_INPUT_P));
-	//keyPair_.emplace_back(make_pair("cancel", KEY_INPUT_BACK));
-	//keyPair_.emplace_back(make_pair("up", KEY_INPUT_UP));
-	//keyPair_.emplace_back(make_pair("down", KEY_INPUT_DOWN));
-	//keyPair_.emplace_back(make_pair("left", KEY_INPUT_LEFT));
-	//keyPair_.emplace_back(make_pair("right", KEY_INPUT_RIGHT));
-	//keyPair_.emplace_back(make_pair("shot", KEY_INPUT_LSHIFT));
-	//keyPair_.emplace_back(make_pair("change", KEY_INPUT_C));
-	//keyPair_.emplace_back(make_pair("jump", KEY_INPUT_SPACE));
-
+	/*"OK",PAD_INPUT_M;
+	"pause",PAD_INPUT_START;
+	"cancel",PAD_INPUT_H;
+	"up",PAD_INPUT_UP;
+	"down",PAD_INPUT_DOWN;
+	"left",PAD_INPUT_LEFT;
+	"right", PAD_INPUT_RIGHT;
+	"shot", PAD_INPUT_B;
+	"jump",PAD_INPUT_C;
+	"change",PAD_INPUT_A;*/
 	for (auto& currentTbl : _inputStateTable)
 	{
 		for (auto& refTbl : peripheralReferenceTable_)
@@ -60,17 +58,13 @@ void Input::Update()
 	{
 		CurrentInput(refTbl.first) = CheckPressed(refTbl.first.c_str(), keyState, pad);
 	}
-	if (isRawMode_ && CheckHitKeyAll())
+	if (isRawMode_)
 	{
 		if (GetJoypadNum() > 0)
 		{
-			rawPadState_ = GetJoypadInputState(DX_INPUT_PAD1);
+			rawPadState_ = pad;
 		}
-		rawKeyState_.resize(keyBufferSize);
-		for (int i = 0; i < keyBufferSize; i++)
-		{
-			rawKeyState_[i] = keyState[i];
-		}
+		copy(begin(keyState), end(keyState), rawKeyState_.begin());
 	}
 
 	
@@ -148,19 +142,21 @@ bool Input::CheckPressed(const char* eventname, const char* keystate, int padsta
 
 const std::vector<char>& Input::GetRawKeyboardState() const
 {
-	assert(isRawMode_);
+	//assert(isRawMode_);
 	return rawKeyState_;
 }
 
 const int Input::GetRawPadState() const
 {
-	assert(isRawMode_);
+//	assert(isRawMode_);
 	return rawPadState_;
 }
 
 void Input::UnLockRawMode() const
 {
+	// ‚±‚ÌŠÖ”‚Íconst‚¾‚ªmutable•Ï”‚Ì‚İ‚Í•ÏX‰Â”\
 	isRawMode_ = true;
+	rawKeyState_.resize(keyBufferSize);
 }
 
 void Input::LockRawMode() const
@@ -174,10 +170,7 @@ void Input::SetPeripheralReferenceTable(const PeripheralReferenceTable_t& prt) c
 {
 	for (auto& p : prt)
 	{
-		if (peripheralReferenceTable_.find(p.first) != peripheralReferenceTable_.end())
-		{
-			peripheralReferenceTable_[p.first] = p.second;
-		}
+		peripheralReferenceTable_[p.first] = p.second;
 	}
 	
 }

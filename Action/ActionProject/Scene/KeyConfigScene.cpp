@@ -103,15 +103,17 @@ void KeyConfigScene::EditUpdate(const Input& input)
 		auto& ref = peripheralReferenceTable_[menuItems_[currentSelectNo_]];
 		for (auto& p : ref) {
 			if (p.type == PeripheralType::keyboard) {
+				auto& rawKeyState = input.GetRawKeyboardState();
 				for (int i = 0; i < input.rawKeyState_.size(); ++i) {
-					if (input.rawKeyState_[i]) {
+					if (rawKeyState[i]) {
 						p.index = i;
 						break;
 					}
 				}
 			}
 			else if (p.type == PeripheralType::gamepad) {
-				if (input.rawPadState_ != 0) {
+				const auto& rawPadState = input.GetRawPadState();
+				if (rawPadState != 0) {
 					p.index = input.rawPadState_;
 				}
 			}
@@ -137,36 +139,34 @@ void KeyConfigScene::NomalDraw()
 	DrawBox(frameRect.Left(), frameRect.Top(), frameRect.Right(), frameRect.Bottom(), 0xffffff, false);
 	int titleW = GetDrawStringWidth(titleName, static_cast<int>(wcslen(titleName)));
 	DrawString(frameRect.pos.x - titleW / 2, frameRect.Top() + 32, titleName, 0xffffff);
-	int offset_x = 0;
+	int offset_x = 50;
 	auto offset_y = frameRect.Top() + 64;
 	uint32_t col = 0xffffff;
-	for (auto ref : peripheralReferenceTable_)
-	{
-		offset_x = 100;
-		col = 0xffffff;
-		if (ref.first == menuItems_[currentSelectNo_])
+	for (auto p : peripheralReferenceTable_)
+	{		
+		auto str = GetWideStringFromString(p.first);
+		DrawString(frameRect.Left() + offset_x, offset_y, str.c_str(), col);
+		offset_x += 100;
+		if (p.first == menuItems_[currentSelectNo_])
 		{
 			if (updater_ == &KeyConfigScene::EditUpdate)
 			{
 				offset_x += 20;
-				col = 0x00ffff;
+				col = 0x0000ff;
 			}
 			else
 			{
 				col = 0x00aaff;
 			}
 		}	
-		auto str = GetWideStringFromString(ref.first);
-		DrawString(frameRect.Left() + offset_x, offset_y, str.c_str(), col);
-		offset_x += 100;
-		DrawFormatString(frameRect.Left() + offset_x, offset_y, col,L"keybord=%04x", ref.second[0].index);
+		DrawFormatString(frameRect.Left() + offset_x, offset_y, col,L"keybord=%04x", p.second[static_cast<int>(PeripheralType::keyboard)].index);
 		offset_x += 150;
-		DrawFormatString(frameRect.Left() + offset_x, offset_y, col, L"gamepad=%04x", ref.second[1].index);
+		DrawFormatString(frameRect.Left() + offset_x, offset_y, col, L"gamepad=%05x", p.second[static_cast<int>(PeripheralType::gamepad)].index);
 		offset_y += 32;
+
+		offset_x = 50;
+		col = 0xffffff;
 	}
-	offset_x = 100;
-	offset_y += 32;
-	col = 0xffffff;
 	if (menuItems_[currentSelectNo_] == "commit")
 	{
 		col = 0x00aaff;

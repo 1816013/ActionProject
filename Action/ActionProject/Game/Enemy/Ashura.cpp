@@ -21,7 +21,7 @@ Ashura::Ashura(GamePlayingScene* gs) :
 	ground_line = rc.size.h - 16;
 	pos_.x = rc.pos.x;
 	pos_.y = chichu_y;
-	life_ = 3;
+	life_ = 10000;
 	isActive_ = true;
 }
 
@@ -48,7 +48,6 @@ void Ashura::OnDamage(int damage)
 void Ashura::OnDead()
 {
 	isDeletable_ = true;
-	//isActive_ = false;
 }
 
 void Ashura::Update()
@@ -107,7 +106,7 @@ void Ashura::NormalDraw()
 		w / 2, 800,
 		draw_scale, 0.0f,
 		ashuraH_, true);
-
+	DrawFormatString(0, 200, 0xffffff, L"%d", life_);
 }
 
 void Ashura::DamageDraw()
@@ -116,6 +115,7 @@ void Ashura::DamageDraw()
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 256);//â¡éZçáê¨
 	NormalDraw();//í èÌï`âÊ
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 }
 
 void Ashura::ExitingDraw()

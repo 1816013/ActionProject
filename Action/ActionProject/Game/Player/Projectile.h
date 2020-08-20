@@ -1,11 +1,12 @@
 #pragma once
 #include "../Character.h"
+
 class Camera;
 class Projectile : public Character
 {
 protected:
 	Vector2f vel_;	// ‘¬“x
-	bool isActive_ = false;	// ¶‚«‚Ä‚¢‚é‚©
+	//bool isActive_ = false;	// ¶‚«‚Ä‚¢‚é‚©
 	std::shared_ptr<Camera> camera_;
 public:
 	Projectile(std::shared_ptr<Camera> c);
