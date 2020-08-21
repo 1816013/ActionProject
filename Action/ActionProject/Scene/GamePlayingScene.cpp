@@ -102,7 +102,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	{
 		spw->Update();
 	}
-	if (stage_->IsBossMode())
+	if (stage_->IsBossMode() && updater_ == &GamePlayingScene::GamePlayUpdate)
 	{
 		camera_->Lock();
 	}
@@ -135,8 +135,8 @@ void GamePlayingScene::NomalDraw()
 	stage_->Draw(static_cast<size_t>(LayerType::Back));
 	enemyManager_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Base));
-	projectileManager_->Draw();
 	player_->Draw();
+	projectileManager_->Draw();
 	effectManager_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Flont));
 
@@ -149,7 +149,7 @@ void GamePlayingScene::NomalDraw()
 	collisionManager_->DebugDraw(camera_);
 	stage_->DebugDraw();
 
-	if (stage_->IsBossMode())
+	if (stage_->IsBossMode()&& updater_ == &GamePlayingScene::GamePlayUpdate)
 	{
 		DrawString(360, 280, L"Boss Mode", 0xff0000);
 	}

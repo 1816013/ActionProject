@@ -14,7 +14,7 @@ namespace
 	bool extensionF = false;
 	Direction retDir;
 
-	constexpr int attack_frame = 40;
+	constexpr int attack_frame = 20;
 	constexpr int chain_length = 400;
 	constexpr int chain_y = 48;
 }
@@ -47,15 +47,14 @@ void ChainEquip::ExtensionUpdate()
 	if (++extensionFrame_ <= attack_frame / 2)
 	{	
 		auto variation = variationAngle;
-		if (fabsf(variation) > DX_PI)
+		/*if (fabsf(variation) > DX_PI)
 		{
 			variation = (fabsf(variation) - DX_PI * 2) * -1.0f;
-		}
+		}*/
 		angle += variation / (attack_frame / 2);
 	}
 	else
 	{
-		frame_ = attack_frame - frame_;
 		updater_ = &ChainEquip::NomalUpdate;
 		extensionFrame_ = 0;
 	}
@@ -96,11 +95,26 @@ void ChainEquip::Attack(const Player& player, const Input& input)
 }
 void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 {
-	if (frame_ < 10  || extensionF)return;
+	if (frame_ < attack_frame / 2  || extensionF)return;
 	auto oldDir = direction_;
 	SetDirection(input, player);
 	if (direction_ == oldDir)return;
 	variationAngle = atan2f(direction_.y, direction_.x);
+	if (player.Direction() == Direction::RIGHT)
+	{
+		if (variationAngle > 0)
+		{
+			variationAngle = -DX_PI_F * 2 + variationAngle;
+		}
+	}
+	else
+	{
+		//variationAngle = -variationAngle;
+		/*if (variationAngle > 0)
+		{
+			variationAngle = -DX_PI_F * 2 + variationAngle;
+		}*/
+	}
 	variationAngle -= angle;
 	updater_ = &ChainEquip::ExtensionUpdate;
 	retDir = player.Direction();

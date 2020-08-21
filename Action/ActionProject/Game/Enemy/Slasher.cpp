@@ -14,7 +14,7 @@ namespace
     constexpr float narakuY = 1000.0f;
     constexpr int change_AI_intarval = 150;
     constexpr int speed = 5;
-    constexpr float jump_power = 25.0f;
+    constexpr float jump_power = 15.0f;
 }
 Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c,std::shared_ptr<Stage>s) :
     Enemy(p, c),
@@ -60,19 +60,8 @@ void Slasher::RunUpdate()
         animFrame_ = 0;
         frame_ = 0;
     }
+
     auto seg3 = stage_->GetThreeSegment(pos_);
-    // 床判定（床があれば床まで座標を床に補正）
-    if (seg3[1].IsNil())
-    {
-        pos_.y = narakuY;
-    }
-    else
-    {
-        assert(seg3[1].vec.x > 0.0f);
-        auto yVariation = seg3[1].vec.y / seg3[1].vec.x;
-        if(updater_ == &Slasher::RunUpdate)
-        pos_.y = seg3[1].start.y + yVariation * (pos_.x - seg3[1].start.x);      
-    }
     //ジャンプ判断 
     if (velocity_.x > 0) {
         if (seg3[2].IsNil() || seg3[2].vec.x == 0) {
@@ -92,7 +81,31 @@ void Slasher::RunUpdate()
             }
         }
     }
+    // 床判定（床があれば床まで座標を床に補正）
+    if (seg3[1].IsNil())
+    {
+        pos_.y = narakuY;
+    }
+    else
+    {
+        assert(seg3[1].vec.x > 0.0f);
+        auto yVariation = seg3[1].vec.y / seg3[1].vec.x;
+        if (updater_ == &Slasher::RunUpdate)
+        {
+            pos_.y = seg3[1].start.y + yVariation * (pos_.x - seg3[1].start.x);
+        }
+    }
+    
    
+}
+void Slasher::JumpUpdate()
+{
+    velocity_.y += 0.75f;
+    pos_ += velocity_;
+    if (velocity_.y >= 0.0f) {
+        updater_ = &Slasher::FallUpdate;
+        frame_ = 0;
+    }
 }
 
 void Slasher::FallUpdate()
@@ -117,15 +130,7 @@ void Slasher::SlashUpdate()
     }
 }
 
-void Slasher::JumpUpdate()
-{
-    velocity_.y += 0.75f;
-    pos_ += velocity_;
-    if (velocity_.y <= 0.0f) {
-        updater_ = &Slasher::FallUpdate;
-        frame_ = 0;
-    }
-}
+
 
 void Slasher::RunDraw()
 {

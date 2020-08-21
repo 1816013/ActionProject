@@ -8,7 +8,7 @@
 BossSpawner::BossSpawner(const Position2f& pos, Enemy* prototype, std::shared_ptr<EnemyManager> enemyManager, std::shared_ptr<CollisionManager> collisionManager, std::shared_ptr<Camera> camera):
 	Spawner(pos, prototype, enemyManager, collisionManager,camera),
 	collisionManager_(collisionManager),
-	updater_(&BossSpawner::CreateUpdate)
+	updater_(&BossSpawner::SpawnUpdate)
 {
 }
 
@@ -17,7 +17,7 @@ void BossSpawner::Update()
 	(this->*updater_)();
 }
 
-void BossSpawner::CreateUpdate()
+void BossSpawner::SpawnUpdate()
 {
 	auto clone = CreateClone();
 	enemyManager_->AddEnemy(clone);

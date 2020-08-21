@@ -2,12 +2,14 @@
 #include <DxLib.h>
 #include "../Camera.h"
 #include "../Collision/CircleCollider.h"
+#include "../../System/FileManager.h"
+#include "../../System/File.h"
 
 namespace
 {
 	constexpr float chichu_y = 1100.f;
 	int ground_line;
-	constexpr float	draw_scale = 0.5f;
+	constexpr float	draw_scale = 1.2f;
 }
 
 Ashura::Ashura(GamePlayingScene* gs) :
@@ -15,13 +17,14 @@ Ashura::Ashura(GamePlayingScene* gs) :
 	updater_(&Ashura::EnteringUpdate),
 	drawer_(&Ashura::NormalDraw)
 {
-	ashuraH_ = LoadGraph(L"Resource/Image/Enemy/Ashura/hotoke_asyura.png");
+	auto& fileMng = FileManager::Instance();
+	ashuraH_ = fileMng.Load(L"Resource/Image/Enemy/Ashura/ashura.png")->Handle();
 	circles_.emplace_back(Position2f(0, -400), 50);
 	auto rc = camera_->GetViewRange();
-	ground_line = rc.size.h - 16;
+	ground_line = rc.size.h - 16 - 32 * 2;
 	pos_.x = rc.pos.x;
 	pos_.y = chichu_y;
-	life_ = 10000;
+	life_ = 10;
 	isActive_ = true;
 }
 
@@ -29,7 +32,10 @@ void Ashura::OnHit(CollisionInfo& colInfo)
 {
 	if (colInfo.collider->GetTag() == tagPlayerAtack)
 	{
-		OnDamage(1);
+		if (updater_ == &Ashura::NomalUpdate)
+		{
+			OnDamage(1);
+		}
 	}
 }
 
@@ -47,7 +53,8 @@ void Ashura::OnDamage(int damage)
 
 void Ashura::OnDead()
 {
-	isDeletable_ = true;
+	updater_ = &Ashura::ExitingUpdate;
+	drawer_ = &Ashura::ExitingDraw;
 }
 
 void Ashura::Update()
@@ -70,7 +77,7 @@ void Ashura::EnteringUpdate()
 	}
 	else
 	{
-		pos_.y -= 10;
+		pos_.y -= 3;
 	}
 }
 
@@ -90,10 +97,21 @@ void Ashura::DamageUpdate()
 
 void Ashura::ExitingUpdate()
 {
+	if (pos_.y >= chichu_y)
+	{
+		updater_ = &Ashura::DeadUpdate;
+		pos_.y = chichu_y;
+	}
+	else
+	{
+		pos_.y += 3;
+	}
 }
 
 void Ashura::DeadUpdate()
 {
+	isDeletable_ = true;
+	isActive_ = false;
 }
 
 void Ashura::NormalDraw()
@@ -103,10 +121,11 @@ void Ashura::NormalDraw()
 	const auto xOffset = camera_->ViewOffset().x;
 	DrawRotaGraph2(
 		pos_.x + xOffset, pos_.y,
-		w / 2, 800,
+		w / 2, 400,
 		draw_scale, 0.0f,
 		ashuraH_, true);
 	DrawFormatString(0, 200, 0xffffff, L"%d", life_);
+	DrawCircle(pos_.x, pos_.y, 10, 0x00ff00, true);
 }
 
 void Ashura::DamageDraw()
@@ -120,6 +139,7 @@ void Ashura::DamageDraw()
 
 void Ashura::ExitingDraw()
 {
+	NormalDraw();
 }
 
 void Ashura::DeadDraw()
