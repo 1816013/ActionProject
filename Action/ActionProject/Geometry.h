@@ -97,6 +97,10 @@ struct Vector2D
 
 	static const Vector2D<float>ZERO;
 	static const Vector2D<float>NIL;
+	static const Vector2D<float>UP;
+	static const Vector2D<float>DOWN;
+	static const Vector2D<float>RIGHT;
+	static const Vector2D<float>LEFT;
 };
 
 

@@ -1,7 +1,7 @@
 #include "BombEquip.h"
 #include "Player.h"
 #include "../../System/Input.h"
-#include "ProjectileManager.h"
+#include "../ProjectileManager.h"
 #include "BombShot.h"
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CircleCollider.h"

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Character.h"
+#include "Character.h"
 
 class Camera;
 class Projectile : public Character

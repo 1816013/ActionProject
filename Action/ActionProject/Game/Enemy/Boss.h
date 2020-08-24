@@ -1,10 +1,12 @@
 #pragma once
 #include "Enemy.h"
 class GamePlayingScene;
+class EffectManager;
 class Boss : public Enemy
 {
 protected:
 	GamePlayingScene* gameScene_;
+	std::shared_ptr<EffectManager>effectManager_;
 public:
 	Boss(GamePlayingScene* gs);
 	virtual ~Boss() = default;

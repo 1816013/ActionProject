@@ -5,6 +5,8 @@
 
 constexpr const char* tagPlayerAtack = "pAtk";
 constexpr const char* tagEnemyDamage = "eDmg";
+constexpr const char* tagPlayerDamage = "pDmg";
+constexpr const char* tagEnemyBullet = "eblt";
 
 class Camera;
 class Character;

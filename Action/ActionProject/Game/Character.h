@@ -8,7 +8,6 @@ enum class Direction
 	LEFT
 };
 
-
 class Input;
 struct CollisionInfo;
 class Camera;

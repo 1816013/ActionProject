@@ -1,6 +1,6 @@
 #include "BombShot.h"
 #include <DxLib.h>
-#include "Projectile.h"
+#include "../Projectile.h"
 #include "../Camera.h"
 #include "../../System/FileManager.h"
 #include "../../System/File.h"

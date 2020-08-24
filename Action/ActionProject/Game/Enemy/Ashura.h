@@ -1,7 +1,9 @@
 #pragma once
 #include "Boss.h"
 #include <vector>
+#include <array>
 
+class EffectManager;
 /// <summary>
 /// 1面ボス
 /// </summary>
@@ -14,7 +16,21 @@ private:
 	Update_t updater_;
 	using Draw_t = void (Ashura::*)();
 	Draw_t drawer_;
-	std::vector<Circle>circles_;
+	std::vector<Circle>circles_;	// 円衝突情報の円
+	/// <summary>
+	/// ボス攻撃起点
+	/// </summary>
+	struct EnergyBall
+	{
+		Vector2f pos;
+		int frame;
+		EnergyBall(Vector2f pos) : pos(pos), frame(0) {};
+	};
+	std::array<EnergyBall, 4>energyBalls_ = {
+		EnergyBall({-128.0f, -420.0f}),
+		EnergyBall({128, -420}),
+		EnergyBall({-100, -300}),
+		EnergyBall({100, -300}) };
 
 	// 更新
 	void EnteringUpdate();

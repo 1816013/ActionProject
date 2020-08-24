@@ -74,6 +74,7 @@ public:
 	std::shared_ptr<Player>& GetPlayer();
 	std::shared_ptr<Camera>& GetCamera();
 	std::shared_ptr<Stage>& GetStage();
+	std::shared_ptr<EffectManager>& GetEffectMng();
 	void AddSpawner(Spawner* spawer);
 };
 

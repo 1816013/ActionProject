@@ -7,7 +7,7 @@
 
 namespace
 {
-	std::pair<std::string, std::string> hitConbinationTable[] = { {tagEnemyDamage,tagPlayerAtack } };
+	std::pair<std::string, std::string> hitConbinationTable[] = { {tagEnemyDamage,tagPlayerAtack }, {tagEnemyBullet,tagPlayerDamage} };
 }
 
 void CollisionManager::Update()

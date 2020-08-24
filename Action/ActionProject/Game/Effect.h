@@ -12,7 +12,10 @@ protected:
 	Position2f pos_;
 	bool isDeleatable = false;
 	std::shared_ptr<Camera>camera_;
+	Size size_;
 	int blowH = -1;
+	int groundExprotionH = -1;
+	int energyBallH = -1;
 public:
 	/// <summary>
 	/// エフェクトのコンストラクタ
@@ -55,6 +58,9 @@ public:
 	/// <param name="isTurn">エフェクトの向きが右か左か</param>
 	/// <param name="c">カメラ参照</param>
 	void EmitBlow3(const Position2f& p, bool isTurn, std::shared_ptr<Camera>c);
+	void EmitGroundExprotion(const Position2f& p, std::shared_ptr<Camera>c);
+	void EmitEnergyBall(const Position2f& p,bool isTurn, std::shared_ptr<Camera>c);
+	void EmitBulletExprode(const Position2f& p,bool isTurn, std::shared_ptr<Camera>c);
 	void Update();
 	void Draw();
 };
@@ -76,6 +82,41 @@ private:
 	float delay_ = 0.0f;
 public:
 	Blow(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c, float delay = 0.0f);
+	void Update();
+	void Draw();
+};
+
+class GroundExprotion : public Effect
+{
+private:
+	float delay_ = 0.0f;
+	
+public:
+	GroundExprotion(const Position2f& p, std::shared_ptr<Camera> c);
+	void Update();
+	void Draw();
+};
+
+class EnergyBall : public Effect
+{
+private:
+	bool isTurn_ = false;
+	float delay_ = 0.0f;
+
+public:
+	EnergyBall(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c);
+	void Update();
+	void Draw();
+};
+
+class BulletExprode : public Effect
+{
+private:
+	bool isTurn_ = false;
+	float delay_ = 0.0f;
+	int bulletExprodeH = -1;
+public:
+	BulletExprode(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c);
 	void Update();
 	void Draw();
 };

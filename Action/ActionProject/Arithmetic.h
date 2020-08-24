@@ -35,3 +35,11 @@ inline T ModuloDecrement(const T& value, const T& modulo) {
 	static_assert(std::is_integral<T>());
 	return (value - 1 + modulo) % modulo;
 }
+/// <summary>
+/// •„†‚ğ•Ô‚·
+/// </summary>
+template<typename T>
+inline T Sign(const T& A)
+{
+	return (A > 0) - (A < 0);
+}

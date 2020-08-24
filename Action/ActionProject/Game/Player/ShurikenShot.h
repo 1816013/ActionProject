@@ -1,5 +1,5 @@
 #pragma once
-#include "Projectile.h"
+#include "../Projectile.h"
 class ShurikenShot :
 	public Projectile
 {

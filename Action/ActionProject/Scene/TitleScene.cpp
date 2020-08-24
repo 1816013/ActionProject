@@ -34,8 +34,7 @@ drawer_(&TitleScene::FadeDraw)
 
 TitleScene::~TitleScene()
 {
-	DeleteGraph(titleH);
-	DeleteGraph(startH);
+	FileManager::Instance().DeleteAllResources();
 }
 
 

@@ -4,18 +4,31 @@
 #include "../Collision/CircleCollider.h"
 #include "../../System/FileManager.h"
 #include "../../System/File.h"
+#include "../Effect.h"
+#include <random>
+#include "AsuraBullet.h"
+#include "../ProjectileManager.h"
+#include "../../Scene/GamePlayingScene.h"
+#include "../Collision/CollisionManager.h"
+#include "../Collision/CircleCollider.h"
+
+
 
 namespace
 {
 	constexpr float chichu_y = 1100.f;
-	int ground_line;
+	float ground_line;
 	constexpr float	draw_scale = 1.2f;
+	std::mt19937 mt_(1);
+	std::uniform_int_distribution<int> dst(60, 80);
+	std::uniform_int_distribution<int> bulletAngleRange(4, 10);
 }
 
 Ashura::Ashura(GamePlayingScene* gs) :
 	Boss(gs),
 	updater_(&Ashura::EnteringUpdate),
 	drawer_(&Ashura::NormalDraw)
+	
 {
 	auto& fileMng = FileManager::Instance();
 	ashuraH_ = fileMng.Load(L"Resource/Image/Enemy/Ashura/ashura.png")->Handle();
@@ -26,6 +39,11 @@ Ashura::Ashura(GamePlayingScene* gs) :
 	pos_.y = chichu_y;
 	life_ = 10;
 	isActive_ = true;
+	
+	for (auto e : energyBalls_)
+	{
+		e.frame = dst(mt_);
+	}
 }
 
 void Ashura::OnHit(CollisionInfo& colInfo)
@@ -83,7 +101,25 @@ void Ashura::EnteringUpdate()
 
 void Ashura::NomalUpdate()
 {
-
+	for (int i = 0; i < energyBalls_.size(); ++i) {
+		if (--energyBalls_[i].frame <= 0) {
+			energyBalls_[i].frame = dst(mt_);
+			auto pos = energyBalls_[i].pos + pos_;
+			effectManager_->EmitEnergyBall(pos, false, camera_);
+			float angle = bulletAngleRange(mt_);
+			for (int i = 0; i < 8; ++i) {
+				Vector2f vel(cosf(angle), sinf(angle));
+				vel *= 4.0f;
+				auto& pm = gameScene_->GetProjectileManager();
+				pm.AddProjectile(new AsuraBullet(pos + vel, vel, camera_, gameScene_->GetEffectMng()));
+				auto colMgr = gameScene_->GetCollisionManager();
+				colMgr->AddCollider(new CircleCollider(pm.Projectiles().back(), tagEnemyBullet, Circle({ 0, 0 }, 5.0f)));
+				angle += DX_PI_F / 4.0f;
+			}
+		}
+	}
+	
+	
 }
 
 void Ashura::DamageUpdate()
@@ -121,7 +157,7 @@ void Ashura::NormalDraw()
 	const auto xOffset = camera_->ViewOffset().x;
 	DrawRotaGraph2(
 		pos_.x + xOffset, pos_.y,
-		w / 2, 400,
+		w / 2, h,
 		draw_scale, 0.0f,
 		ashuraH_, true);
 	DrawFormatString(0, 200, 0xffffff, L"%d", life_);
@@ -139,11 +175,19 @@ void Ashura::DamageDraw()
 
 void Ashura::ExitingDraw()
 {
+	int w;
+	GetGraphSize(ashuraH_, &w, nullptr);
+	auto randW = (rand() % w) - w / 2;
+	effectManager_->EmitGroundExprotion({ pos_.x + randW, ground_line }, camera_);
 	NormalDraw();
+	SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 128);
+	NormalDraw();//í èÌï`âÊ
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void Ashura::DeadDraw()
 {
+	
 }
 
 Enemy* Ashura::MakeClone()

@@ -10,11 +10,12 @@
 #include "PauseScene.h"
 #include "../Game/Player/Player.h"
 #include "../Game/Background.h"
-#include "../Game/Player/ProjectileManager.h"
+#include "../Game/ProjectileManager.h"
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/SideSpawner.h"
 #include "../Game/Enemy/Slasher.h"
 #include "../Game/Collision/CollisionManager.h"
+#include "../Game/Collision/CircleCollider.h"
 #include "../Game/Effect.h"
 #include "../Game/Stage.h"
 #include "../Game/Camera.h"
@@ -63,6 +64,7 @@ void GamePlayingScene::InitializeUpdate(const Input& input)
 	stage_->Load(L"Resource/level/level2.fmf");
 	player_ = make_shared<Player>(this);
 	player_->SetPosition({ 350, 480 });
+	collisionManager_->AddCollider(new CircleCollider(player_, tagPlayerDamage, Circle(Vector2f::ZERO, 50)));
 	camera_->SetPlayer(player_);
 	
 	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_, stage_), enemyManager_, collisionManager_, camera_));
@@ -77,7 +79,6 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 {
 	
 	camera_->Update();
-
 	if (input.IsTriggered("OK"))
 	{
 		updater_ = &GamePlayingScene::FadeoutUpdate;
@@ -194,6 +195,11 @@ std::shared_ptr<Camera>& GamePlayingScene::GetCamera()
 std::shared_ptr<Stage>& GamePlayingScene::GetStage()
 {
 	return stage_;
+}
+
+std::shared_ptr<EffectManager>& GamePlayingScene::GetEffectMng()
+{
+	return effectManager_;
 }
 
 void GamePlayingScene::AddSpawner(Spawner* spawer)

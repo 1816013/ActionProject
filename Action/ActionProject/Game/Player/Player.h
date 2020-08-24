@@ -38,11 +38,15 @@ private:
 
 	void FallUpdate();
 
+	void DamageUpdate();
+
 	void RunDraw(Vector2f offset, bool isRight);
 
 	void RizeDraw(Vector2f offset, bool isRight);
 
 	void FallDraw(Vector2f offset, bool isRight);
+
+	void DamageDraw(Vector2f offset, bool isRight);
 
 	void LoadGraphPlayer(const char* key, int* handle, int size, FileManager& fmanager);
 

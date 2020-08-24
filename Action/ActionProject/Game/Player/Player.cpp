@@ -13,13 +13,14 @@
 #include "../Stage.h"
 #include "../../System/FileManager.h"
 #include "../../System/File.h"
+#include "../Collision/CollisionManager.h"
+#include "../Collision/CircleCollider.h"
 
 using namespace std;
 
 namespace
 {
-	
-
+	int hurtH_[3] = {-1, -1, -1};
 	int frame_ = 0;
 	//constexpr int groundLine = 480;
 	constexpr float maxGraviry = 1.0f;
@@ -41,6 +42,7 @@ Player::Player(GamePlayingScene* gs) :
 	LoadGraphPlayer("run", runH_, _countof(runH_), fileMng);
 	LoadGraphPlayer("jump", jumpH_, _countof(jumpH_ ), fileMng);
 	LoadGraphPlayer("fall", fallH_, _countof(fallH_), fileMng);
+	LoadGraphPlayer("hurt", hurtH_, _countof(hurtH_), fileMng);
 	/*for (int i = 0; i < _countof(runH_); i++)
 	{
 		wstringstream wss;
@@ -49,7 +51,7 @@ Player::Player(GamePlayingScene* gs) :
 		wss << ".png";
 		runH_[i] = LoadGraph(wss.str().c_str());
 	}*/
-
+	isActive_ = true;
 	shadowMaskH = fileMng.Load(L"Resource/Image/Player/shadow_mask.bmp")->Handle();
 	class PlayerInputListner : public InputListner
 	{
@@ -230,6 +232,15 @@ void Player::FallUpdate()
 	}
 }
 
+void Player::DamageUpdate()
+{
+	if (frame_ >= 8)
+	{
+		updater_ = &Player::NomalUpdate;
+		drawer_ = &Player::RunDraw;
+	}
+}
+
 void Player::LoadGraphPlayer(const char* key, int* handle, int size, FileManager& fmanager)
 {
 	for (int i = 0; i < size; i++)
@@ -300,6 +311,15 @@ void Player::FallDraw(Vector2f offset, bool isRight)
 	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1, 3.0f, 0.0f, fallH_[idx], true, !isRight);
 }
 
+void Player::DamageDraw(Vector2f offset, bool isRight)
+{
+	auto idx = min(frame_ / 10, _countof(hurtH_) - 1);
+	auto gH = hurtH_[idx];
+	int w = 0, h = 0;
+	GetGraphSize(gH, &w, &h);
+	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1, 3.0f, 0.0f, hurtH_[idx], true, !isRight);
+}
+
 size_t Player::CurrentEquipmentNo() const
 {
 	return currentEquipmentNo_;
@@ -310,8 +330,14 @@ Direction Player::Direction() const
 	return direction_;
 }
 
-void Player::OnHit(CollisionInfo& c)
+void Player::OnHit(CollisionInfo& colInfo)
 {
+	if (colInfo.collider->GetTag() == tagEnemyBullet)
+	{
+		frame_ = 0;
+		updater_ = &Player::DamageUpdate;
+		drawer_ = &Player::DamageDraw;
+	}
 }
 
 void Player::SetCurrentPosition()
