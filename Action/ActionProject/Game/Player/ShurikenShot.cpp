@@ -56,12 +56,12 @@ void ShurikenShot::Update()
 void ShurikenShot::Draw()
 {
 	auto offset = camera_->ViewOffset();
-	DrawRotaGraph(pos_.x + offset.x, pos_.y,1.0f, angle_, shurikenH, true);
+	DrawRotaGraphF(pos_.x + offset.x, pos_.y,1.0f, angle_, shurikenH, true);
 }
 
-void ShurikenShot::OnHit(CollisionInfo& info)
+void ShurikenShot::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
-	if (info.collider->GetTag() == tagEnemyDamage)
+	if (another.collider->GetTag() == tagEnemyDamage)
 	{
 		isActive_ = false;
 	}

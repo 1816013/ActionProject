@@ -19,11 +19,19 @@ public:
     /// <param name="camera">カメラ</param> 
     AsuraBullet(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera>c, std::shared_ptr<EffectManager> effectManager);
 
+    /// <summary>
+    /// 更新
+    /// </summary>
     void Update()override;
+
     ///<summary>
-    /// Drawは最後の派生クラスで実装する
+    /// 描画
     /// </summary>
     void Draw()override;
 
-    void OnHit(CollisionInfo& colInfo);
+    /// <summary>
+    /// 何かが当たった
+    /// </summary>
+    /// <param name="colInfo">衝突情報</param>
+    void OnHit(CollisionInfo& mine, CollisionInfo& another);
 };

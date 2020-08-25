@@ -13,7 +13,7 @@ void Debugger::Update()
 	{
 		if (!pressedF1)
 		{
-			isDebug_ = true;
+			isDebug_ = !isDebug_;
 		}
 		pressedF1 = true;
 	}

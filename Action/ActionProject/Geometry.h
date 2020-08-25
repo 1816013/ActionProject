@@ -128,19 +128,19 @@ struct Rect
 	Size size;		// ‘å‚«‚³
 	Rect() : pos({ 0, 0 }), size({ 0, 0 }) {};
 	Rect(const Position2f& vpos, const Size& vsize) : pos(vpos),size(vsize){};
-	int Left()const
+	float Left()const
 	{
-		return pos.x - size.w / 2;
+		return pos.x - size.w / 2.0f;
 	}
-	int Right()const
+	float Right()const
 	{
-		return pos.x + size.w / 2;
+		return pos.x + size.w / 2.0f;
 	}
-	int Top()const
+	float Top()const
 	{
-		return pos.y - size.h / 2;
+		return pos.y - size.h / 2.0f;
 	}
-	int Bottom()const
+	float Bottom()const
 	{
 		return pos.y + size.h / 2;
 	}

@@ -3,6 +3,9 @@
 
 class EffectManager;
 class Stage;
+/// <summary>
+/// 雑魚敵、近づいて攻撃してくる
+/// </summary>
 class Slasher : public Enemy
 {
 private:
@@ -13,35 +16,62 @@ private:
 	Enemy* MakeClone() override;
     using Func_t = void (Slasher::*)();
 
+    //更新
     void RunUpdate();
     void FallUpdate();
     void SlashUpdate();
     void JumpUpdate();
     Func_t updater_;
 
+    // 描画
     void RunDraw();
     void SlashDraw();
     Func_t drawer_;
 
     std::shared_ptr<EffectManager>effectManager_;
     std::shared_ptr<Stage>stage_;
-
-   
-
 public:
-	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c, std::shared_ptr<Stage>s);
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="p">プレイヤー</param>
+    /// <param name="effectManager">エフェクト管理用クラス</param>
+    /// <param name="c">カメラ</param>
+    /// <param name="stage">ステージ</param>
+	Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& effectManager, std::shared_ptr<Camera> c, std::shared_ptr<Stage>stage);
     ~Slasher();
+
+    /// <summary>
+    /// ダメージを受けた
+    /// </summary>
+    /// <param name="damage">ダメージ値</param>
 	void OnDamage(int damage);
 
+    /// <summary>
+    /// 死んだ
+    /// </summary>
 	void OnDead();
+
+    /// <summary>
+    /// 更新
+    /// </summary>
 	void Update();
+
+    /// <summary>
+    /// 描画
+    /// </summary>
 	void Draw();
+
     /// <summary>
     /// 何かが当たった
     /// </summary>
     /// <param name="c">当たった相手のコリジョン情報</param>
-    void OnHit(CollisionInfo& c)override;
+    void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
 
+    /// <summary>
+    /// キャラが持っている円衝突情報を全て取得する
+    /// </summary>
+    /// <returns></returns>
     const std::vector<Circle>& GetCircles()const override;
 };
 

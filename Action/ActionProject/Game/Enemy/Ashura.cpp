@@ -20,7 +20,7 @@ namespace
 	float ground_line;
 	constexpr float	draw_scale = 1.2f;
 	std::mt19937 mt_(1);
-	std::uniform_int_distribution<int> dst(60, 80);
+	std::uniform_int_distribution<int> dst(60, 120);
 	std::uniform_int_distribution<int> bulletAngleRange(4, 10);
 }
 
@@ -32,9 +32,9 @@ Ashura::Ashura(GamePlayingScene* gs) :
 {
 	auto& fileMng = FileManager::Instance();
 	ashuraH_ = fileMng.Load(L"Resource/Image/Enemy/Ashura/ashura.png")->Handle();
-	circles_.emplace_back(Position2f(0, -400), 50);
+	circles_.emplace_back(Position2f(0.0f, -400.0f), 50.0f);
 	auto rc = camera_->GetViewRange();
-	ground_line = rc.size.h - 16 - 32 * 2;
+	ground_line = rc.size.h - 16.0f- 32.0f * 2.0f;
 	pos_.x = rc.pos.x;
 	pos_.y = chichu_y;
 	life_ = 10;
@@ -46,9 +46,9 @@ Ashura::Ashura(GamePlayingScene* gs) :
 	}
 }
 
-void Ashura::OnHit(CollisionInfo& colInfo)
+void Ashura::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
-	if (colInfo.collider->GetTag() == tagPlayerAtack)
+	if (another.collider->GetTag() == tagPlayerAtack)
 	{
 		if (updater_ == &Ashura::NomalUpdate)
 		{
@@ -106,14 +106,14 @@ void Ashura::NomalUpdate()
 			energyBalls_[i].frame = dst(mt_);
 			auto pos = energyBalls_[i].pos + pos_;
 			effectManager_->EmitEnergyBall(pos, false, camera_);
-			float angle = bulletAngleRange(mt_);
+			float angle = static_cast<float>(bulletAngleRange(mt_));
 			for (int i = 0; i < 8; ++i) {
 				Vector2f vel(cosf(angle), sinf(angle));
 				vel *= 4.0f;
 				auto& pm = gameScene_->GetProjectileManager();
 				pm.AddProjectile(new AsuraBullet(pos + vel, vel, camera_, gameScene_->GetEffectMng()));
 				auto colMgr = gameScene_->GetCollisionManager();
-				colMgr->AddCollider(new CircleCollider(pm.Projectiles().back(), tagEnemyBullet, Circle({ 0, 0 }, 5.0f)));
+				colMgr->AddCollider(new CircleCollider(pm.Projectiles().back(), tagEnemyBullet, Circle({ 0.0f, 0.0f }, 5.0f)));
 				angle += DX_PI_F / 4.0f;
 			}
 		}
@@ -156,12 +156,12 @@ void Ashura::NormalDraw()
 	GetGraphSize(ashuraH_, &w, &h);
 	const auto xOffset = camera_->ViewOffset().x;
 	DrawRotaGraph2(
-		pos_.x + xOffset, pos_.y,
+		static_cast<int>(pos_.x + xOffset), static_cast<int>(pos_.y),
 		w / 2, h,
 		draw_scale, 0.0f,
 		ashuraH_, true);
 	DrawFormatString(0, 200, 0xffffff, L"%d", life_);
-	DrawCircle(pos_.x, pos_.y, 10, 0x00ff00, true);
+	//DrawCircle(pos_.x + xOffset, pos_.y, 10, 0x00ff00, true);
 }
 
 void Ashura::DamageDraw()

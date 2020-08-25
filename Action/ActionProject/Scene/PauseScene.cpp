@@ -7,13 +7,14 @@
 #include "../System/FileManager.h"
 #include "../System/File.h"
 #include "KeyConfigScene.h"
+#include "../Arithmetic.h"
 
 
 namespace
 {
 	const Size& vpSize = Application::Instance().GetViewport().GetSize();
 	const Size rectSize = Size(400, 400);
-	Rect menuRect(Position2f(vpSize.w / 2, vpSize.h / 2),Size(rectSize.w, rectSize.h));
+	Rect menuRect(Position2f(vpSize.w / 2.0f, vpSize.h / 2.0f),Size(rectSize.w, rectSize.h));
 	constexpr int AccordionInterval = 20;	
 	unsigned int waitTimer = 0;	
 	
@@ -24,7 +25,7 @@ namespace
 	constexpr int menuInterval_y = 48;	// ÉÅÉjÉÖÅ[ÇÃï∂éöä‘äu
 	const wchar_t* titleName = L"Pause Menu";
 
-	int currentSelectNo_;
+	size_t currentSelectNo_;
 }
 
 PauseScene::~PauseScene()
@@ -74,11 +75,11 @@ void PauseScene::PauseUpdate(const Input& input)
 	}
 	if (input.IsTriggered("down"))
 	{
-		currentSelectNo_ = (static_cast<size_t>(currentSelectNo_) + 1) % menuItems_.size();
+		currentSelectNo_ = ModuloIncrement(currentSelectNo_, menuItems_.size());
 	}
 	if (input.IsTriggered("up"))
 	{
-		currentSelectNo_ = (static_cast<size_t>(currentSelectNo_) - 1 + menuItems_.size()) % menuItems_.size();
+		currentSelectNo_ = ModuloDecrement(currentSelectNo_, menuItems_.size());
 	}
 
 	for (auto& m : menuItems_)
@@ -131,13 +132,13 @@ void PauseScene::NomalDraw()
 
 	// ògÇÃï`âÊ
 	SetDrawBlendMode(DX_BLENDMODE_MULA, 128);
-	DrawBox(menuRect.Left(), menuRect.Top(), menuRect.Right(), menuRect.Bottom(), 0x000000, true);
+	DrawBoxAA(menuRect.Left(), menuRect.Top(), menuRect.Right(), menuRect.Bottom(), 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	DrawBox(menuRect.Left(), menuRect.Top(), menuRect.Right(), menuRect.Bottom(), 0xffffff, false);
+	DrawBoxAA(menuRect.Left(), menuRect.Top(), menuRect.Right(), menuRect.Bottom(), 0xffffff, false);
 
 	// ÉÅÉjÉÖÅ[ï∂éöï\é¶
 	int titleW =GetDrawStringWidth(titleName, static_cast<int>(wcslen(titleName)));
-	DrawString(menuRect.pos.x - titleW / 2, menuRect.Top() + pauseTitle_y, titleName, 0xffffff);
+	DrawStringF(menuRect.pos.x - titleW / 2, menuRect.Top() + pauseTitle_y, titleName, 0xffffff);
 	for(auto m : menuItems_)
 	{
 		uint32_t col = 0xffffff;
@@ -147,24 +148,24 @@ void PauseScene::NomalDraw()
 			col = 0xff0000;
 			offset_x = indicatorWidth_;
 		}
-		DrawString(menuRect.Left() + m.pos.x + offset_x, menuRect.Top() + m.pos.y, m.menuText.c_str(), col);
+		DrawStringF(menuRect.Left() + m.pos.x + offset_x, menuRect.Top() + m.pos.y, m.menuText.c_str(), col);
 	}
 
 	auto& indicatorPos = menuItems_[currentSelectNo_].pos;
-	DrawGraph(menuRect.Left() + indicatorPos.x - indicatorWidth_, menuRect.Top() + indicatorPos.y , IndicatorH, true);
+	DrawGraphF(menuRect.Left() + indicatorPos.x - indicatorWidth_, menuRect.Top() + indicatorPos.y , IndicatorH, true);
 }
 
 void PauseScene::OpenCloseDraw()
 {         
 	auto vh = static_cast<float>(AccordionInterval - waitTimer) / AccordionInterval;
 	Rect rc = menuRect;
-	rc.size.h = vh * rectSize.h;
+	rc.size.h =static_cast<int>(vh * rectSize.h);
 
 	// ògÇÃï`âÊ
 	SetDrawBlendMode(DX_BLENDMODE_MULA, 128);
-	DrawBox(rc.Left(), rc.Top(), rc.Right(), rc.Bottom(), 0x000000, true);
+	DrawBoxAA(rc.Left(), rc.Top(), rc.Right(), rc.Bottom(), 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	DrawBox(rc.Left(), rc.Top(), rc.Right(), rc.Bottom(), 0xffffff, false);
+	DrawBoxAA(rc.Left(), rc.Top(), rc.Right(), rc.Bottom(), 0xffffff, false);
 }
 
 

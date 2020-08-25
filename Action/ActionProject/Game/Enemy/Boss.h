@@ -10,7 +10,12 @@ protected:
 public:
 	Boss(GamePlayingScene* gs);
 	virtual ~Boss() = default;
-	virtual void OnHit(CollisionInfo& colInfo) = 0;
+
+	/// <summary>
+	/// ‰½‚©‚ª“–‚½‚Á‚½
+	/// </summary>
+	/// <param name="colInfo">Õ“Ëî•ñ</param>
+	virtual void OnHit(CollisionInfo& mine, CollisionInfo& another) = 0;
 
 	/// <summary>
 	/// UŒ‚‚ğó‚¯‚½

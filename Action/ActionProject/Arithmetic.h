@@ -41,5 +41,5 @@ inline T ModuloDecrement(const T& value, const T& modulo) {
 template<typename T>
 inline T Sign(const T& A)
 {
-	return (A > 0) - (A < 0);
+	return static_cast<T>((A > 0) - (A < 0));
 }

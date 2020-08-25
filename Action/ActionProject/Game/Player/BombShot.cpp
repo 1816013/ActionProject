@@ -50,10 +50,12 @@ void BombShot::Update()
 void BombShot::Draw()
 {
 	auto offset = camera_->ViewOffset();
-	DrawRotaGraph(pos_.x + offset.x, pos_.y, 0.5f, angle_, bombH, true);
+	DrawRotaGraph(static_cast<int>(pos_.x + offset.x),static_cast<int>(pos_.y),
+		0.5f, angle_, 
+		bombH, true);
 }
 
-void BombShot::OnHit(CollisionInfo& c)
+void BombShot::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
 	isActive_ = false;
 }

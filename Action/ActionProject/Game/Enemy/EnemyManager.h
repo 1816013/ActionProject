@@ -13,9 +13,26 @@ class EnemyManager
 private:
 	EnemyList enemies_;
 public:
+	/// <summary>
+	/// “G‚ğŠÇ—‚É’Ç‰Á‚·‚é
+	/// </summary>
+	/// <param name="enemy">“G‚Ì–{‘Ì</param>
 	void AddEnemy(Enemy* enemy);
+
+	/// <summary>
+	/// ŠÇ—‚µ‚Ä‚¢‚é“G‘S‚Ä‚ğæ“¾‚·‚é
+	/// </summary>
+	/// <returns></returns>
 	EnemyList& Enemies();
+
+	/// <summary>
+	/// XV
+	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// •`‰æ
+	/// </summary>
 	void Draw();
 };
 

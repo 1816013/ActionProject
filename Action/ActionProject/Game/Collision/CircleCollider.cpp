@@ -45,7 +45,7 @@ void CircleCollider::Draw(std::shared_ptr<Camera>c)
 		col = 0xffaaaa;
 	}
 
-	DrawCircle(pos.x + offset.x, pos.y,circle_.radius, col,0, 2);
+	DrawCircleAA(pos.x + offset.x, pos.y,circle_.radius, 32, col,false);
 
 	auto i = 0;
 #endif 

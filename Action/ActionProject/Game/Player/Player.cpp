@@ -52,6 +52,7 @@ Player::Player(GamePlayingScene* gs) :
 		runH_[i] = LoadGraph(wss.str().c_str());
 	}*/
 	isActive_ = true;
+	life_ = 10;
 	shadowMaskH = fileMng.Load(L"Resource/Image/Player/shadow_mask.bmp")->Handle();
 	class PlayerInputListner : public InputListner
 	{
@@ -234,7 +235,7 @@ void Player::FallUpdate()
 
 void Player::DamageUpdate()
 {
-	if (frame_ >= 8)
+	if (--knockbackfFrame <= 0)
 	{
 		updater_ = &Player::NomalUpdate;
 		drawer_ = &Player::RunDraw;
@@ -273,14 +274,21 @@ void Player::Draw()
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
 	auto& fpos = GetBackTimePosition(20);	
-	DrawFillMask(fpos.x + offset.x - 100, fpos.y -100, fpos.x + offset.x + 100, fpos.y, shadowMaskH);
-	DrawRotaGraph2(fpos.x + offset.x, fpos.y, w / 2, h - 1, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
+	DrawFillMask(
+		static_cast<int>(fpos.x + offset.x - 100), static_cast<int>(fpos.y -100),
+		static_cast<int>(fpos.x + offset.x + 100), static_cast<int>(fpos.y),
+		shadowMaskH);
+	DrawRotaGraph2F(fpos.x + offset.x, fpos.y, w / 2.0f, h - 1.0f, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 
 	auto& spos = GetBackTimePosition(40);
-	DrawFillMask(spos.x + offset.x - 100, spos.y - 100, spos.x + offset.x + 100, spos.y, shadowMaskH);
-	DrawRotaGraph2(spos.x + offset.x, spos.y,w / 2, h - 1, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
+	DrawFillMask(
+		static_cast<int>(spos.x + offset.x - 100), static_cast<int>(spos.y - 100),
+		static_cast<int>(spos.x + offset.x + 100), static_cast<int>(spos.y), shadowMaskH);
+	DrawRotaGraph2F(spos.x + offset.x, spos.y,w / 2.0f, h - 1.0f, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 	
 	DeleteMaskScreen();
+
+	DrawFormatString(0, 300, 0xffffff, L"life %d", life_);
 	(this->*drawer_)(offset, isRight);
 }
 
@@ -290,7 +298,7 @@ void Player::RunDraw(Vector2f offset, bool isRight)
 	auto gH = runH_[idx];
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
-	DrawRotaGraph2(pos_.x + offset.x, pos_.y,w / 2, h - 1, 3.0f, 0.0f, runH_[idx], true, !isRight);
+	DrawRotaGraph2F(pos_.x + offset.x, pos_.y, w / 2.0f, h - 1.0f, 3.0f, 0.0f, runH_[idx], true, !isRight);
 }
 
 void Player::RizeDraw(Vector2f offset, bool isRight)
@@ -299,7 +307,7 @@ void Player::RizeDraw(Vector2f offset, bool isRight)
 	auto gH = jumpH_[idx];
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
-	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1,  3.0f, 0.0f, jumpH_[idx], true, !isRight);
+	DrawRotaGraph2F(pos_.x + offset.x, pos_.y, w / 2.0f, h - 1.0f,  3.0f, 0.0f, jumpH_[idx], true, !isRight);
 }
 
 void Player::FallDraw(Vector2f offset, bool isRight)
@@ -308,7 +316,7 @@ void Player::FallDraw(Vector2f offset, bool isRight)
 	auto gH = fallH_[idx];
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
-	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1, 3.0f, 0.0f, fallH_[idx], true, !isRight);
+	DrawRotaGraph2F(pos_.x + offset.x, pos_.y, w / 2.0f, h - 1.0f, 3.0f, 0.0f, fallH_[idx], true, !isRight);
 }
 
 void Player::DamageDraw(Vector2f offset, bool isRight)
@@ -317,7 +325,7 @@ void Player::DamageDraw(Vector2f offset, bool isRight)
 	auto gH = hurtH_[idx];
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
-	DrawRotaGraph2(pos_.x + offset.x, pos_.y, w / 2, h - 1, 3.0f, 0.0f, hurtH_[idx], true, !isRight);
+	DrawRotaGraph2F(pos_.x + offset.x, pos_.y, w / 2.0f, h - 1.0f, 3.0f, 0.0f, hurtH_[idx], true, !isRight);
 }
 
 size_t Player::CurrentEquipmentNo() const
@@ -330,13 +338,19 @@ Direction Player::Direction() const
 	return direction_;
 }
 
-void Player::OnHit(CollisionInfo& colInfo)
+void Player::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
-	if (colInfo.collider->GetTag() == tagEnemyBullet)
+	if (updater_ == &Player::DamageUpdate)return;
+	if (another.collider->GetTag() == tagEnemyBullet && mine.collider->GetTag() == tagPlayerDamage)
 	{
-		frame_ = 0;
+		knockbackfFrame = 6;
+		--life_;
 		updater_ = &Player::DamageUpdate;
 		drawer_ = &Player::DamageDraw;
+		if (life_ <= 0)
+		{
+			isActive_ = false;
+		}
 	}
 }
 

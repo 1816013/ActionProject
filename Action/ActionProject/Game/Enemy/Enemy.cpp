@@ -17,9 +17,9 @@ void Enemy::AimPlayer()
 	velocity_.Nomarize(); 
 }
 
-void Enemy::SetPosition(const Vector2f& vel)
+void Enemy::SetPosition(const Position2f& pos)
 {
-	pos_ = vel;
+	pos_ = pos;
 }
 
 const Vector2f& Enemy::GetVelocity() const
@@ -42,6 +42,6 @@ bool Enemy::IsDeletable() const
 	return isDeletable_;
 }
 
-void Enemy::OnHit(CollisionInfo& c)
+void Enemy::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
 }

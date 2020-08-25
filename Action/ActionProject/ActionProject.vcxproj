@@ -94,7 +94,8 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -131,7 +132,8 @@
       <PreprocessorDefinitions>_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DXLIB_DIR)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -149,6 +151,7 @@
     <ClCompile Include="Game\Enemy\Boss.cpp" />
     <ClCompile Include="Debug\Debugger.cpp" />
     <ClCompile Include="Scene\KeyConfigScene.cpp" />
+    <ClCompile Include="Game\Player\ShadowClone.cpp" />
     <ClCompile Include="System\File.cpp" />
     <ClCompile Include="System\FileManager.cpp" />
     <ClCompile Include="Game\Camera.cpp" />
@@ -195,6 +198,7 @@
     <ClInclude Include="Game\Enemy\Boss.h" />
     <ClInclude Include="Debug\Debugger.h" />
     <ClInclude Include="Scene\KeyConfigScene.h" />
+    <ClInclude Include="Game\Player\ShadowClone.h" />
     <ClInclude Include="System\File.h" />
     <ClInclude Include="System\FileManager.h" />
     <ClInclude Include="Game\Camera.h" />

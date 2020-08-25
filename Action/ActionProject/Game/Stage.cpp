@@ -58,8 +58,8 @@ void Stage::CheckBossMode()
 {
 	constexpr uint8_t boss_no = 255;
 	auto rc = camera_->GetViewRange();
-	size_t xLeft = rc.Left() / (header_.chipW * scale_);
-	size_t xRight = rc.Right() / (header_.chipW * scale_);
+	size_t xLeft = static_cast<size_t>(rc.Left() / (header_.chipW * scale_));
+	size_t xRight = static_cast<size_t>(rc.Right() / (header_.chipW * scale_));
 	auto itBegin = stageData_[static_cast<int>(LayerType::Enemy)].begin();
 	isBossMode_ = count(next(itBegin, xLeft * header_.mapH),
 		next(itBegin, xRight * header_.mapH),
@@ -108,7 +108,8 @@ void Stage::Load(const TCHAR* path)
 		}
 	}
 	//FileRead_close(h);
-	camera_->SetStageSize(Size(header_.mapW * header_.chipW * scale_, header_.mapH * header_.chipH * scale_));
+	camera_->SetStageSize(Size(static_cast<int>(header_.mapW * header_.chipW * scale_),
+							   static_cast<int>(header_.mapH * header_.chipH * scale_)));
 
 	//最後のレイヤーを「線」のデータに変換 
 	constexpr uint8_t tr_point = 1;
@@ -124,7 +125,7 @@ void Stage::Load(const TCHAR* path)
 		for (size_t y = 0; y < header_.mapH; ++y) {
 			auto data = stageData_[CollisionLayerNo][y + x * header_.mapH];
 			if (data == 0)continue;
-			auto pos = Position2f(x * header_.chipW, y * header_.chipH) * scale_ + Vector2f(0, yOffset);
+			auto pos = Position2f(static_cast<float>(x * header_.chipW),static_cast<float>( y * header_.chipH)) * scale_ + Vector2f(0, yOffset);
 			switch (data) {
 			case tr_point://左上の点
 				if (pendingPos.IsNil())
@@ -165,21 +166,21 @@ void Stage::Update()
 
 void Stage::Draw(const size_t layerNo)
 {
-	const int yoffset = groundLine - (header_.chipH * scale_ * header_.mapH);
+	const auto yoffset = groundLine - (header_.chipH * scale_ * header_.mapH);
 	auto& offset = camera_->ViewOffset();
 	auto rc = camera_->GetViewRange();
 
 	for (unsigned int x = 0; x < header_.mapW; ++x)
 	{
-		int xpos = x * header_.chipW * scale_;
-		int xmargin = header_.chipW * scale_;
+		auto xpos = x * header_.chipW * scale_;
+		auto xmargin = header_.chipW * scale_;
 		if (xpos < rc.Left() - xmargin || rc.Right() + xmargin < xpos) {
 			continue;
 		}
 		for (unsigned int y = 0; y < header_.mapH; ++y)
 		{		
 			auto& data = stageData_[layerNo][y + x * static_cast<size_t>(header_.mapH)];
-			DrawRectRotaGraph2(
+			DrawRectRotaGraph2F(
 				x * header_.chipW * scale_ + offset.x,
 				yoffset + y * header_.chipH * scale_,
 				(data % 16) * header_.chipW,
@@ -205,7 +206,7 @@ void Stage::DebugDraw()
 		auto sPos = seg.start;
 		auto ePos = seg.start + seg.vec;
 		auto offset = camera_->ViewOffset();
-		DrawLine(sPos.x + offset.x, sPos.y, ePos.x + offset.x, ePos.y, 0xffffff, 3);
+		DrawLineAA(sPos.x + offset.x, sPos.y, ePos.x + offset.x, ePos.y, 0xffffff, 3);
 	}
 #endif // _DEBUG
 

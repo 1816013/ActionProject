@@ -135,7 +135,7 @@ void Slasher::SlashUpdate()
 void Slasher::RunDraw()
 {
     auto offset = camera_->ViewOffset();
-    DrawRectRotaGraph2(
+    DrawRectRotaGraph2F(
         pos_.x + offset.x, pos_.y,(animFrame_ / 5) * 36,0, 36, 26,
         18, 25,
         4.0f, 0.0f, runH, true,
@@ -145,7 +145,7 @@ void Slasher::RunDraw()
 void Slasher::SlashDraw()
 {
     auto offset = camera_->ViewOffset();
-    DrawRectRotaGraph2(pos_.x + offset.x, pos_.y,
+    DrawRectRotaGraph2F(pos_.x + offset.x, pos_.y,
         (animFrame_ / 5) * 42, 0, 42, 26,
         18, 25,
         4.0f, 0.0f, slashH, true,
@@ -176,9 +176,9 @@ void Slasher::Draw()
     (this->*drawer_)();
 }
 
-void Slasher::OnHit(CollisionInfo& col)
+void Slasher::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
-    if (col.collider->GetTag() == tagPlayerAtack)
+    if (another.collider->GetTag() == tagPlayerAtack)
     {
         // Ž€‚Ê
         effectManager_->EmitBlow3(pos_, velocity_.x < 0, camera_);

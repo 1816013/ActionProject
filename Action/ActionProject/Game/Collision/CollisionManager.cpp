@@ -7,7 +7,11 @@
 
 namespace
 {
-	std::pair<std::string, std::string> hitConbinationTable[] = { {tagEnemyDamage,tagPlayerAtack }, {tagEnemyBullet,tagPlayerDamage} };
+	std::pair<std::string, std::string> hitConbinationTable[] = { 
+		{tagEnemyDamage,tagPlayerAtack }, 
+		{tagEnemyBullet,tagPlayerDamage},
+		{tagEnemyBullet,tagPlayerAtack }
+	};
 }
 
 void CollisionManager::Update()
@@ -41,8 +45,9 @@ void CollisionManager::Update()
 			}
 			if (col->IsHit(other) || other->IsHit(col))
 			{
-				CollisionInfo colInfoOther = { other };
-				col->GetOwner()->OnHit(colInfoOther);
+				CollisionInfo colInfoOwn = { col };
+				CollisionInfo colInfoAnother = { other };
+				col->GetOwner()->OnHit(colInfoOwn, colInfoAnother);
 				if (col->GetOwner()->IsActive())
 				{
 					col->Sleep();
@@ -52,8 +57,7 @@ void CollisionManager::Update()
 					col->Suside();
 				}
 				
-				CollisionInfo colInfoOwn = { col };
-				other->GetOwner()->OnHit(colInfoOwn);
+				other->GetOwner()->OnHit(colInfoAnother,colInfoOwn);
 				if (other->GetOwner()->IsActive())
 				{
 					other->Sleep();

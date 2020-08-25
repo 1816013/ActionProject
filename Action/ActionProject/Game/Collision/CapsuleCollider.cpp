@@ -45,7 +45,8 @@ void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 	auto& spos = capsule.seg.start;
 	auto epos = capsule.seg.start + capsule.seg.vec ;
 
-	DrawCircle(spos.x, spos.y, capsule.radius, 0xffffff, false);
+	int posnum = 32; // DrawCircleAAÇÃí∏ì_êî
+	DrawCircleAA(spos.x, spos.y, capsule.radius, posnum, 0xffffff, false);
 	
 	auto v90 = capsule.seg.vec;
 	v90 = {-v90.y, v90.x};
@@ -58,7 +59,7 @@ void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 	auto p4 = spos - v90;	// ç∂â∫
 	DrawQuadrangleAA(p1.x + offset.x, p1.y, p2.x + offset.x, p2.y, p3.x + offset.x, p3.y, p4.x + offset.x, p4.y, 0xffffff, false);
 
-	DrawCircle(epos.x + offset.x, epos.y, capsule.radius, 0xffffff, false);
+	DrawCircleAA(epos.x + offset.x, epos.y, capsule.radius, posnum, 0xffffff, false);
 }
 
 const Vector2f CapsuleCollider::AcutualPosition()

@@ -19,6 +19,7 @@ namespace
 	constexpr int expand_frame = attack_frame / 2;
 	constexpr int chain_length = 400;
 	constexpr int chain_y = 48;
+	constexpr float radian360 = DX_PI_F * 2;
 }
 void ChainEquip::NomalUpdate()
 {
@@ -26,7 +27,7 @@ void ChainEquip::NomalUpdate()
 	{
 		if (capsuleCollider_ != nullptr)
 		{
-			capsuleCollider_->GetCapsule().seg.vec = { 0, 0 };
+			capsuleCollider_->GetCapsule().seg.vec = Vector2f::ZERO;
 		}
 		return;
 	}
@@ -39,16 +40,14 @@ void ChainEquip::NomalUpdate()
 			extensionF = false;
 		}
 		auto& vec = capsuleCollider_->GetCapsule().seg.vec;
-		int f = abs((frame_ + (expand_frame)) % attack_frame - (expand_frame));
-		float w = (f * chain_length) / (expand_frame);
-		vec = direction_ * w;
+		vec = direction_ * static_cast<float>(ExpandWidth());
 	}
 }
 void ChainEquip::ExtensionUpdate()
 {
 	if (++extensionFrame_ <= expand_frame)
 	{	
-		angle += variationAngle / (attack_frame / 2);
+		angle += variationAngle / expand_frame;
 	}
 	else
 	{
@@ -56,9 +55,7 @@ void ChainEquip::ExtensionUpdate()
 		extensionFrame_ = 0;
 	}
 	auto& vec = capsuleCollider_->GetCapsule().seg.vec;
-	int f = abs((frame_ + (expand_frame)) % attack_frame - (expand_frame));
-	float w = (f * chain_length) / (expand_frame);
-	vec = Vector2f(cos(angle), sin(angle)) * w;
+	vec = Vector2f(cos(angle), sin(angle)) * static_cast<float>(ExpandWidth());
 }
 ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm ,std::shared_ptr<Camera> c):
 	player_(p),
@@ -74,7 +71,7 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 	}
 }
 
-void ChainEquip::Attack(const Player& player, const Input& input)
+void ChainEquip::Attack(const Player& player, const Input& input, Vector2f offset)
 {
 	if (frame_ >= 0)return;
 	
@@ -102,17 +99,17 @@ void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 	{
 		if (variationAngle > 0)
 		{
-			variationAngle = -DX_PI_F * 2 + variationAngle;
+			variationAngle = -radian360 + variationAngle;
 		}
 	}
 	else
 	{
-		variationAngle = variationAngle + DX_PI_F * 2;
+		variationAngle = variationAngle + radian360;
 	}
 	variationAngle -= angle;
-	if (fabs(variationAngle) > DX_PI_F * 2)
+	if (fabs(variationAngle) > radian360)
 	{
-		variationAngle = (fabs(variationAngle) - DX_PI_F * 2) * Sign(variationAngle);
+		variationAngle = (fabs(variationAngle) - radian360) * Sign(variationAngle);
 	}
 	updater_ = &ChainEquip::ExtensionUpdate;
 	
@@ -139,7 +136,7 @@ void ChainEquip::SetDirection(const Input& input, const Player& player)
 		direction_ += Vector2f::DOWN;
 	}
 	// ‰½‚à‰Ÿ‚µ‚Ä‚¢‚È‚¢‚Æ‚«
-	if (direction_.x == 0.0f && direction_.y == 0.0f)
+	if (direction_ == Vector2f::ZERO)
 	{
 		if (player.Direction() == Direction::RIGHT)
 		{
@@ -152,6 +149,11 @@ void ChainEquip::SetDirection(const Input& input, const Player& player)
 	}
 	direction_.Nomarize();
 }
+int ChainEquip::ExpandWidth()
+{
+	int f = abs((frame_ + (expand_frame)) % attack_frame - (expand_frame));
+	return (f * chain_length) / (expand_frame);
+}
 void ChainEquip::Update()
 {
 	(this->*updater_)();
@@ -163,8 +165,12 @@ void ChainEquip::Draw()
 	if (frame_ >= 0)
 	{
 		auto offset = camera_->ViewOffset();
-		int f = abs((frame_ + (expand_frame)) % attack_frame - (expand_frame));
-		int w = (f * chain_length) / (expand_frame);
-		DrawRectRotaGraph2(pos.x + offset.x, pos.y, chain_length - w, 0, w, chain_y, 0, chain_y / 2,  1.0f, angle, chainH, true);
+		int w = ExpandWidth();
+		DrawRectRotaGraph2(
+			static_cast<int>(pos.x + offset.x), static_cast<int>(pos.y),
+			chain_length - w, 0,
+			w, chain_y, 0, chain_y / 2, 
+			1.0f, angle,
+			chainH, true);
 	}
 }

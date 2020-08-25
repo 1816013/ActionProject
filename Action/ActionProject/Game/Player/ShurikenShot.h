@@ -20,7 +20,7 @@ public:
 	void Update()override;
 
 	void Draw()override;
-	void OnHit(CollisionInfo& info)override;
+	void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
 
 };
 

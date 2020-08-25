@@ -14,7 +14,7 @@ File::File(int handle, Type type, const char* tag) :
 		auto fsize = endIdx - bgnIdx;
 		FileRead_seek(handle_, 0, SEEK_SET);
 		data_.resize(fsize);
-		FileRead_read(data_.data(), fsize, handle);
+		FileRead_read(data_.data(), static_cast<int>(fsize), handle);
 		FileRead_close(handle);
 		cursor_ = data_.begin();
 	}

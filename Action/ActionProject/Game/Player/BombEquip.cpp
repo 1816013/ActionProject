@@ -18,7 +18,7 @@ BombEquip::BombEquip(ProjectileManager& pm, std::shared_ptr<CollisionManager>col
 {
 }
 
-void BombEquip::Attack(const Player& player, const Input& input)
+void BombEquip::Attack(const Player& player, const Input& input, Vector2f offset)
 {
 	Vector2f vel(0, 0);
 	if (input.IsPressed("up"))

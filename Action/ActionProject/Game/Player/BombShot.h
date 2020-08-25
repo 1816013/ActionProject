@@ -21,6 +21,6 @@ public:
 	
 	void Draw()override;
 
-	void OnHit(CollisionInfo& c)override;
+	void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
 };
 

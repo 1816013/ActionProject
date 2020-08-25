@@ -24,6 +24,7 @@ private:
 	std::shared_ptr<CollisionManager>collisionManager_;
 	std::array<Position2f, 41>moveHistory_;
 	size_t currentMoveIndex_ = 0;
+	int knockbackfFrame = 0;
 
 	using Updater_t = void(Player::*)();
 	Updater_t updater_;
@@ -102,7 +103,7 @@ public:
 	size_t CurrentEquipmentNo()const;
 	Direction Direction()const;
 
-	void OnHit(CollisionInfo& c);
+	void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
 
 	float gravity_ = 0.0f;
 	float velY_ = 0.0f;

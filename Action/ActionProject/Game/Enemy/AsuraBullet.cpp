@@ -20,7 +20,8 @@ AsuraBullet::AsuraBullet(const Position2f& pos, const Vector2f& vel, std::shared
 	initVel_ = vel;
 	speed_ = vel.Magnitude();
 	effectManager_ = effectManager;
-	centripetalSpeed_ = 0.5f;
+	std::uniform_real_distribution<float>dist(-0.5, 0.5);
+	centripetalSpeed_ = dist(mt_);
 	isActive_ = true;
 	if (bulletH == -1)
 	{
@@ -37,10 +38,10 @@ void AsuraBullet::Update()
 	{
 		isActive_ = false;
 	}
-	Vector2f centripetalVel(-vel_.x, vel_.y);
+	Vector2f centripetalVel(-vel_.y, vel_.x);
 	centripetalVel.Nomarize();
 	centripetalVel *= centripetalSpeed_;
-	//vel_ = vel_ + (vel_ + centripetalVel).Nomarized();
+	vel_ = (vel_ * 5 + (vel_ + centripetalVel).Nomarized()).Nomarized() * speed_;
 	Projectile::Update();
 }
 
@@ -49,18 +50,23 @@ void AsuraBullet::Draw()
 	float angle = atan2f(vel_.y, vel_.x);
 	auto offset = camera_->ViewOffset();
 	DrawRectRotaGraph(
-		pos_.x + offset.x, pos_.y,
+		static_cast<int>(pos_.x + offset.x),static_cast<int>(pos_.y),
 		0, 0,
 		64, 32,
 		1.0f, angle,
 		bulletH, true);
 }
 
-void AsuraBullet::OnHit(CollisionInfo& colInfo)
+void AsuraBullet::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
-	if (colInfo.collider->GetTag() == tagPlayerDamage)
+	if (another.collider->GetTag() == tagPlayerDamage)
 	{
 		// Ž€‚Ê
+		effectManager_->EmitBulletExprode(pos_, false, camera_);
+		isActive_ = false;
+	}
+	if (another.collider->GetTag() == tagPlayerAtack)
+	{
 		effectManager_->EmitBulletExprode(pos_, false, camera_);
 		isActive_ = false;
 	}

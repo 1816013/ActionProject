@@ -26,6 +26,7 @@ private:
 		int frame;
 		EnergyBall(Vector2f pos) : pos(pos), frame(0) {};
 	};
+	// 攻撃起点情報
 	std::array<EnergyBall, 4>energyBalls_ = {
 		EnergyBall({-128.0f, -420.0f}),
 		EnergyBall({128, -420}),
@@ -49,6 +50,10 @@ private:
 	const std::vector<Circle>& GetCircles()const override;
 
 public:
+	/// <summary>
+	/// 一面ボスのコンストラクタ
+	/// </summary>
+	/// <param name="gs">ゲームシーン</param>
 	Ashura(GamePlayingScene* gs);
 	~Ashura() = default;
 
@@ -56,7 +61,7 @@ public:
 	/// 何かが当たった
 	/// </summary>
 	/// <param name="colInfo">当たり判定情報</param>
-	void OnHit(CollisionInfo& colInfo)override;
+	void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
 
 	/// <summary>
 	/// ダメージを受けた

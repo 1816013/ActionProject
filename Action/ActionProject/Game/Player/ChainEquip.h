@@ -2,6 +2,7 @@
 #include "Equipment.h"
 #include "../../Geometry.h"
 
+class Player;
 class CollisionManager;
 class CapsuleCollider;
 /// <summary>
@@ -12,7 +13,6 @@ class ChainEquip : public Equipment
 private:
 	int frame_;
 	int extensionFrame_;
-	//const Player& player_;
 	Vector2f direction_;
 	std::shared_ptr<Player>& player_;
 	CapsuleCollider* capsuleCollider_ = nullptr;
@@ -24,7 +24,17 @@ private:
 
 	void NomalUpdate();
 	void ExtensionUpdate();
+	/// <summary>
+	/// 鎖鎌を伸ばす方向を決める
+	/// </summary>
+	/// <param name="input">入力情報</param>
+	/// <param name="player">プレイヤー</param>
 	void SetDirection(const Input& input, const Player& player);
+	/// <summary>
+	/// 現在のフレームから鎖鎌の長さを取得する
+	/// </summary>
+	/// <returns>鎖鎌の長さ</returns>
+	int ExpandWidth();
 public:
 	/// <summary>
 	/// 鎖鎌インスタンス
@@ -39,7 +49,7 @@ public:
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
 	/// <param name="input">入力情報</param>
-	void Attack(const Player& player, const Input& input)override;
+	void Attack(const Player& player, const Input& input, Vector2f offset = Vector2f::ZERO)override;
 
 	/// <summary>
 	/// 追加攻撃

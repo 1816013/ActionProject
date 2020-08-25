@@ -9,7 +9,8 @@
 
 namespace
 {
-	constexpr int shuriken_speed = 15;
+	constexpr int shuriken_speed = 15; 
+	constexpr int collider_radius = 10;
 }
 
 
@@ -18,38 +19,39 @@ ShurikenEquip::ShurikenEquip(ProjectileManager& pm, std::shared_ptr<CollisionMan
 {
 }
 
-void ShurikenEquip::Attack(const Player& player, const Input& input)
+void ShurikenEquip::Attack(const Player& player, const Input& input, Vector2f offset)
 {
-	Vector2f vel(0, 0);
+	Vector2f vel(Vector2f::ZERO);
 	if (input.IsPressed("right"))
 	{
-		vel += { 1, 0 };
+		vel += Vector2f::RIGHT;
 	}
 	if (input.IsPressed("left"))
 	{
-		vel += { -1, 0 };
+		vel += Vector2f::LEFT;
 	}
 	if (input.IsPressed("up"))
 	{
-		vel += { 0, -1 };
+		vel += Vector2f::UP;
 	}
 	if (input.IsPressed("down"))
 	{
-		vel += { 0, 1 };
+		vel += Vector2f::DOWN;
 	}
-	if (vel.x == 0 && vel.y == 0)
+	if (vel == Vector2f::ZERO)
 	{
 		if (player.Direction() == Direction::RIGHT)
 		{
-			vel += { 1, 0 };
+			vel += Vector2f::RIGHT;
 		}
 		if (player.Direction() == Direction::LEFT)
 		{
-			vel += { -1, 0 };
+			vel += Vector2f::LEFT;
 		}
 	}
 	vel.Nomarize();
 	vel *= shuriken_speed;
 	pm_.AddProjectile(new ShurikenShot(player.GetPosition(), vel, camera_));
-	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), tagPlayerAtack, Circle{ {0, 0}, 10 }));
+	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), 
+		tagPlayerAtack, Circle{ Position2f::ZERO, collider_radius }));
 }

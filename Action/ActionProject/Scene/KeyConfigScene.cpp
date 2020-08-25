@@ -135,17 +135,17 @@ void KeyConfigScene::CloseUpdate(const Input& input)
 void KeyConfigScene::NomalDraw()
 {
 	// ˜g‚Ì•`‰æ
-	DrawBox(frameRect.Left(), frameRect.Top(), frameRect.Right(), frameRect.Bottom(), 0xbb00aa, true);
-	DrawBox(frameRect.Left(), frameRect.Top(), frameRect.Right(), frameRect.Bottom(), 0xffffff, false);
+	DrawBoxAA(frameRect.Left(), frameRect.Top(), frameRect.Right(), frameRect.Bottom(), 0xbb00aa, true);
+	DrawBoxAA(frameRect.Left(), frameRect.Top(), frameRect.Right(), frameRect.Bottom(), 0xffffff, false);
 	int titleW = GetDrawStringWidth(titleName, static_cast<int>(wcslen(titleName)));
-	DrawString(frameRect.pos.x - titleW / 2, frameRect.Top() + 32, titleName, 0xffffff);
+	DrawStringF(frameRect.pos.x - titleW / 2, frameRect.Top() + 32, titleName, 0xffffff);
 	int offset_x = 50;
 	auto offset_y = frameRect.Top() + 64;
 	uint32_t col = 0xffffff;
 	for (auto p : peripheralReferenceTable_)
 	{		
 		auto str = GetWideStringFromString(p.first);
-		DrawString(frameRect.Left() + offset_x, offset_y, str.c_str(), col);
+		DrawStringF(frameRect.Left() + offset_x, offset_y, str.c_str(), col);
 		offset_x += 100;
 		if (p.first == menuItems_[currentSelectNo_])
 		{
@@ -159,9 +159,9 @@ void KeyConfigScene::NomalDraw()
 				col = 0x00aaff;
 			}
 		}	
-		DrawFormatString(frameRect.Left() + offset_x, offset_y, col,L"keybord=%04x", p.second[static_cast<int>(PeripheralType::keyboard)].index);
+		DrawFormatStringF(frameRect.Left() + offset_x, offset_y, col,L"keybord=%04x", p.second[static_cast<int>(PeripheralType::keyboard)].index);
 		offset_x += 150;
-		DrawFormatString(frameRect.Left() + offset_x, offset_y, col, L"gamepad=%05x", p.second[static_cast<int>(PeripheralType::gamepad)].index);
+		DrawFormatStringF(frameRect.Left() + offset_x, offset_y, col, L"gamepad=%05x", p.second[static_cast<int>(PeripheralType::gamepad)].index);
 		offset_y += 32;
 
 		offset_x = 50;
@@ -171,7 +171,7 @@ void KeyConfigScene::NomalDraw()
 	{
 		col = 0x00aaff;
 	}
-	DrawString(frameRect.Left() + offset_x, offset_y,L"Œˆ’è", col);
+	DrawStringF(frameRect.Left() + offset_x, offset_y,L"Œˆ’è", col);
 
 }
 

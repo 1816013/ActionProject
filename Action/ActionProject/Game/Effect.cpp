@@ -19,7 +19,7 @@ void EffectManager::EmitBlood(const Position2f& p, bool isTurn, std::shared_ptr<
 
 void EffectManager::EmitBlow3(const Position2f& p, bool isTurn, std::shared_ptr<Camera>c)
 {
-	std::uniform_int_distribution<int> dst(random_min, random_max);
+	std::uniform_real_distribution<float> dst(random_min, random_max);
 	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c));
 	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c, 5));
 	effects_.emplace_back(new Blow(p + Vector2f(dst(mt_), dst(mt_) * 2.0f), isTurn, c, 10));
@@ -75,7 +75,7 @@ void Blood::Draw()
 
 Blow::Blow(const Position2f& p, bool isTurn, std::shared_ptr<Camera> c, float delay) : Effect(c)
 {
-	frame_ = 0.0f;
+	frame_ = 0;
 	pos_ = p;
 	isTurn_ = isTurn_;
 	delay_ = delay;
@@ -101,7 +101,7 @@ void Blow::Draw()
 	if (delay_ < frame_)
 	{
 		auto offset = camera_->ViewOffset();
-		DrawRectRotaGraph(pos_.x + offset.x, pos_.y,
+		DrawRectRotaGraph(static_cast<int>(pos_.x + offset.x), static_cast<int>(pos_.y),
 			((frame_ / 3)) * effect_blow_x, 0,
 			effect_blow_x, effect_blow_y, 
 			2.0f,0.0f,
@@ -141,8 +141,8 @@ void GroundExprotion::Update()
 void GroundExprotion::Draw()
 {
 	auto offset = camera_->ViewOffset();
-	DrawRectRotaGraph(pos_.x + offset.x, pos_.y - 40, 
-		((frame_ / 3)) * 128, 0.0f, 
+	DrawRectRotaGraphF(pos_.x + offset.x, pos_.y - 40, 
+		((frame_ / 3)) * 128, 0, 
 		128, 80,
 		1.0f,0.0f, 
 		groundExprotionH, true);
@@ -171,7 +171,7 @@ void EnergyBall::Draw()
 	auto offset = camera_->ViewOffset();
 	int idx_x = frame_ % 6;
 	int idx_y =  frame_ % 5 / 6 ;
-	DrawRectRotaGraph(pos_.x + offset.x, pos_.y,
+	DrawRectRotaGraph(static_cast<int>(pos_.x + offset.x), static_cast<int>(pos_.y),
 		idx_x * 100, idx_y * 100,
 		100, 100,
 		1.0f, 0.0f,
@@ -201,7 +201,7 @@ void BulletExprode::Update()
 void BulletExprode::Draw()
 {
 	auto offset = camera_->ViewOffset();
-	DrawRectRotaGraph(pos_.x + offset.x, pos_.y,
+	DrawRectRotaGraph(static_cast<int>(pos_.x + offset.x),static_cast<int>(pos_.y),
 		(frame_ / 4) * 32, 0,
 		32, 32,
 		1.0f, 0.0f,

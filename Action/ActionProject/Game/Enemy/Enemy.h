@@ -11,7 +11,7 @@ class Enemy : public Character
 protected:
 	const std::shared_ptr<Player>& player_;
 	// 敵の体力0以下は死んでいる
-	int life_ = 0;
+	//int life_ = 0;
 	// 消えるかどうか
 	bool isDeletable_ = false;
 	// 現在の速度
@@ -36,17 +36,46 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 
-	///座標アクセス 
-	virtual void SetPosition(const Vector2f& vel);
+	/// <summary>
+	/// 座標取得
+	/// </summary>
+	/// <param name="pos">座標</param>
+	virtual void SetPosition(const Position2f& pos);
 
-	///速度アクセス 
+	/// <summary>
+	/// 速度取得
+	/// </summary>
+	/// <returns>速度</returns>
 	virtual const Vector2f& GetVelocity()const;
+
+	/// <summary>
+	/// 速度設定
+	/// </summary>
+	/// <param name="vel">速度</param>
 	virtual void SetVelocity(const Vector2f& vel);
 
+	/// <summary>
+	/// 死んでいるか
+	/// </summary>
+	/// <returns>true:死んだ</returns>
 	virtual bool IsDead()const;
+
+	/// <summary>
+	/// 消えてよいか
+	/// </summary>
+	/// <returns>true:消えて良い</returns>
 	virtual bool IsDeletable()const;
+
+	/// <summary>
+	/// キャラが持っている円衝突情報をすべて取得する(1キャラ)
+	/// </summary>
+	/// <returns></returns>
 	virtual const std::vector<Circle>& GetCircles()const = 0;
 
-	void OnHit(CollisionInfo& c)override;
+	/// <summary>
+	/// 何かが当たった
+	/// </summary>
+	/// <param name="c"></param>
+	void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
 };
 
