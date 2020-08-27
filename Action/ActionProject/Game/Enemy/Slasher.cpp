@@ -17,9 +17,8 @@ namespace
     constexpr float jump_power = 15.0f;
 }
 Slasher::Slasher(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c,std::shared_ptr<Stage>s) :
-    Enemy(p, c),
-    effectManager_(em),
-    stage_(s)
+    Enemy(p, c, s),
+    effectManager_(em)
 {
     updater_ = &Slasher::RunUpdate;
     drawer_ = &Slasher::RunDraw;

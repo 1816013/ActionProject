@@ -9,10 +9,10 @@
 #include "../../System/FileManager.h"
 #include "../../System/File.h"
 #include "../../Arithmetic.h"
+#include "ShadowClone.h"
 
 namespace
 {
-	bool extensionF = false;
 	Direction retDir;
 
 	constexpr int attack_frame = 24;
@@ -37,7 +37,7 @@ void ChainEquip::NomalUpdate()
 		if (frame_ > attack_frame)
 		{
 			frame_ = -1;
-			extensionF = false;
+			extensionF_ = false;
 		}
 		auto& vec = capsuleCollider_->GetCapsule().seg.vec;
 		vec = direction_ * static_cast<float>(ExpandWidth());
@@ -47,7 +47,7 @@ void ChainEquip::ExtensionUpdate()
 {
 	if (++extensionFrame_ <= expand_frame)
 	{	
-		angle += variationAngle / expand_frame;
+		angle_ += variationAngle / expand_frame;
 	}
 	else
 	{
@@ -55,11 +55,12 @@ void ChainEquip::ExtensionUpdate()
 		extensionFrame_ = 0;
 	}
 	auto& vec = capsuleCollider_->GetCapsule().seg.vec;
-	vec = Vector2f(cos(angle), sin(angle)) * static_cast<float>(ExpandWidth());
+	vec = Vector2f(cos(angle_), sin(angle_)) * static_cast<float>(ExpandWidth());
 }
-ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm ,std::shared_ptr<Camera> c):
+ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm ,std::shared_ptr<Camera> c, ShadowClone* shadow):
 	player_(p),
 	Equipment(cm, c),
+	shadow_(shadow),
 	updater_(&ChainEquip::NomalUpdate)
 {
 	frame_ = -1;	// -1Ç≈èâä˙âª
@@ -74,15 +75,15 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 void ChainEquip::Attack(const Player& player, const Input& input, Vector2f offset)
 {
 	if (frame_ >= 0)return;
-	
+	offset_ = offset,
 	direction_ = {};
 	SetDirection(input, player);
-	angle = atan2f(direction_.y, direction_.x);
+	angle_ = atan2f(direction_.y, direction_.x);
 	retDir = player.Direction();
 	
 	if (capsuleCollider_ == nullptr)
 	{
-		capsuleCollider_ = new CapsuleCollider(player_, { {{0, 0}, {0, 0}}, 20 }, tagPlayerAtack, true);
+		capsuleCollider_ = new CapsuleCollider(player_, { {offset,offset}, 20 }, tagPlayerAtack, true);
 		collisionManager_->AddCollider(capsuleCollider_);
 	}
 	frame_ = 0;
@@ -90,7 +91,7 @@ void ChainEquip::Attack(const Player& player, const Input& input, Vector2f offse
 }
 void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 {
-	if (frame_ < expand_frame || extensionF)return;
+	if (frame_ < expand_frame || extensionF_)return;
 	auto oldDir = direction_;
 	SetDirection(input, player);
 	if (direction_ == oldDir)return;
@@ -106,14 +107,14 @@ void ChainEquip::ExtensionAttack(const Player& player, const Input& input)
 	{
 		variationAngle = variationAngle + radian360;
 	}
-	variationAngle -= angle;
+	variationAngle -= angle_;
 	if (fabs(variationAngle) > radian360)
 	{
 		variationAngle = (fabs(variationAngle) - radian360) * Sign(variationAngle);
 	}
 	updater_ = &ChainEquip::ExtensionUpdate;
 	
-	extensionF = true;
+	extensionF_ = true;
 }
 
 void ChainEquip::SetDirection(const Input& input, const Player& player)
@@ -156,12 +157,17 @@ int ChainEquip::ExpandWidth()
 }
 void ChainEquip::Update()
 {
+	if (shadow_ != nullptr && capsuleCollider_ != nullptr)
+	{
+		offset_ = shadow_->GetPosition() - player_->GetPosition();
+		capsuleCollider_->GetCapsule().seg.start = offset_;
+	}
 	(this->*updater_)();
 }
 
 void ChainEquip::Draw()
 {
-	auto pos = player_->GetPosition();
+	auto pos = player_->GetPosition() + offset_;
 	if (frame_ >= 0)
 	{
 		auto offset = camera_->ViewOffset();
@@ -170,7 +176,7 @@ void ChainEquip::Draw()
 			static_cast<int>(pos.x + offset.x), static_cast<int>(pos.y),
 			chain_length - w, 0,
 			w, chain_y, 0, chain_y / 2, 
-			1.0f, angle,
+			1.0f, angle_,
 			chainH, true);
 	}
 }

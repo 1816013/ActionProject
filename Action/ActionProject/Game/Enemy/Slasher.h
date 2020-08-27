@@ -2,7 +2,7 @@
 #include "Enemy.h"
 
 class EffectManager;
-class Stage;
+
 /// <summary>
 /// 雑魚敵、近づいて攻撃してくる
 /// </summary>
@@ -29,7 +29,6 @@ private:
     Func_t drawer_;
 
     std::shared_ptr<EffectManager>effectManager_;
-    std::shared_ptr<Stage>stage_;
 public:
     /// <summary>
     /// コンストラクタ

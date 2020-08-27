@@ -12,8 +12,8 @@ class CollisionManager;
 class Spawner
 {
 protected:
-	Position2f pos_;
-	std::shared_ptr<Enemy> prototype_;
+	Position2f pos_;	// スポナー座標
+	std::shared_ptr<Enemy> prototype_;	// 敵のプロトタイプ
 	std::shared_ptr<EnemyManager> enemyManager_;
 	std::shared_ptr<Camera>camera_;
 	std::shared_ptr<CollisionManager>collisionManeger_;

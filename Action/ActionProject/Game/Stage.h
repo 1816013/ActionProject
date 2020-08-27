@@ -52,6 +52,11 @@ private:
 
 	void CreateSegment(Position2f& lastPos, const Position2f& pos);
 	void CheckBossMode();
+
+	/// <summary>
+	/// “G‚Ì”z’uî•ñ‚ğì‚é
+	/// </summary>
+	void BuildEnemyLayout();
 public:
 	Stage(std::shared_ptr<Camera>c,GamePlayingScene* gs);
 	/// <summary>

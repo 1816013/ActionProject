@@ -51,7 +51,7 @@ void ShurikenEquip::Attack(const Player& player, const Input& input, Vector2f of
 	}
 	vel.Nomarize();
 	vel *= shuriken_speed;
-	pm_.AddProjectile(new ShurikenShot(player.GetPosition(), vel, camera_));
+	pm_.AddProjectile(new ShurikenShot(player.GetPosition() + offset, vel, camera_));
 	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), 
 		tagPlayerAtack, Circle{ Position2f::ZERO, collider_radius }));
 }

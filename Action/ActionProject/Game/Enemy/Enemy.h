@@ -5,6 +5,7 @@
 class Player;
 class Spawner;
 class Camera;
+class Stage;
 class Enemy : public Character
 {
 	friend Spawner;
@@ -17,13 +18,14 @@ protected:
 	// Œ»İ‚Ì‘¬“x
 	Vector2f velocity_;
 	std::vector<Circle>circles_;
+	std::shared_ptr<Stage>stage_;
 
 	// ©•ª‚ÌƒNƒ[ƒ“‚ğ•Ô‚·
 	virtual Enemy* MakeClone() = 0;
 	virtual void AimPlayer();
 	
 public:
-	Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c);
+	Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c, std::shared_ptr<Stage> stage);
 	virtual ~Enemy() = default;
 
 	/// <summary>

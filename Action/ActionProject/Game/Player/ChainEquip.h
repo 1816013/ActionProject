@@ -5,6 +5,7 @@
 class Player;
 class CollisionManager;
 class CapsuleCollider;
+class ShadowClone;
 /// <summary>
 /// 鎖鎌
 /// </summary>
@@ -16,9 +17,12 @@ private:
 	Vector2f direction_;
 	std::shared_ptr<Player>& player_;
 	CapsuleCollider* capsuleCollider_ = nullptr;
-	float angle = 0.0f;
+	float angle_ = 0.0f;
 	float variationAngle = 0.0f;
 	using func_t = void(ChainEquip::*)();
+	ShadowClone* shadow_;
+	Vector2f offset_ = Vector2f::ZERO;
+	bool extensionF_ = false;
 	func_t updater_;
 	int chainH = -1;
 
@@ -42,7 +46,10 @@ public:
 	/// <param name="p">プレイヤー</param>
 	/// <param name="cm">コリジョン管理用</param>
 	/// <param name="c">カメラ</param>
-	ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c);
+	ChainEquip(std::shared_ptr<Player>& p,
+		std::shared_ptr<CollisionManager>cm,
+		std::shared_ptr<Camera> c,
+		ShadowClone* shadow = nullptr);
 
 	/// <summary>
 	/// 攻撃

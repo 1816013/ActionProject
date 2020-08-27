@@ -41,7 +41,7 @@ void AsuraBullet::Update()
 	Vector2f centripetalVel(-vel_.y, vel_.x);
 	centripetalVel.Nomarize();
 	centripetalVel *= centripetalSpeed_;
-	vel_ = (vel_ * 5 + (vel_ + centripetalVel).Nomarized()).Nomarized() * speed_;
+	vel_ = (vel_ * 2 + (vel_ + centripetalVel).Nomarized()).Nomarized() * speed_;
 	Projectile::Update();
 }
 

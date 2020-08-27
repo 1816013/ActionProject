@@ -4,6 +4,13 @@
 #include "../Camera.h"
 #include "../../System/FileManager.h"
 #include "../../System/File.h"
+#include "../Collision/CollisionManager.h"
+#include "../Collision/Collider.h"
+
+namespace
+{
+	int exprotionH_ = -1;
+}
 
 BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<Camera>c) : Projectile(c)
 {
@@ -14,7 +21,12 @@ BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<C
 	{
 		bombH = fileMng.Load(L"Resource/Image/Player/bombshot2.png")->Handle();
 	}
+	if (exprotionH_)
+	{
+		exprotionH_ = fileMng.Load(L"Resource/Image/Effect/bomb_prj_exp.png")->Handle();
+	}
 	updater_ = &BombShot::NomalUpdate;
+	drawer_ = &BombShot::NomalDraw;
 	isActive_ = true;
 	angle_ = 0.0f;
 }
@@ -33,13 +45,34 @@ void BombShot::NomalUpdate()
 	auto viewRect = camera_->GetViewRange();
 	if (pos_.x > viewRect.Right() || pos_.x < viewRect.Left() || pos_.y > viewRect.size.h || pos_.y < 0.0f)
 	{
-		updater_ = &BombShot::DestroyUpdate;
+		isActive_ = false;
 	}
 }
 
-void BombShot::DestroyUpdate()
+void BombShot::ExprotionUpdate()
 {
-	isActive_ = false;
+	if (--frame_ == 0)
+	{
+		isActive_ = false;
+	}
+}
+
+void BombShot::NomalDraw()
+{
+	auto offset = camera_->ViewOffset();
+	DrawRotaGraph(static_cast<int>(pos_.x + offset.x), static_cast<int>(pos_.y),
+		0.5f, angle_,
+		bombH, true);
+}
+
+void BombShot::ExprotionDraw()
+{
+	auto offset = camera_->ViewOffset();
+	DrawRectRotaGraph(static_cast<int>(pos_.x + offset.x), static_cast<int>(pos_.y),
+		(frame_ / 8) * 48, 0,
+		48,48,
+		3.0f, 0.0f,
+		exprotionH_, true);
 }
 
 void BombShot::Update()
@@ -49,13 +82,16 @@ void BombShot::Update()
 
 void BombShot::Draw()
 {
-	auto offset = camera_->ViewOffset();
-	DrawRotaGraph(static_cast<int>(pos_.x + offset.x),static_cast<int>(pos_.y),
-		0.5f, angle_, 
-		bombH, true);
+	(this->*drawer_)();
+	
 }
 
 void BombShot::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
-	isActive_ = false;
+	if (another.collider->GetTag() == tagEnemyDamage && frame_ == 0)
+	{
+		updater_ = &BombShot::ExprotionUpdate;
+		drawer_ = &BombShot::ExprotionDraw;
+		frame_ = 40;
+	}
 }

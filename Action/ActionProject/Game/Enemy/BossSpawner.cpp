@@ -19,12 +19,15 @@ void BossSpawner::Update()
 
 void BossSpawner::SpawnUpdate()
 {
+	auto rc = camera_->GetViewRange();
+	if (pos_.x < rc.Left() || rc.Right() < pos_.x)return;
 	auto clone = CreateClone();
 	enemyManager_->AddEnemy(clone);
 	const auto& circles = prototype_->GetCircles();
 	const auto& c = circles[0];
 	collisionManager_->AddCollider(new CircleCollider(enemyManager_->Enemies().back(), tagEnemyDamage, c));
 	updater_ = &BossSpawner::SleepUpdate;
+	
 }
 
 void BossSpawner::SleepUpdate()

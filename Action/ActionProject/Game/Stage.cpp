@@ -9,6 +9,9 @@
 #include "../Scene/GamePlayingScene.h"
 #include "Enemy/BossSpawner.h"
 #include "Enemy/Ashura.h"
+#include "Enemy/Slasher.h"
+#include "Enemy/Thrower.h"
+#include "Enemy/SideSpawner.h"
 #include "Enemy/EnemyManager.h"
 using namespace std;
 
@@ -24,14 +27,15 @@ namespace
 void Stage::NomalUpdate()
 {
 	CheckBossMode();
+	
 	if (isBossMode_)
 	{
-		gameScene_->AddSpawner(
+		/*gameScene_->AddSpawner(
 			new BossSpawner(Position2f(0, 0),
 				new Ashura(gameScene_),
 				gameScene_->GetEnemyManager(),
 				gameScene_->GetCollisionManager(),
-				camera_));
+				camera_));*/
 		updater_ = &Stage::BossUpdate;
 	}
 }
@@ -66,7 +70,60 @@ void Stage::CheckBossMode()
 		boss_no) > 0;
 }
 
-Stage::Stage(std::shared_ptr<Camera>c, GamePlayingScene* gs) : 
+void Stage::BuildEnemyLayout()
+{
+	constexpr uint8_t no_data = 0;
+	constexpr uint8_t slasher_side = 1;
+	constexpr uint8_t thrower_side = 2;
+	constexpr uint8_t samurai_side = 3;
+	constexpr uint8_t boss = 255;
+
+	auto rc = camera_->GetViewRange();
+	auto yOffset = groundLine - header_.mapH * header_.chipH * scale_;
+	for (size_t x = 0; x < header_.mapW; ++x) {
+		for (size_t y = 0; y < header_.mapH; ++y) {
+			auto data = stageData_[static_cast<int>(LayerType::Enemy)][y + x * header_.mapH];
+			if (data == no_data)continue;
+			auto pos = Position2f(static_cast<float>(x * header_.chipW + header_.chipW),
+				static_cast<float>(y * header_.chipH))* scale_ + Vector2f(0, yOffset);
+			switch (data)
+			{
+			case slasher_side:
+				gameScene_->AddSpawner(new SideSpawner(pos ,
+					new Slasher(gameScene_->GetPlayer(), gameScene_->GetEffectMng(),
+						camera_, gameScene_->GetStage()),
+					gameScene_->GetEnemyManager(),
+					gameScene_->GetCollisionManager(), 
+					camera_));
+				break;
+			case thrower_side:
+				gameScene_->AddSpawner(new SideSpawner(pos,
+					new Thrower(gameScene_->GetPlayer(), 
+						gameScene_->GetEffectMng(),
+						camera_, 
+						gameScene_->GetStage(),
+						gameScene_->GetProjectileManager()),
+					gameScene_->GetEnemyManager(),
+					gameScene_->GetCollisionManager(),
+					camera_, 40, 1, true));
+				break;
+			case boss:
+				gameScene_->AddSpawner(
+					new BossSpawner(pos,
+						new Ashura(gameScene_),
+						gameScene_->GetEnemyManager(),
+						gameScene_->GetCollisionManager(),
+						camera_));
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+}
+
+Stage::Stage(std::shared_ptr<Camera>c, GamePlayingScene* gs) :
 	camera_(c),
 	gameScene_(gs),
 	updater_(&Stage::NomalUpdate)
@@ -81,10 +138,6 @@ void Stage::Load(const TCHAR* path)
 	auto& fileMng = FileManager::Instance();
 	auto file = fileMng.Load(path);
 	file->CopyRead(header_);
-
-	//auto h = FileRead_open(path);
-	//assert( h > 0);
-	//FileRead_read(&header_, sizeof(header_), h);	// ƒwƒbƒ_“Ç‚Ýž‚Ý
 	
 	auto layerSize = header_.mapH * header_.mapW;
 	stageData_.resize(header_.layerCnt);
@@ -93,7 +146,6 @@ void Stage::Load(const TCHAR* path)
 	{
 		stageData_[i].resize(layerSize);
 		rawStageData[i].resize(layerSize);
-	//	FileRead_read(rawStageData[i].data(), layerSize, h);
 		file->CopyRead(rawStageData[i].data(), layerSize);
 	}
 	fileMng.Delete(file);
@@ -157,6 +209,7 @@ void Stage::Load(const TCHAR* path)
 			}
 		}
 	}
+	BuildEnemyLayout();
 }
 
 void Stage::Update()
@@ -200,12 +253,35 @@ void Stage::DebugDraw()
 {
 #ifdef _DEBUG
 	if (!Debugger::Instance().IsDebugMode())return;
-
+	auto& offset = camera_->ViewOffset();
+	const auto yoffset = groundLine - (header_.chipH * scale_ * header_.mapH);
+	auto rc = camera_->GetViewRange();
+	constexpr auto rt3div2 = (1.732f / 2.0f);
+	constexpr auto trgR = 20.0f;
+	for (size_t x = 0; x < header_.mapW; ++x)
+	{
+		auto xpos = x * header_.chipW * scale_;
+		auto xmargin = header_.chipW * scale_;
+		if (xpos < rc.Left() - xmargin || rc.Right() + xmargin < xpos) {
+			continue;
+		}
+		for (size_t y = 0; y < header_.mapH; ++y) {
+			auto enemyNo = stageData_[static_cast<int>(LayerType::Enemy)][y + x * static_cast<size_t>(header_.mapH)];
+			if (enemyNo == 0)continue;
+			auto xpos = offset.x + x * header_.chipW * scale_ + header_.chipW;
+			auto ypos = yoffset + y * header_.chipH * scale_;
+			DrawTriangleAA(
+				xpos, ypos - trgR,
+				xpos + trgR * rt3div2, ypos + trgR * 0.5f,
+				xpos - trgR * rt3div2, ypos + trgR * 0.5f,
+				0xff0000, false, 0.0f);
+		}
+	}
 	for (auto seg : terrainSegment_)
 	{
 		auto sPos = seg.start;
 		auto ePos = seg.start + seg.vec;
-		auto offset = camera_->ViewOffset();
+		
 		DrawLineAA(sPos.x + offset.x, sPos.y, ePos.x + offset.x, ePos.y, 0xffffff, 3);
 	}
 #endif // _DEBUG

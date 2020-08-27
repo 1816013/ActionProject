@@ -67,7 +67,9 @@ void GamePlayingScene::InitializeUpdate(const Input& input)
 	collisionManager_->AddCollider(new CircleCollider(player_, tagPlayerDamage, Circle(Vector2f::ZERO, 50)));
 	camera_->SetPlayer(player_);
 	
-	spawners_.emplace_back(new SideSpawner({ 0, 0 }, new Slasher(player_, effectManager_, camera_, stage_), enemyManager_, collisionManager_, camera_));
+	/*spawners_.emplace_back(new SideSpawner({ 0, 0 }, 
+		new Slasher(player_, effectManager_, camera_, stage_),
+		enemyManager_, collisionManager_, camera_));*/
 	weaponUIH_[0] = fileMng.Load(L"Resource/Image/UI/bomb.png")->Handle();
 	weaponUIH_[1] = fileMng.Load(L"Resource/Image/UI/shuriken.png")->Handle();
 	weaponUIH_[2] = fileMng.Load(L"Resource/Image/UI/chain.png")->Handle();

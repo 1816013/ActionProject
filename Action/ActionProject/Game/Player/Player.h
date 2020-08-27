@@ -10,6 +10,7 @@ class Equipment;
 class CollisionManager;
 class Stage;
 class FileManager;
+class ShadowClone;
 class Player : public Character
 {
 private:
@@ -25,6 +26,7 @@ private:
 	std::array<Position2f, 41>moveHistory_;
 	size_t currentMoveIndex_ = 0;
 	int knockbackfFrame = 0;
+	std::vector<std::shared_ptr<ShadowClone>> shadowClones_;
 
 	using Updater_t = void(Player::*)();
 	Updater_t updater_;
@@ -68,7 +70,7 @@ public:
 	/// 追加攻撃(今は鎖鎌のみ)
 	/// </summary>
 	/// <param name="input">入力参照</param>
-	void ExtendAttack(const Input& input);
+	void ExtensionAttack(const Input& input);
 
 	/// <summary>
 	/// プレイヤーの座標を設定する

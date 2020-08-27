@@ -15,6 +15,7 @@
 #include "../../System/File.h"
 #include "../Collision/CollisionManager.h"
 #include "../Collision/CircleCollider.h"
+#include "ShadowClone.h"
 
 using namespace std;
 
@@ -43,14 +44,7 @@ Player::Player(GamePlayingScene* gs) :
 	LoadGraphPlayer("jump", jumpH_, _countof(jumpH_ ), fileMng);
 	LoadGraphPlayer("fall", fallH_, _countof(fallH_), fileMng);
 	LoadGraphPlayer("hurt", hurtH_, _countof(hurtH_), fileMng);
-	/*for (int i = 0; i < _countof(runH_); i++)
-	{
-		wstringstream wss;
-		wss << L"Resource/Image/Player/adventurer-run-";
-		wss << setw(2) << setfill(L'0') << i;
-		wss << ".png";
-		runH_[i] = LoadGraph(wss.str().c_str());
-	}*/
+	
 	isActive_ = true;
 	life_ = 10;
 	shadowMaskH = fileMng.Load(L"Resource/Image/Player/shadow_mask.bmp")->Handle();
@@ -69,25 +63,25 @@ Player::Player(GamePlayingScene* gs) :
 			if (input.IsPressed("up"))
 			{
 			//	player_.Move({ 0, -5 });
-				player_.ExtendAttack(input);
+				player_.ExtensionAttack(input);
 			}
 			if (input.IsPressed("down"))
 			{
 			//	player_.Move({ 0, 5 });
-				player_.ExtendAttack(input);
+				player_.ExtensionAttack(input);
 			}
 			
 			if (input.IsPressed("right"))
 			{
 				player_.direction_ = Direction::RIGHT;
 				player_.Move({ 5, 0 });
-				player_.ExtendAttack(input);
+				player_.ExtensionAttack(input);
 			}
 			if (input.IsPressed("left"))
 			{
 				player_.direction_ = Direction::LEFT;
 				player_.Move({ -5, 0 });
-				player_.ExtendAttack(input);
+				player_.ExtensionAttack(input);
 			}
 			if (input.IsTriggered("shot"))
 			{
@@ -119,6 +113,8 @@ Player::Player(GamePlayingScene* gs) :
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), collisionManager_, camera_));
+	shadowClones_.emplace_back(make_shared<ShadowClone>(gs, this, camera_));
+	shadowClones_.emplace_back(make_shared<ShadowClone>(gs, this, camera_));
 	
 }
 
@@ -129,11 +125,19 @@ Player::~Player()
 void Player::Attack(const Input& input)
 {
 	equipments_[currentEquipmentNo_]->Attack(*this, input);
+	for (auto shadow : shadowClones_)
+	{
+		shadow->Attack(input, currentEquipmentNo_);
+	}
 }
 
-void Player::ExtendAttack(const Input& input)
+void Player::ExtensionAttack(const Input& input)
 {
 	equipments_[currentEquipmentNo_]->ExtensionAttack(*this, input);
+	for (auto shadow : shadowClones_)
+	{
+		shadow->ExtensionAttack(input);
+	}
 }
 
 void Player::SetPosition(const Position2f& pos )
@@ -174,6 +178,14 @@ void Player::Update()
 	{
 		e->Update();
 	}
+
+	int time = 16;
+	for (auto shadow : shadowClones_)
+	{
+		shadow->Update(GetBackTimePosition(time));
+		time += 16;
+	}
+
 	(this->*updater_)();
 
 	
@@ -182,16 +194,6 @@ void Player::Update()
 		SetCurrentPosition();
 	}
 	lastPos_ = pos_;
-	//Position2f wpos = pos_;
-	/*for (auto& spos : shadowPositions)
-	{
-		auto v = spos - wpos;
-		auto d = v.Magnitude();
-		if (d == 0.0f)continue;
-		spos = wpos + v.Normalized() * min(d, 100.0f);
-		wpos = spos;
-
-	}*/
 }
 
 void Player::NomalUpdate()
@@ -266,6 +268,11 @@ void Player::Draw()
 	{
 		isRight = true;
 	}
+
+	for (auto shadow : shadowClones_)
+	{
+		shadow->Draw();
+	}
 	auto rc = camera_->GetViewRange();
 	CreateMaskScreen();
 	//DrawFillMask(rc.Left(), rc.Top(), rc.Right(),rc.Bottom(), shadowMaskH);
@@ -273,14 +280,14 @@ void Player::Draw()
 	auto gH = runH_[idx];
 	int w = 0, h = 0;
 	GetGraphSize(gH, &w, &h);
-	auto& fpos = GetBackTimePosition(20);	
+	auto& fpos = GetBackTimePosition(16);	
 	DrawFillMask(
 		static_cast<int>(fpos.x + offset.x - 100), static_cast<int>(fpos.y -100),
 		static_cast<int>(fpos.x + offset.x + 100), static_cast<int>(fpos.y),
 		shadowMaskH);
 	DrawRotaGraph2F(fpos.x + offset.x, fpos.y, w / 2.0f, h - 1.0f, 3.0f, 0.0f, runH_[frame_ / 5 % _countof(runH_)], true, !isRight);
 
-	auto& spos = GetBackTimePosition(40);
+	auto& spos = GetBackTimePosition(32);
 	DrawFillMask(
 		static_cast<int>(spos.x + offset.x - 100), static_cast<int>(spos.y - 100),
 		static_cast<int>(spos.x + offset.x + 100), static_cast<int>(spos.y), shadowMaskH);
