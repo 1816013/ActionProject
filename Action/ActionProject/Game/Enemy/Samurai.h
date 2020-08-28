@@ -2,43 +2,53 @@
 #include "Enemy.h"
 
 class EffectManager;
-class Stage;
-class ProjectileManager;
-class CollisionManager;
-class Thrower : public Enemy
+class CircleCollider;
+/// <summary>
+/// 侍雑魚敵
+/// </summary>
+class Samurai : public Enemy
 {
 private:
+    int idleH_ = -1;
     int runH = -1;
-    int throwH_ = -1;
+    int HslashH = -1;
+    int VslashH_ = -1;
+    int damageH_ = -1;
     int frame_ = 0;
     int animFrame_ = 0;
-    Enemy* MakeClone() override;
-    using Func_t = void (Thrower::*)();
-    int specialAttackTimer = 0;
-    float lockonAngle_ = 0.0f;
-    float addAngle_ = 0.0f;
+    int damageTimer = 0;
 
-    void SpecialAttack();
+    //std::vector<CircleCollider> samuraiCols_;
+
+    bool slashed = false;
+    Enemy* MakeClone() override;
+    using Func_t = void (Samurai::*)();
+    Func_t lastUpdater_;
 
     //更新
+    void IdleUpdate();
     void RunUpdate();
-    void RunawayUpdate();
-    void FallUpdate();
+    void Jump();
+    void HSlash();
+    void VSlash();
     void JumpUpdate();
-    void ThrowUpdate();
-    void SpecialAttackUpdate();
+    void FallUpdate();
+    void DamageUpdate();
+    void HSlashUpdate();
+    void VSlashUpdate();
+    
     Func_t updater_;
 
     // 描画
+    void IdleDraw();
     void RunDraw();
-    void ThrowDraw();
-
+    void FallDraw();
+    void DamageDraw();
+    void HSlashDraw();
+    void VSlashDraw();
     Func_t drawer_;
 
     std::shared_ptr<EffectManager>effectManager_;
-    std::shared_ptr<Stage>stage_;
-    ProjectileManager& projectileManager_;
-    std::shared_ptr<CollisionManager>collisionManager_;
 public:
     /// <summary>
     /// コンストラクタ
@@ -47,13 +57,8 @@ public:
     /// <param name="effectManager">エフェクト管理用クラス</param>
     /// <param name="c">カメラ</param>
     /// <param name="stage">ステージ</param>
-    Thrower(const std::shared_ptr<Player>& p, 
-        std::shared_ptr<EffectManager>& effectManager,
-        std::shared_ptr<CollisionManager>colManager,
-        std::shared_ptr<Camera> c,
-        std::shared_ptr<Stage>stage,
-        ProjectileManager& pm);
-    ~Thrower();
+    Samurai(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& effectManager, std::shared_ptr<Camera> c, std::shared_ptr<Stage>stage);
+    ~Samurai();
 
     /// <summary>
     /// ダメージを受けた

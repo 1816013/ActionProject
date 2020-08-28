@@ -11,6 +11,7 @@
 #include "Enemy/Ashura.h"
 #include "Enemy/Slasher.h"
 #include "Enemy/Thrower.h"
+#include "Enemy/Samurai.h"
 #include "Enemy/SideSpawner.h"
 #include "Enemy/EnemyManager.h"
 using namespace std;
@@ -100,12 +101,21 @@ void Stage::BuildEnemyLayout()
 				gameScene_->AddSpawner(new SideSpawner(pos,
 					new Thrower(gameScene_->GetPlayer(), 
 						gameScene_->GetEffectMng(),
+						gameScene_->GetCollisionManager(),
 						camera_, 
 						gameScene_->GetStage(),
 						gameScene_->GetProjectileManager()),
 					gameScene_->GetEnemyManager(),
 					gameScene_->GetCollisionManager(),
 					camera_, 40, 1, true));
+				break;
+			case samurai_side:
+				gameScene_->AddSpawner(new SideSpawner(pos,
+					new Samurai(gameScene_->GetPlayer(), gameScene_->GetEffectMng(),
+						camera_, gameScene_->GetStage()),
+					gameScene_->GetEnemyManager(),
+					gameScene_->GetCollisionManager(),
+					camera_, 10, 1));
 				break;
 			case boss:
 				gameScene_->AddSpawner(

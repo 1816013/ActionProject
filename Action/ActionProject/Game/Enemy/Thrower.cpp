@@ -18,11 +18,26 @@ namespace
     constexpr int speed = 5;
     constexpr float jump_power = 15.0f;
     constexpr int attack_distance = 200;
+    constexpr int throw_frame = 20;
+    constexpr int throw_onepicture_frame = throw_frame / 4;
+    constexpr float specialattack_jump_power = 30.0f;
+    constexpr float fall_gravity = 0.75f;
+    constexpr float jump_gravity = 0.75f;
+    constexpr int bullet_speed = 5;
 }
 
 Enemy* Thrower::MakeClone()
 {
-	return new Thrower(player_, effectManager_, camera_, stage_, projectileManager_);
+	return new Thrower(player_, effectManager_,collisionManager_, camera_, stage_, projectileManager_);
+}
+
+void Thrower::SpecialAttack()
+{
+    AimPlayer();
+    velocity_.y = -jump_power;
+    updater_ = &Thrower::SpecialAttackUpdate;
+    frame_ = 0;
+    animFrame_ = 0;
 }
 
 void Thrower::RunUpdate()
@@ -135,7 +150,7 @@ void Thrower::RunawayUpdate()
 
 void Thrower::FallUpdate()
 {
-    velocity_.y += 0.75f;
+    velocity_.y += fall_gravity;
     pos_ += velocity_;
     auto groundy = stage_->GetGroundY(pos_);
     if (groundy < pos_.y) {
@@ -147,7 +162,7 @@ void Thrower::FallUpdate()
 
 void Thrower::JumpUpdate()
 {
-    velocity_.y += 0.75f;
+    velocity_.y += jump_gravity;
     pos_ += velocity_;
     if (velocity_.y >= 0.0f) {
         updater_ = &Thrower::FallUpdate;
@@ -157,13 +172,15 @@ void Thrower::JumpUpdate()
 
 void Thrower::ThrowUpdate()
 {
-    animFrame_ = (animFrame_ + 1) % 20;
-    if (animFrame_ == 19)
+    animFrame_ = (animFrame_ + 1) % throw_frame;
+    if (animFrame_ == throw_frame - throw_onepicture_frame * 2)
     {
-        auto vel = player_->GetPosition() -  pos_;
+        SpecialAttack();
+        /*auto vel = player_->GetPosition() -  pos_;
         vel.Nomarize();
-        vel *= 5;
+        vel *= bullet_speed;
         projectileManager_.AddProjectile(new Kunai(pos_ + vel, vel, camera_));
+        collisionManager_->AddCollider(new CircleCollider(projectileManager_.Projectiles().back(), tagEnemyBullet, Circle(Position2f::ZERO, 5.0f)));*/
     }
     if (fabs(player_->GetPosition().x - pos_.x) > attack_distance) 
     {
@@ -179,19 +196,43 @@ void Thrower::ThrowUpdate()
 
 void Thrower::SpecialAttackUpdate()
 {
-    velocity_.y += 0.75f;
-    pos_ += velocity_;
-    if (velocity_.y >= 0.0f) {
-        updater_ = &Thrower::FallUpdate;
-        frame_ = 0;
-    }
-    animFrame_ = (animFrame_ + 1) % 20;
-    if (animFrame_ == 19)
+
+    auto lastVelY = velocity_.y;
+    if (specialAttackTimer == 0)
     {
-        auto vel = player_->GetPosition() - pos_;
-        vel.Nomarize();
-        vel *= 5;
-        projectileManager_.AddProjectile(new Kunai(pos_ + vel, vel, camera_));
+        velocity_.y += jump_gravity;
+        pos_ += velocity_;
+        if (lastVelY > 0.0f)
+        {
+            specialAttackTimer = 40;
+            auto vel = player_->GetPosition() - pos_;
+            lockonAngle_ = atan2f(vel.y, vel.x);
+            addAngle_ = (vel.x > 0 ? -1.0f : 1.0f)* (DX_PI_F / 18.0f);
+        }
+    }
+    
+    if (specialAttackTimer > 0)
+    {
+        if (--specialAttackTimer == 0)
+        {
+            updater_ = &Thrower::FallUpdate;
+            frame_ = 0;
+        }
+        else
+        {
+            if (specialAttackTimer % 5 == 0)
+            {
+                Vector2f vel(cosf(lockonAngle_), sinf(lockonAngle_));
+                vel = vel.Nomarized() * bullet_speed;
+                lockonAngle_ += addAngle_;
+                projectileManager_.AddProjectile(new Kunai(pos_ + vel, vel, camera_));
+                collisionManager_->AddCollider(new CircleCollider(projectileManager_.Projectiles().back(), tagEnemyBullet, Circle(Position2f::ZERO, 5.0f)));
+            }
+        }
+    }
+    else
+    {
+
     }
     
 }
@@ -218,11 +259,13 @@ void Thrower::ThrowDraw()
 
 Thrower::Thrower(const std::shared_ptr<Player>& p, 
     std::shared_ptr<EffectManager>& effectManager,
+    std::shared_ptr<CollisionManager>colManager,
     std::shared_ptr<Camera> c,
     std::shared_ptr<Stage> stage,
     ProjectileManager& pm):
     Enemy(p, c, stage),
     effectManager_(effectManager),
+    collisionManager_(colManager),
     stage_(stage),
     projectileManager_(pm)
 {
