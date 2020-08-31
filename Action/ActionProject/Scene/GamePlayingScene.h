@@ -69,7 +69,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	ProjectileManager& GetProjectileManager();
-	std::shared_ptr<CollisionManager> GetCollisionManager();
+	std::shared_ptr<CollisionManager>& GetCollisionManager();
 	std::shared_ptr<EnemyManager> GetEnemyManager();
 	std::shared_ptr<Player>& GetPlayer();
 	std::shared_ptr<Camera>& GetCamera();

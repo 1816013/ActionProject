@@ -69,7 +69,7 @@ void SideSpawner::Update()
 			enemy->SetPosition({ viewRect.Right() + spawn_offset , 0.0f });
 		}	
 		enemyManager_->AddEnemy(enemy);
-
+		enemyManager_->Enemies().back()->SetWeakRef(enemyManager_->Enemies().back());
 		// ŽãŽQÆ‚É’Ç‰Á
 		if (limitSpawnNum_ > 0)
 		{

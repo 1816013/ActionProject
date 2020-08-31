@@ -68,7 +68,7 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 	auto& fileMng = FileManager::Instance();
 	if (chainH == -1)
 	{
-		chainH = fileMng.Load(L"Resource/Image/Player/chainsickle.png")->Handle();
+		chainH = fileMng.Load(L"Resource/Image/Equipment/chainsickle.png")->Handle();
 	}
 }
 

@@ -174,7 +174,7 @@ ProjectileManager& GamePlayingScene::GetProjectileManager()
 	return *projectileManager_;
 }
 
-std::shared_ptr<CollisionManager> GamePlayingScene::GetCollisionManager()
+std::shared_ptr<CollisionManager>& GamePlayingScene::GetCollisionManager()
 {
 	return collisionManager_;
 }

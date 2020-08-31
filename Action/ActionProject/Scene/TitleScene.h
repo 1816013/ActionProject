@@ -10,6 +10,10 @@ class TitleScene : public Scene
 	friend PauseScene;
 	friend SceneController;
 private:
+	float angle_;
+	float dist_;
+	int captureH_;
+
 	TitleScene(SceneController&);
 
 	// Updater

@@ -188,3 +188,115 @@ struct Capsule
 	//Capsule(const Position2f& s, const Vector2f& v, const float r) : start(s), vecEnd(v), radius(r) {};
 	Capsule(const Segment& s, const float r) :seg(s), radius(r) {};
 };
+
+/// <summary>
+/// 扇形構造体
+/// </summary>
+/// <attention>
+///  条件 : v1→v2は時計回り
+///		  : v1とv2は同じ大きさ
+/// </attention>
+struct FanShape
+{
+	Position2f center;	//中心座標
+	Vector2f v1;		// 扇形の端点までのベクトル1
+	Vector2f v2;		// 扇形の端点までのベクトル2
+	FanShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
+	FanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
+	FanShape(const Position2f& p, const Vector2f& inv1, float angle);
+
+	/// <summary>
+	/// 扇形を描画する
+	/// </summary>
+	/// <param name="color">色</param>
+	void Draw(int graphH, float amp, bool distF = false, unsigned int color = 0xffffff);
+	/// <summary>
+	/// 半径を返す
+	/// </summary>
+	/// <returns>半径</returns>
+	float Radius()const;
+	void AddAngle1(float angle);
+	void AddAngle2(float angle);
+	/// <summary>
+	/// v1→v2の角度を返す
+	/// </summary>
+	/// <returns>角度</returns>
+	float GetAngle()const;
+};
+/// <summary>
+/// v1とv2の距離を測る
+/// </summary>
+/// <param name="v1">端点までのベクトル1</param>
+/// <param name="v2">端点までのベクトル2</param>
+float GetAngle2Vector(const Vector2f& v1, const Vector2f& v2);
+
+struct Matrix {
+	float m[3][3];
+};
+
+/// <summary>
+/// 単位行列を返す
+/// </summary>
+Matrix IdentityMat();
+
+/// <summary>
+/// 平行移動行列を返す
+/// </summary>
+/// <param name="x">X方向平行移動量</param>
+/// <param name="y">Y方向平行移動量</param>
+Matrix TranslateMat(float x, float y);
+
+/// <summary>
+/// 回転行列を返す
+/// </summary>
+/// <param name="angle">回転角度</param>
+Matrix RotateMat(float angle);
+
+/// <summary>
+/// ２つの行列の乗算を返す
+/// </summary>
+/// <param name="lmat">左辺値(行列)</param>
+/// <param name="rmat">右辺値(行列)</param>
+Matrix MultipleMat(const Matrix& lmat, const Matrix& rmat);
+
+///ベクトルに対して行列乗算を適用し、結果のベクトルを返す
+///@param mat 行列
+///@param vec ベクトル
+Vector2f MultipleVec(const Matrix& mat, const Vector2f& vec);
+
+Vector2f operator*(const Matrix& mat, const Vector2f& vec);
+
+/// <summary>
+/// 扇形構造体
+/// </summary>
+/// <attention>
+///  条件 : v1→v2は時計回り
+///		  : v1とv2は同じ大きさ
+/// </attention>
+struct SlashShape
+{
+	Position2f center;	//中心座標
+	Vector2f v1;		// 扇形の端点までのベクトル1
+	Vector2f v2;		// 扇形の端点までのベクトル2
+	SlashShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
+	SlashShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
+	SlashShape(const Position2f& p, const Vector2f& inv1, float angle);
+
+	/// <summary>
+	/// 扇形を描画する
+	/// </summary>
+	/// <param name="color">色</param>
+	void Draw(int graphH, float amp, bool distF = false, unsigned int color = 0xffffff);
+	/// <summary>
+	/// 半径を返す
+	/// </summary>
+	/// <returns>半径</returns>
+	float Radius()const;
+	void AddAngle1(float angle);
+	void AddAngle2(float angle);
+	/// <summary>
+	/// v1→v2の角度を返す
+	/// </summary>
+	/// <returns>角度</returns>
+	float GetAngle()const;
+};

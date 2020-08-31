@@ -3,11 +3,14 @@
 #include <DxLib.h>
 #include <cassert>
 #include "../Collision/Collider.h"
+#include "../Collision/CapsuleCollider.h"
+#include "../Collision/CollisionManager.h"
 #include "../Effect.h"
 #include "../Camera.h"
 #include "../Stage.h"
 #include "../../System/FileManager.h"
 #include "../../System/File.h"
+#include "../../Arithmetic.h"
 
 namespace
 {
@@ -27,8 +30,9 @@ namespace
     constexpr int run_frames = one_picture_frame * run_pict_num;
     constexpr int Hslash_frames = one_picture_frame * Hslash_pict_num;
 }
-Samurai::Samurai(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<Camera> c, std::shared_ptr<Stage>s) :
+Samurai::Samurai(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& em, std::shared_ptr<CollisionManager>& collisionManager, std::shared_ptr<Camera> c, std::shared_ptr<Stage>s) :
     Enemy(p, c, s),
+    collisionManager_(collisionManager),
     effectManager_(em)
 {
     life_ = 10;
@@ -66,7 +70,12 @@ Samurai::~Samurai()
 
 Enemy* Samurai::MakeClone()
 {
-    return new Samurai(player_, effectManager_, camera_, stage_);
+    return new Samurai(player_, effectManager_,collisionManager_, camera_, stage_);
+}
+
+void Samurai::SetWeakRef(std::shared_ptr<Enemy> ref)
+{
+    weakThis_ = ref;
 }
 
 void Samurai::IdleUpdate()
@@ -126,11 +135,13 @@ void Samurai::RunUpdate()
     
 
 }
+
 void Samurai::Jump()
 {
     velocity_.y = -jump_power;
     updater_ = &Samurai::JumpUpdate;
 }
+
 void Samurai::HSlash()
 {
     updater_ = &Samurai::HSlashUpdate;
@@ -181,7 +192,7 @@ void Samurai::DamageUpdate()
         drawer_ = &Samurai::RunDraw;
         if (updater_ != &Samurai::JumpUpdate && updater_ != &Samurai::FallUpdate)
         {
-            if (rand() % 5 == 0)
+            if (rand() % 4 == 0)
             {
                 if (fabs(pos_.x - player_->GetPosition().x) < slash_distance && !slashed)
                 {
@@ -215,6 +226,17 @@ void Samurai::HSlashUpdate()
         frame_ = 1;
         updater_ = &Samurai::RunUpdate;
         drawer_ = &Samurai::RunDraw;
+    }
+    if (animFrame_ == 2 * one_picture_frame)
+    {
+        if (slashCol_.expired() && !weakThis_.expired())
+        {
+            auto sign = Sign(velocity_.x);
+  
+            collisionManager_->AddCollider(new CapsuleCollider(weakThis_.lock(),
+               Capsule({ { 0 , -50 }, {-50, -50} }, 10), tagEnemyBullet));
+            //slashCol_ = ;
+        }
     }
 }
 
@@ -333,7 +355,7 @@ void Samurai::OnHit(CollisionInfo& mine, CollisionInfo& another)
     if (another.collider->GetTag() == tagPlayerAtack)
     {
         
-        if (updater_ == &Samurai::DamageUpdate)
+        if (updater_ == &Samurai::DamageUpdate && updater_ == &Samurai::HSlashUpdate)
         {
             return;
         }

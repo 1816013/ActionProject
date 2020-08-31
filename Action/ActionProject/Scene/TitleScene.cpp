@@ -7,6 +7,7 @@
 #include "../Geometry.h"
 #include "../System/FileManager.h"
 #include "../System/File.h"
+#include "../System/Application.h"
 
 namespace{
 	constexpr uint32_t FadeInterval = 45;
@@ -24,10 +25,14 @@ updater_(&TitleScene::FadeinUpdate),
 drawer_(&TitleScene::FadeDraw)
 {
 	waitTimer = 0;
+	dist_ = 0.5;
+	angle_ = DX_PI_F;
 	blinkInterval = BlinkIntervalNomal;
 	auto& fileMng = FileManager::Instance();
 	titleH = fileMng.Load(L"Resource/Image/Title/Title.png")->Handle();
 	startH = fileMng.Load(L"Resource/Image/Title/pressstart.png")->Handle();
+	auto& rc = Application::Instance().GetViewport();
+	captureH_ = MakeScreen(rc.GetSize().w, rc.GetSize().h);
 }
 
 
@@ -45,6 +50,27 @@ void TitleScene::TitleUpdate(const Input& input)
 		waitTimer = BlinkIntervalFast;
 		updater_ = &TitleScene::FastBlinkUpdate;
 		blinkInterval = BlinkIntervalFast;
+	}
+	else
+	{
+		if (input.IsPressed("left"))
+		{
+			angle_ -= 0.01f;
+		}
+		
+		if (input.IsPressed("right"))
+		{
+			angle_ += 0.01f;
+		}
+		if (input.IsPressed("up"))
+		{
+			dist_ -= 1.0f;
+		}
+
+		if (input.IsPressed("down"))
+		{
+			dist_ += 1.0f;
+		}
 	}
 }
 
@@ -85,12 +111,7 @@ void TitleScene::Update(const Input & input)
 
 void TitleScene::NomalDraw()
 {
-	//Position2 pos;
-	//Size iSize;
-	//GetGraphSize(titleH, &iSize.w, &iSize.h);
 	const auto& vpSize = Application::Instance().GetViewport().GetSize();
-	//pos.x = (vpSize.w - iSize.w) / 2;
-	//pos.y = (vpSize.h - iSize.h) / 2;
 	DrawRotaGraph(vpSize.w / 2, vpSize.h / 2, 1.0, 0.0, titleH, false);
 	DrawString(100, 100, L"TitleScene", 0xffffff);
 	
@@ -98,6 +119,9 @@ void TitleScene::NomalDraw()
 	{
 		DrawRotaGraph(vpSize.w / 2, 400, 1.0, 0.0, startH, true);		
 	}
+	SlashShape fan({ 400.0f, 300.0f }, {-125.0f, -125.0f},angle_);
+	GetDrawScreenGraph(0, 0, 800, 600, captureH_);
+	fan.Draw(captureH_, dist_);
 }
 
 void TitleScene::FadeDraw()

@@ -111,8 +111,11 @@ void Stage::BuildEnemyLayout()
 				break;
 			case samurai_side:
 				gameScene_->AddSpawner(new SideSpawner(pos,
-					new Samurai(gameScene_->GetPlayer(), gameScene_->GetEffectMng(),
-						camera_, gameScene_->GetStage()),
+					new Samurai(gameScene_->GetPlayer(),
+						gameScene_->GetEffectMng(),
+						gameScene_->GetCollisionManager(),
+						camera_, 
+						gameScene_->GetStage()),
 					gameScene_->GetEnemyManager(),
 					gameScene_->GetCollisionManager(),
 					camera_, 10, 1));

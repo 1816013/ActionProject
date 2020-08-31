@@ -2,7 +2,8 @@
 #include "Enemy.h"
 
 class EffectManager;
-class CircleCollider;
+class CollisionManager;
+class Collider;
 /// <summary>
 /// 侍雑魚敵
 /// </summary>
@@ -18,12 +19,17 @@ private:
     int animFrame_ = 0;
     int damageTimer = 0;
 
-    //std::vector<CircleCollider> samuraiCols_;
+    std::shared_ptr<CollisionManager>collisionManager_;
+    std::vector<Circle>circles_;
+    std::weak_ptr<Collider> slashCol_;
+    std::weak_ptr<Enemy>weakThis_;
 
     bool slashed = false;
     Enemy* MakeClone() override;
     using Func_t = void (Samurai::*)();
     Func_t lastUpdater_;
+
+    void SetWeakRef(std::shared_ptr<Enemy>ref)override;
 
     //更新
     void IdleUpdate();
@@ -57,7 +63,7 @@ public:
     /// <param name="effectManager">エフェクト管理用クラス</param>
     /// <param name="c">カメラ</param>
     /// <param name="stage">ステージ</param>
-    Samurai(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& effectManager, std::shared_ptr<Camera> c, std::shared_ptr<Stage>stage);
+    Samurai(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager>& effectManager, std::shared_ptr<CollisionManager>& collisionManager, std::shared_ptr<Camera> c, std::shared_ptr<Stage>stage);
     ~Samurai();
 
     /// <summary>

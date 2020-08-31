@@ -18,6 +18,10 @@ void Enemy::AimPlayer()
 	velocity_.Nomarize(); 
 }
 
+void Enemy::SetWeakRef(std::shared_ptr<Enemy> ref)
+{
+}
+
 void Enemy::SetPosition(const Position2f& pos)
 {
 	pos_ = pos;

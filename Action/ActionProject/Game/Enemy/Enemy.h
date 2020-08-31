@@ -24,6 +24,7 @@ protected:
 	virtual Enemy* MakeClone() = 0;
 	virtual void AimPlayer();
 	
+	
 public:
 	Enemy(const std::shared_ptr<Player>& p, std::shared_ptr<Camera> c, std::shared_ptr<Stage> stage);
 	virtual ~Enemy() = default;
@@ -79,5 +80,7 @@ public:
 	/// </summary>
 	/// <param name="c"></param>
 	void OnHit(CollisionInfo& mine, CollisionInfo& another)override;
+
+	virtual void SetWeakRef(std::shared_ptr<Enemy>ref);
 };
 

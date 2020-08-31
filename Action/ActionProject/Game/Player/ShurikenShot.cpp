@@ -20,7 +20,7 @@ ShurikenShot::ShurikenShot(const Position2f& pos, const Vector2f& vel, std::shar
 	auto& fileMng = FileManager::Instance();
 	if (shurikenH == -1)
 	{
-		shurikenH = fileMng.Load(L"Resource/Image/Player/shuriken.png")->Handle();
+		shurikenH = fileMng.Load(L"Resource/Image/Equipment/shuriken.png")->Handle();
 	}
 	angle_ = 0.0f;
 	updater_ = &ShurikenShot::NomalUpdate;

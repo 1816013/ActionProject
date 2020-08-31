@@ -19,7 +19,7 @@ BombShot::BombShot(const Position2f& pos, const Vector2f& vel, std::shared_ptr<C
 	auto& fileMng = FileManager::Instance();
 	if (bombH == -1)
 	{
-		bombH = fileMng.Load(L"Resource/Image/Player/bombshot2.png")->Handle();
+		bombH = fileMng.Load(L"Resource/Image/Equipment/bombshot2.png")->Handle();
 	}
 	if (exprotionH_)
 	{
