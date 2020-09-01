@@ -18,6 +18,7 @@ namespace{
 	unsigned int blinkInterval = 45;
 	int titleH;
 	int startH;
+	SlashShape slash_({ 400.0f, 300.0f }, { -125.0f, -125.0f }, 0.0f);
 }
 
 TitleScene::TitleScene(SceneController& c): Scene(c),
@@ -33,6 +34,14 @@ drawer_(&TitleScene::FadeDraw)
 	startH = fileMng.Load(L"Resource/Image/Title/pressstart.png")->Handle();
 	auto& rc = Application::Instance().GetViewport();
 	captureH_ = MakeScreen(rc.GetSize().w, rc.GetSize().h);
+	if (psH_ == -1)
+	{
+		psH_ = LoadPixelShader(L"Resource/Etc/testps.pso");
+	}
+	if (normalH_ == -1)
+	{
+		normalH_ = fileMng.Load(L"Resource/Etc/normal.png")->Handle();
+	}
 }
 
 
@@ -55,12 +64,13 @@ void TitleScene::TitleUpdate(const Input& input)
 	{
 		if (input.IsPressed("left"))
 		{
-			angle_ -= 0.01f;
+			slash_.AddAngle1(0.01f);//angle_ -= 0.05f;
 		}
 		
 		if (input.IsPressed("right"))
 		{
-			angle_ += 0.01f;
+			slash_.AddAngle2(0.01f);
+			//angle_ += 0.05f;
 		}
 		if (input.IsPressed("up"))
 		{
@@ -121,7 +131,7 @@ void TitleScene::NomalDraw()
 	}
 	SlashShape fan({ 400.0f, 300.0f }, {-125.0f, -125.0f},angle_);
 	GetDrawScreenGraph(0, 0, 800, 600, captureH_);
-	fan.Draw(captureH_, dist_);
+	slash_.Draw(captureH_, dist_, psH_, normalH_);
 }
 
 void TitleScene::FadeDraw()

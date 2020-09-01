@@ -21,7 +21,7 @@ bool Application::Initialize()
 {	
 	ChangeWindowMode(true);
 	SetGraphMode(800, 600, 32);
-	SetWindowText(L"");
+	SetWindowText(L"1816013_–Ø‘º—¤");
 	const auto& wsize = viewport_.GetSize();
 	if (DxLib_Init())
 	{

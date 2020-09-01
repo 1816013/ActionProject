@@ -7,6 +7,7 @@
 #include "BombEquip.h"
 #include "ShurikenEquip.h"
 #include "ChainEquip.h"
+#include "SwordEquip.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ ShadowClone::ShadowClone(GamePlayingScene* gs, Player* player, std::shared_ptr<C
 	player_(player), 
 	camera_(camera)
 {
+	equipments_.emplace_back(make_shared<SwordEquip>(gs->GetPlayer(), gs->GetCollisionManager(), camera_, this));
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), gs->GetCollisionManager(), camera_));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), gs->GetCollisionManager(), camera_));
 	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), gs->GetCollisionManager(), camera_, this));

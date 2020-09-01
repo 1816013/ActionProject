@@ -21,6 +21,134 @@
 	 }
  }
 
+ namespace
+ {
+	 void BuildVertex(Position2f& center, Vector2f& v1,Vector2f& v2, std::vector<DxLib::VERTEX2D>& vertices, const size_t& triangleNum, float amp, const float& step_angle, float rem);
+	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2, float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem);
+	 void BuildVertex(Position2f& center, Vector2f& v1, Vector2f& v2, std::vector<DxLib::VERTEX2D>& vertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
+	 {
+		 for (auto& v : vertices)
+		 {
+			 v.dif.r = 0xaa;
+			 v.dif.g = 0xaa;
+			 v.dif.b = 0xff;
+			 v.dif.a = 0xaa;
+			 v.u = 0.0f;
+			 v.v = 0.0f;
+			 v.rhw = 1.0f;
+		 }
+
+		 Vector2f tmpV = v1;
+		 auto r = tmpV.Magnitude();
+		 auto inr = r;
+		 auto stepr = r / (float)(triangleNum + 1);
+		 auto ampX = amp / 800.0f;
+		 auto ampY = amp / 600.0f;
+		 float curentAngle = 0.0f;
+		 for (size_t i = 0; i < triangleNum; ++i)
+		 {
+			 //auto ratio = curentAngle / angleRange;
+			 //inr = r * (1 - ratio);
+			 auto nv = tmpV.Nomarized();
+			 vertices[i * 2 + 0].pos = V2V(center + nv * inr);
+			 vertices[i * 2 + 0].u = vertices[i * 2 + 0].pos.x / 800.f;
+			 vertices[i * 2 + 0].v = vertices[i * 2 + 0].pos.y / 600.f;
+			 vertices[i * 2 + 1].pos = V2V(center + nv * r);
+			 vertices[i * 2 + 1].u = cos(float(i * step_angle)) * ampX + vertices[i * 2 + 1].pos.x / 800.f;
+			 vertices[i * 2 + 1].v = sin(float(i * step_angle)) * ampY + vertices[i * 2 + 1].pos.y / 600.f;
+			 tmpV = RotateMat(step_angle) * tmpV;
+			 //curentAngle = GetAngle2Vector(v1, tmpV);
+			 inr = inr - stepr;
+			 max(inr, 0);
+		 }
+		 // step_angle‚ÅŠ„‚èØ‚ê‚È‚¢‚Æ‚«‚Ì•\Ž¦
+		 tmpV = v2;
+		 if (rem > 0.0f)
+		 {
+			 auto idx = (triangleNum - 1) * 2;
+			 auto nv = tmpV.Nomarized();
+			 vertices[triangleNum * 2 + 0].pos = V2V(center + nv * inr);
+			 vertices[triangleNum * 2 + 0].u = vertices[triangleNum * 2 + 0].pos.x / 800.f;
+			 vertices[triangleNum * 2 + 0].v = vertices[triangleNum * 2 + 0].pos.y / 600.f;
+			 vertices[triangleNum * 2 + 1].pos = V2V(center + nv * r);
+			 vertices[triangleNum * 2 + 1].u = cos(float(triangleNum * step_angle)) * ampX + vertices[triangleNum * 2 + 1].pos.x / 800.f;
+			 vertices[triangleNum * 2 + 1].v = sin(float(triangleNum * step_angle)) * ampY + vertices[triangleNum * 2 + 1].pos.y / 600.f;
+			 tmpV = RotateMat(step_angle) * tmpV;
+		 }
+
+	 }
+
+	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2,float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
+	 {
+		 for (auto& v : svertices)
+		 {
+			 /*v.dif.r = 0xaa;
+			 v.dif.g = 0xaa;
+			 v.dif.b = 0xff;
+			 v.dif.a = 0xaa;*/
+			 v.u = 0.0f;
+			 v.v = 0.0f;
+			 v.rhw = 1.0f;
+		 }
+
+		 Vector2f tmpV = v1;
+		 auto r = tmpV.Magnitude();
+		 auto inr = r;
+		 auto stepr = r / (float)(triangleNum + 1);
+		 auto ampX = amp / 800.0f;
+		 auto ampY = amp / 600.0f;
+		 float curentAngle = 0.0f;
+		 for (size_t i = 0; i < triangleNum; ++i)
+		 {
+			 auto ratio = curentAngle / angleRange;
+			 inr = r * (1 - ratio);
+			 auto nv = tmpV.Nomarized();
+			 svertices[i * 2 + 0].pos = V2V(center + nv * inr);
+			 svertices[i * 2 + 0].u = svertices[i * 2 + 0].pos.x / 800.f;
+			 svertices[i * 2 + 0].v = svertices[i * 2 + 0].pos.y / 600.f;
+			 svertices[i * 2 + 0].dif.r = 0xff;
+			 svertices[i * 2 + 0].dif.g = 0x44;
+			 svertices[i * 2 + 0].dif.b = 0x00;
+			 svertices[i * 2 + 0].dif.a = 0xaa;
+			 svertices[i * 2 + 1].pos = V2V(center + nv * r);
+			 svertices[i * 2 + 1].u = sin(float(i * step_angle)) * ampX + svertices[i * 2 + 1].pos.x / 800.f;
+			 svertices[i * 2 + 1].v = cos(float(i * step_angle)) * ampY + svertices[i * 2 + 1].pos.y / 600.f;
+			 svertices[i * 2 + 1].dif.r = 0xff;
+			 svertices[i * 2 + 1].dif.g = 0xff;
+			 svertices[i * 2 + 1].dif.b = 0xff;
+			 svertices[i * 2 + 1].dif.a = 0xaa;
+			 tmpV = RotateMat(step_angle) * tmpV;
+			 curentAngle = GetAngle2Vector(v1, tmpV);
+			 //max(inr, 0);
+		 }
+		 // step_angle‚ÅŠ„‚èØ‚ê‚È‚¢‚Æ‚«‚Ì•\Ž¦
+		 tmpV = v2;
+		 if (rem > 0.0f)
+		 {
+			 auto ratio = curentAngle / angleRange;
+			 inr = r * (1 - ratio);
+			 auto idx = (triangleNum - 1) * 2;
+			 auto nv = tmpV.Nomarized();
+			 svertices[triangleNum * 2 + 0].pos = V2V(center + nv * inr);
+			 svertices[triangleNum * 2 + 0].u = svertices[triangleNum * 2 + 0].pos.x / 800.f;
+			 svertices[triangleNum * 2 + 0].v = svertices[triangleNum * 2 + 0].pos.y / 600.f;
+			 svertices[triangleNum * 2 + 0].dif.r = 0xff;
+			 svertices[triangleNum * 2 + 0].dif.g = 0xff;
+			 svertices[triangleNum * 2 + 0].dif.b = 0xff;
+			 svertices[triangleNum * 2 + 0].dif.a = 0xff;
+			 svertices[triangleNum * 2 + 1].pos = V2V(center + nv * r);
+			 svertices[triangleNum * 2 + 1].u = sin(float(triangleNum * step_angle)) * ampX + svertices[triangleNum * 2 + 1].pos.x / 800.f;
+			 svertices[triangleNum * 2 + 1].v = cos(float(triangleNum * step_angle)) * ampY + svertices[triangleNum * 2 + 1].pos.y / 600.f;
+			 svertices[triangleNum * 2 + 1].dif.r = 0xff;
+			 svertices[triangleNum * 2 + 1].dif.g = 0xff;
+			 svertices[triangleNum * 2 + 1].dif.b = 0xff;
+			 svertices[triangleNum * 2 + 1].dif.a = 0xff;
+			 tmpV = RotateMat(step_angle) * tmpV;
+		 }
+
+	 }
+ }
+
 float Dot(const Vector2f& va, const Vector2f& vb)
 {
 	return va.x * vb.x + va.y * vb.y;
@@ -227,72 +355,48 @@ SlashShape::SlashShape(const Position2f& p, const Vector2f& inv1, float angle)
 	v2 = RotateMat(angle) * v1;
 }
 
-void SlashShape::Draw(int graphH, float amp, bool distF, unsigned int color)
+void SlashShape::Draw(int graphH, float amp,int psH, int normalH, Vector2f offset)
 {
-	
-	constexpr float step_angle = (DX_PI_F / 18.0f);
+	constexpr float step_angle = (DX_PI_F / 36.0f);
 	float angleRange = GetAngle2Vector(v1, v2);
 	size_t triangleNum = static_cast<size_t>(angleRange / step_angle);
 	// Š„‚èØ‚ê‚é‚©
 	float rem = fmod(angleRange, step_angle);
 	auto remNum = rem > 0 ? triangleNum + 1 : triangleNum;
+	std::vector<VERTEX2D> vertices;
+	std::vector<VERTEX2DSHADER> svertices;
 
-	std::vector<VERTEX2D> vertices(2 * remNum);
-	for (auto& v : vertices)
-	{
-		v.dif.r = 0xaa;
-		v.dif.g = 0xaa;
-		v.dif.b = 0xff;
-		v.dif.a = 0xaa;
-		v.u = 0.0f;
-		v.v = 0.0f;
-		v.rhw = 1.0f;
-	}
-
-	Vector2f tmpV = v1;
-	auto r = tmpV.Magnitude();
-	auto inr = r;
-	auto stepr = r / (float)(triangleNum + 1);
-	auto ampX = amp / 800;
-	auto ampY = amp / 600;
-	for (size_t i = 0; i < triangleNum; ++i)
-	{
-		auto nv = tmpV.Nomarized();
-		vertices[i * 2 + 0].pos = V2V(center + nv * inr );
-		vertices[i * 2 + 0].u = vertices[i * 2 + 0].pos.x / 800.f;
-		vertices[i * 2 + 0].v = vertices[i * 2 + 0].pos.y / 600.f;
-		vertices[i * 2 + 1].pos = V2V(center + nv * r);
-		vertices[i * 2 + 1].u = cos(float(i * step_angle)) * ampX + vertices[i * 2 + 1].pos.x / 800.f;
-		vertices[i * 2 + 1].v = sin(float(i * step_angle)) * ampY + vertices[i * 2 + 1].pos.y / 600.f;
-		tmpV = RotateMat(step_angle) * tmpV;
-		inr = inr - stepr;
-		inr = max(inr, 0);
-	}
-	// step_angle‚ÅŠ„‚èØ‚ê‚È‚¢‚Æ‚«‚Ì•\Ž¦
-	tmpV = v2;
-	if (rem > 0.0f)
-	{
-		auto nv = tmpV.Nomarized();
-		vertices[triangleNum * 2 + 0].pos = V2V(center + nv * inr);
-		vertices[triangleNum * 2 + 0].u = vertices[triangleNum * 2 + 0].pos.x / 800.f;
-		vertices[triangleNum * 2 + 0].v = vertices[triangleNum * 2 + 0].pos.y / 600.f;
-		vertices[triangleNum * 2 + 1].pos = V2V(center + nv * r);
-		vertices[triangleNum * 2 + 1].u = cos(float(triangleNum * step_angle)) * ampX + vertices[triangleNum * 2 + 1].pos.x / 800.f;
-		vertices[triangleNum * 2 + 1].v = sin(float(triangleNum * step_angle)) * ampY + vertices[triangleNum * 2 + 1].pos.y / 600.f;
-		tmpV = RotateMat(step_angle) * tmpV;
-	}
-
-	//v.emplace_back({center.x, center.y}, 1.0f, );
 	if (graphH == -1)
 	{
 		graphH = DX_NONE_GRAPH;
+
 	}
-	DrawPrimitive2D(vertices.data(), vertices.size(), DX_PRIMTYPE_TRIANGLESTRIP, graphH, false);
+	if (psH == -1)
+	{
+		vertices.resize(2 * remNum);
+		
+		BuildVertex(center, v1, v2, vertices, triangleNum, amp, step_angle, rem);
+		DrawPrimitive2D(vertices.data(), vertices.size(), DX_PRIMTYPE_TRIANGLESTRIP, graphH, false);
+	}
+	else
+	{
+		svertices.resize(2 * remNum);
+		BuildVertexToShader(center, v1, v2, angleRange ,svertices, triangleNum, amp, step_angle, rem);
+		SetUsePixelShader(psH);
+		SetUseTextureToShader(0, graphH);
+		SetUseTextureToShader(1, normalH);
+		DrawPrimitive2DToShader(svertices.data(), svertices.size(), DX_PRIMTYPE_TRIANGLESTRIP);
+	}
+	
+	
+
 	DrawLineAA(center.x, center.y,
 		(center + v1).x, (center + v1).y, 0xff0000, 3.0f);
 	DrawLineAA(center.x, center.y,
 		(center + v2).x, (center + v2).y, 0xff0000, 3.0f);
 }
+
+
 
 float SlashShape::Radius() const
 {
@@ -301,15 +405,27 @@ float SlashShape::Radius() const
 
 void SlashShape::AddAngle1(float angle)
 {
-	float tmpAngle = GetAngle2Vector(v1, v2);
-	v2 = RotateMat(tmpAngle + angle) * v1;
+	float tmpAngle = GetAngle2Vector(v2, v1);
+	v1 = RotateMat(tmpAngle + angle) * v2;
 }
 
 void SlashShape::AddAngle2(float angle)
 {
+	float tmpAngle = GetAngle2Vector(v1, v2);
+	v2 = RotateMat(tmpAngle + angle) * v1;
+}
+
+void SlashShape::SetAngle1(float angle)
+{
+	v1 = RotateMat(angle) * v1;
+}
+
+void SlashShape::SetAngle2(float angle)
+{
+	v2 = RotateMat(angle) * v2;
 }
 
 float SlashShape::GetAngle() const
 {
-	return 0.0f;
+	return GetAngle2Vector(v1, v2);
 }

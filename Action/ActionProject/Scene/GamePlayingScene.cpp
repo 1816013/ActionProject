@@ -30,7 +30,7 @@ namespace
 {
 	constexpr uint32_t FadeInterval = 45;
 	unsigned int waitTimer = 0;
-	int weaponUIH_[3];
+	int weaponUIH_[4];
 }
 
 
@@ -70,9 +70,10 @@ void GamePlayingScene::InitializeUpdate(const Input& input)
 	/*spawners_.emplace_back(new SideSpawner({ 0, 0 }, 
 		new Slasher(player_, effectManager_, camera_, stage_),
 		enemyManager_, collisionManager_, camera_));*/
-	weaponUIH_[0] = fileMng.Load(L"Resource/Image/UI/bomb.png")->Handle();
-	weaponUIH_[1] = fileMng.Load(L"Resource/Image/UI/shuriken.png")->Handle();
-	weaponUIH_[2] = fileMng.Load(L"Resource/Image/UI/chain.png")->Handle();
+	weaponUIH_[0] = fileMng.Load(L"Resource/Image/UI/sword.png")->Handle();
+	weaponUIH_[1] = fileMng.Load(L"Resource/Image/UI/bomb.png")->Handle();
+	weaponUIH_[2] = fileMng.Load(L"Resource/Image/UI/shuriken.png")->Handle();
+	weaponUIH_[3] = fileMng.Load(L"Resource/Image/UI/chain.png")->Handle();
 	updater_ = &GamePlayingScene::FadeinUpdate;
 }
 

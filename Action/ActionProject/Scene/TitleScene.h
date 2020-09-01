@@ -13,6 +13,8 @@ private:
 	float angle_;
 	float dist_;
 	int captureH_;
+	int psH_ = -1;
+	int normalH_ = -1;
 
 	TitleScene(SceneController&);
 

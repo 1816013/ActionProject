@@ -86,7 +86,7 @@ struct Vector2D
 	{
 		Vector2D vec(x, y);		
 		auto mag = vec.Magnitude();
-		assert(mag != 0.0f);
+		//assert(mag != 0.0f);
 		return Vector2D(x / mag, y / mag);
 	}
 
@@ -276,17 +276,18 @@ Vector2f operator*(const Matrix& mat, const Vector2f& vec);
 struct SlashShape
 {
 	Position2f center;	//中心座標
-	Vector2f v1;		// 扇形の端点までのベクトル1
-	Vector2f v2;		// 扇形の端点までのベクトル2
+	Vector2f v1;		// 斬撃の端点までのベクトル1
+	Vector2f v2;		// 斬撃の端点までのベクトル2
 	SlashShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
 	SlashShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
 	SlashShape(const Position2f& p, const Vector2f& inv1, float angle);
 
 	/// <summary>
-	/// 扇形を描画する
+	/// 斬撃を描画する
 	/// </summary>
 	/// <param name="color">色</param>
-	void Draw(int graphH, float amp, bool distF = false, unsigned int color = 0xffffff);
+	void Draw(int graphH, float amp, int psH,int normalH, Vector2f offset = Vector2f::ZERO);
+	
 	/// <summary>
 	/// 半径を返す
 	/// </summary>
@@ -294,6 +295,8 @@ struct SlashShape
 	float Radius()const;
 	void AddAngle1(float angle);
 	void AddAngle2(float angle);
+	void SetAngle1(float angle);
+	void SetAngle2(float angle);
 	/// <summary>
 	/// v1→v2の角度を返す
 	/// </summary>

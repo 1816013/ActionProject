@@ -9,6 +9,7 @@
 #include "BombEquip.h"
 #include "ShurikenEquip.h"
 #include "ChainEquip.h"
+#include "SwordEquip.h"
 #include "../Camera.h"
 #include "../Stage.h"
 #include "../../System/FileManager.h"
@@ -110,6 +111,7 @@ Player::Player(GamePlayingScene* gs) :
 	};
 	collisionManager_ =  gs->GetCollisionManager();
 	gs->AddListner(make_shared<PlayerInputListner>(*this));
+	equipments_.emplace_back(make_shared<SwordEquip>(gs->GetPlayer(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<BombEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<ShurikenEquip>(gs->GetProjectileManager(), collisionManager_, camera_));
 	equipments_.emplace_back(make_shared<ChainEquip>(gs->GetPlayer(), collisionManager_, camera_));
