@@ -350,7 +350,7 @@ Direction Player::Direction() const
 void Player::OnHit(CollisionInfo& mine, CollisionInfo& another)
 {
 	if (updater_ == &Player::DamageUpdate)return;
-	if (another.collider->GetTag() == tagEnemyBullet && mine.collider->GetTag() == tagPlayerDamage)
+	if (another.collider->GetTag() == tagEnemyAttack || another.collider->GetTag() == tagEnemyBullet && mine.collider->GetTag() == tagPlayerDamage)
 	{
 		knockbackfFrame = 6;
 		--life_;

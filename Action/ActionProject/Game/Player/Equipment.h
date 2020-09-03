@@ -19,7 +19,7 @@ public:
 	/// </summary>
 	/// <param name="p"> プレイヤーの参照</param>
 	/// <param name="i">入力参照</param>
-	virtual void Attack(const Player& p, const Input& i, Vector2f offset = Vector2f::ZERO) = 0;
+	virtual void Attack(const Player& p, const Input& i, const Vector2f offset = Vector2f::ZERO) = 0;
 	virtual void ExtensionAttack(const Player& player, const Input& input);
 	virtual void Update() {};
 	virtual void Draw() {};

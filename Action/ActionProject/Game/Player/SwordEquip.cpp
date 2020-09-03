@@ -27,14 +27,35 @@ namespace
 	int psH_ = -1;
 	int normalH_ = -1;
 	SlashShape slash_({ 400.0f, 300.0f }, { -125.0f, -125.0f }, 0);
+
+
+	constexpr int slash_frame = 30;
+	constexpr float slash_target_rad = 45 * (DX_PI_F / 180);
+	constexpr float slash1_speed = slash_target_rad / slash_frame;
+	constexpr float slash2_speed = slash_target_rad / slash_frame;
+	constexpr float slash1_Decay_rate = slash1_speed / slash_frame * 2;
+	constexpr float slash2_Decay_rate = slash2_speed / slash_frame;
+
+	float slash1Speed = slash_target_rad / slash_frame / 2;	// 始端スピード
+	float slash2Speed = slash_target_rad / slash_frame;	// 終端スピード
 }
 void SwordEquip::NomalUpdate()
 {
-	if (frame_ >= 0)
+	if (--frame_ >= 0)
 	{
 		slash_.center = player_->GetPosition();
-		slash_.AddAngle1(0.01);
-		slash_.AddAngle2(0.02);
+		slash_.AddAngle1(slash1Speed);
+		slash_.AddAngle2(slash2Speed);
+		//slash1Speed -= slash1_Decay_rate;
+		//slash2Speed -= slash2_Decay_rate;
+		if (frame_ == 0)
+		{
+			slash_.SetAngle1(0.0f);
+			slash_.SetAngle2(0.0f);
+			frame_ = -1;
+			
+
+		}
 	}
 }
 SwordEquip::SwordEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c, ShadowClone* shadow) :
@@ -71,7 +92,7 @@ void SwordEquip::Attack(const Player& player, const Input& input, Vector2f offse
 		capsuleCollider_ = new CapsuleCollider(player_, { {offset,offset}, 20 }, tagPlayerAtack, true);
 		collisionManager_->AddCollider(capsuleCollider_);
 	}
-	frame_ = 0;
+	frame_ = slash_frame;
 	slash_.SetAngle1(0);
 	slash_.SetAngle2(0);
 
@@ -123,8 +144,12 @@ void SwordEquip::Update()
 
 void SwordEquip::Draw()
 {
-	auto pos = player_->GetPosition() + offset_;
+	if (frame_ >= 0)
+	{
+		auto pos = player_->GetPosition() + offset_;
+		auto cameraOffset = camera_->ViewOffset();
 
-	GetDrawScreenGraph(0, 0, 800, 600, captureH_);
-	slash_.Draw(captureH_, dist_, psH_, normalH_, pos);
+		GetDrawScreenGraph(0, 0, 800, 600, captureH_);
+		slash_.Draw(captureH_, dist_, psH_, normalH_, cameraOffset + offset_);
+	}
 }

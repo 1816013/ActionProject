@@ -29,5 +29,7 @@ public:
 	/// <param name="collider">Õ“Ëî•ñ‚ğ’Ç‰Á‚·‚é</param>
 	void AddCollider(Collider* collider);
 
+	std::list<std::shared_ptr<Collider>>GetColliders();
+
 };
 

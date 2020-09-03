@@ -15,7 +15,6 @@ public:
 	/// <param name="tag">ƒ^ƒO</param>
 	/// <param name="immortal">•sŽ€‚©‚Ç‚¤‚©</param>
 	CapsuleCollider(std::shared_ptr<Character> owner, const Capsule& cap,  const char* tag = "", bool immortal = false);
-
 	/// <summary>
 	/// ‰½‚©‚ª“–‚½‚Á‚½
 	/// </summary>

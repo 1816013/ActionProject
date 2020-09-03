@@ -23,6 +23,7 @@ namespace
 }
 void ChainEquip::NomalUpdate()
 {
+	
 	if (frame_ < 0)
 	{
 		if (capsuleCollider_ != nullptr)

@@ -10,7 +10,8 @@ namespace
 	std::pair<std::string, std::string> hitConbinationTable[] = { 
 		{tagEnemyDamage,tagPlayerAtack }, 
 		{tagEnemyBullet,tagPlayerDamage},
-		{tagEnemyBullet,tagPlayerAtack }
+		{tagEnemyBullet,tagPlayerAtack },
+		{tagPlayerDamage,tagEnemyAttack}
 	};
 }
 
@@ -95,4 +96,9 @@ void CollisionManager::DebugDraw(std::shared_ptr<Camera>c)
 void CollisionManager::AddCollider(Collider* collider)
 {
 	colliders_.emplace_back(collider);
+}
+
+std::list<std::shared_ptr<Collider>> CollisionManager::GetColliders()
+{
+	return colliders_;
 }

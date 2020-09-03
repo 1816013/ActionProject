@@ -293,7 +293,17 @@ struct SlashShape
 	/// </summary>
 	/// <returns>”¼Œa</returns>
 	float Radius()const;
+	/// <summary>
+	/// V1‚ÌŠp“x‚ğ‰ÁZ
+	/// n’[
+	/// </summary>
+	/// <param name="angle">‰ÁZŠp“x</param>
 	void AddAngle1(float angle);
+	/// <summary>
+	/// V2‚ÌŠp“x‚ğ‰ÁZ
+	/// I’[
+	/// </summary>
+	/// <param name="angle">‰ÁZŠp“x</param>
 	void AddAngle2(float angle);
 	void SetAngle1(float angle);
 	void SetAngle2(float angle);

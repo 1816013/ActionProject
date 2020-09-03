@@ -70,7 +70,14 @@ void TitleScene::TitleUpdate(const Input& input)
 		if (input.IsPressed("right"))
 		{
 			slash_.AddAngle2(0.01f);
-			//angle_ += 0.05f;
+		}
+		if (input.IsPressed("shot"))
+		{
+			slash_.AddAngle1(-0.01f);//angle_ -= 0.05f;
+		}
+		if (input.IsPressed("jump"))
+		{
+			slash_.AddAngle2(-0.01f);
 		}
 		if (input.IsPressed("up"))
 		{

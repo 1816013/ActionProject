@@ -57,7 +57,7 @@ void SideSpawner::Update()
 				[](auto& reg)
 				{
 					return reg.isRight;
-				}) * 2 <= regurators_.size();
+				}) * 2 <= static_cast<int>(regurators_.size());
 		}
 
 		if (fromRight)

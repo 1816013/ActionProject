@@ -37,6 +37,8 @@ Samurai::Samurai(const std::shared_ptr<Player>& p, std::shared_ptr<EffectManager
 {
     life_ = 10;
     isActive_ = true;
+   // capsuleCollider_ = std::make_shared<CapsuleCollider>();
+    //slashCol_ = capsuleCollider_;
     lastUpdater_ = &Samurai::IdleUpdate;
     updater_ = &Samurai::RunUpdate;
     drawer_ = &Samurai::RunDraw;
@@ -226,16 +228,15 @@ void Samurai::HSlashUpdate()
         frame_ = 1;
         updater_ = &Samurai::RunUpdate;
         drawer_ = &Samurai::RunDraw;
+        slashCol_.lock()->Suside();
     }
     if (animFrame_ == 2 * one_picture_frame)
     {
         if (slashCol_.expired() && !weakThis_.expired())
         {
             auto sign = Sign(velocity_.x);
-  
-            collisionManager_->AddCollider(new CapsuleCollider(weakThis_.lock(),
-               Capsule({ { 0 , -50 }, {-50, -50} }, 10), tagEnemyBullet));
-            //slashCol_ = ;
+            collisionManager_->AddCollider(new CapsuleCollider(weakThis_.lock(), Capsule({ { 0 , 0 }, {100 * sign, 0} }, 20), tagEnemyAttack));
+            slashCol_ = collisionManager_->GetColliders().back();
         }
     }
 }

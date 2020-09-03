@@ -18,7 +18,6 @@ private:
     int frame_ = 0;
     int animFrame_ = 0;
     int damageTimer = 0;
-
     std::shared_ptr<CollisionManager>collisionManager_;
     std::vector<Circle>circles_;
     std::weak_ptr<Collider> slashCol_;

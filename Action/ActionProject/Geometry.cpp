@@ -15,7 +15,7 @@
 
  namespace DxLib
  {
-	 const tagVECTOR& V2V(const Vector2f& v)
+	 const tagVECTOR V2V(const Vector2f& v)
 	 {
 		 return VGet(v.x, v.y, 0.0f);
 	 }
@@ -78,14 +78,11 @@
 
 	 }
 
-	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2,float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
+	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2, float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
 	 {
+		 
 		 for (auto& v : svertices)
 		 {
-			 /*v.dif.r = 0xaa;
-			 v.dif.g = 0xaa;
-			 v.dif.b = 0xff;
-			 v.dif.a = 0xaa;*/
 			 v.u = 0.0f;
 			 v.v = 0.0f;
 			 v.rhw = 1.0f;
@@ -118,7 +115,7 @@
 			 svertices[i * 2 + 1].dif.b = 0xff;
 			 svertices[i * 2 + 1].dif.a = 0xaa;
 			 tmpV = RotateMat(step_angle) * tmpV;
-			 curentAngle = GetAngle2Vector(v1, tmpV);
+			 curentAngle += step_angle;//GetAngle2Vector(v1, tmpV);
 			 //max(inr, 0);
 		 }
 		 // step_angleÇ≈äÑÇËêÿÇÍÇ»Ç¢Ç∆Ç´ÇÃï\é¶
@@ -127,7 +124,6 @@
 		 {
 			 auto ratio = curentAngle / angleRange;
 			 inr = r * (1 - ratio);
-			 auto idx = (triangleNum - 1) * 2;
 			 auto nv = tmpV.Nomarized();
 			 svertices[triangleNum * 2 + 0].pos = V2V(center + nv * inr);
 			 svertices[triangleNum * 2 + 0].u = svertices[triangleNum * 2 + 0].pos.x / 800.f;
@@ -259,7 +255,7 @@ void FanShape::Draw(int graphH, float amp, bool distF, unsigned int color)
 	{
 		graphH = DX_NONE_GRAPH;
 	}
-	DrawPrimitive2D(vertices.data(), vertices.size(), DX_PRIMTYPE_TRIANGLELIST, graphH, false);
+	DrawPrimitive2D(vertices.data(), static_cast<int>(vertices.size()), DX_PRIMTYPE_TRIANGLELIST, graphH, false);
 	DrawLineAA(center.x, center.y,
 		(center + v1).x, (center + v1).y, 0xff0000, 3.0f);
 	DrawLineAA(center.x, center.y,
@@ -357,6 +353,8 @@ SlashShape::SlashShape(const Position2f& p, const Vector2f& inv1, float angle)
 
 void SlashShape::Draw(int graphH, float amp,int psH, int normalH, Vector2f offset)
 {
+	auto tmpCenter = center;
+	tmpCenter.x += offset.x;
 	constexpr float step_angle = (DX_PI_F / 36.0f);
 	float angleRange = GetAngle2Vector(v1, v2);
 	size_t triangleNum = static_cast<size_t>(angleRange / step_angle);
@@ -375,28 +373,26 @@ void SlashShape::Draw(int graphH, float amp,int psH, int normalH, Vector2f offse
 	{
 		vertices.resize(2 * remNum);
 		
-		BuildVertex(center, v1, v2, vertices, triangleNum, amp, step_angle, rem);
-		DrawPrimitive2D(vertices.data(), vertices.size(), DX_PRIMTYPE_TRIANGLESTRIP, graphH, false);
+		BuildVertex(tmpCenter, v1, v2, vertices, triangleNum, amp, step_angle, rem);
+		DrawPrimitive2D(vertices.data(), static_cast<int>(vertices.size()), DX_PRIMTYPE_TRIANGLESTRIP, graphH, false);
 	}
 	else
 	{
 		svertices.resize(2 * remNum);
-		BuildVertexToShader(center, v1, v2, angleRange ,svertices, triangleNum, amp, step_angle, rem);
+		BuildVertexToShader(tmpCenter, v1, v2,angleRange,svertices, triangleNum, amp, step_angle, rem);
 		SetUsePixelShader(psH);
 		SetUseTextureToShader(0, graphH);
 		SetUseTextureToShader(1, normalH);
-		DrawPrimitive2DToShader(svertices.data(), svertices.size(), DX_PRIMTYPE_TRIANGLESTRIP);
+		DrawPrimitive2DToShader(svertices.data(), static_cast<int>(svertices.size()), DX_PRIMTYPE_TRIANGLESTRIP);
 	}
 	
 	
 
-	DrawLineAA(center.x, center.y,
-		(center + v1).x, (center + v1).y, 0xff0000, 3.0f);
-	DrawLineAA(center.x, center.y,
-		(center + v2).x, (center + v2).y, 0xff0000, 3.0f);
+	DrawLineAA(tmpCenter.x, tmpCenter.y,
+		(tmpCenter + v1).x , (tmpCenter + v1).y, 0xff0000, 3.0f);
+	DrawLineAA(tmpCenter.x , tmpCenter.y,
+		(tmpCenter + v2).x, (tmpCenter + v2).y, 0xff0000, 3.0f);
 }
-
-
 
 float SlashShape::Radius() const
 {
@@ -417,12 +413,14 @@ void SlashShape::AddAngle2(float angle)
 
 void SlashShape::SetAngle1(float angle)
 {
-	v1 = RotateMat(angle) * v1;
+	auto tmpAngle = angle - GetAngle();
+	v1 = RotateMat(tmpAngle) * v1;
 }
 
 void SlashShape::SetAngle2(float angle)
 {
-	v2 = RotateMat(angle) * v2;
+	auto tmpAngle = angle - GetAngle();
+	v2 = RotateMat(tmpAngle) * v2;
 }
 
 float SlashShape::GetAngle() const
