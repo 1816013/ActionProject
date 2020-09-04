@@ -21,7 +21,7 @@ private:
 	std::vector<std::shared_ptr<Equipment>>equipments_;
 	size_t currentEquipmentNo_ = 0;
 	Direction direction_;
-	GamePlayingScene* gs_;
+	GamePlayingScene* gameScene_;
 	std::shared_ptr<CollisionManager>collisionManager_;
 	std::array<Position2f, 41>moveHistory_;
 	size_t currentMoveIndex_ = 0;

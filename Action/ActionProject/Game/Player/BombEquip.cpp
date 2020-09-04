@@ -50,7 +50,7 @@ void BombEquip::Attack(const Player& player, const Input& input, Vector2f offset
 		}
 	}
 	vel *= bomb_shot_speed;
-	auto bomb = new BombShot(player.GetPosition() + offset, vel, camera_);
+	auto bomb = new BombShot(player.GetPosition() + offset + Vector2f(0.0f, -50.0f), vel, camera_);
 	
 	pm_.AddProjectile(bomb);
 	collisionManager_->AddCollider(new CircleCollider(pm_.Projectiles().back(), tagPlayerAtack, {0, 0}, bomb_radius));

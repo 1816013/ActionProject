@@ -18,7 +18,7 @@ class GamePlayingScene : public Scene
 {
 	friend TitleScene;
 private:
-	GamePlayingScene(SceneController&);
+	GamePlayingScene(SceneController& sceneController);
 
 	void InitializeUpdate(const Input& input);
 	void FadeoutUpdate(const Input&);
@@ -42,9 +42,7 @@ private:
 	std::shared_ptr<CollisionManager> collisionManager_;
 	std::shared_ptr<EffectManager> effectManager_;
 	std::shared_ptr<Stage> stage_;
-	std::shared_ptr<Camera> camera_;
-
-	
+	std::shared_ptr<Camera> camera_;	
 public:
 	~GamePlayingScene();
 	/// <summary>
@@ -76,5 +74,9 @@ public:
 	std::shared_ptr<Stage>& GetStage();
 	std::shared_ptr<EffectManager>& GetEffectMng();
 	void AddSpawner(Spawner* spawer);
+	/// <summary>
+	/// ゲームオーバーシーンに飛ばす
+	/// </summary>
+	void GameOver();
 };
 

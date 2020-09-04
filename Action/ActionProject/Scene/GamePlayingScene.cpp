@@ -42,7 +42,7 @@ drawer_(&GamePlayingScene::FadeDraw)
 
 GamePlayingScene::~GamePlayingScene()
 {
-	FileManager::Instance().DeleteAllResources();
+	//;
 }
 
 void GamePlayingScene::AddListner(std::shared_ptr<InputListner> listner)
@@ -64,7 +64,7 @@ void GamePlayingScene::InitializeUpdate(const Input& input)
 	stage_->Load(L"Resource/level/level2.fmf");
 	player_ = make_shared<Player>(this);
 	player_->SetPosition({ 350, 480 });
-	collisionManager_->AddCollider(new CircleCollider(player_, tagPlayerDamage, Circle(Vector2f::ZERO, 50)));
+	collisionManager_->AddCollider(new CircleCollider(player_, tagPlayerDamage, Circle(Vector2f(0, -50), 50)));
 	camera_->SetPlayer(player_);
 	
 	/*spawners_.emplace_back(new SideSpawner({ 0, 0 }, 
@@ -84,9 +84,7 @@ void GamePlayingScene::GamePlayUpdate(const Input& input)
 	camera_->Update();
 	if (input.IsTriggered("OK"))
 	{
-		updater_ = &GamePlayingScene::FadeoutUpdate;
-		drawer_ = &GamePlayingScene::FadeDraw;
-		waitTimer = FadeInterval;
+		GameOver();
 	}
 	if (input.IsTriggered("pause"))
 	{
@@ -119,6 +117,7 @@ void GamePlayingScene::FadeoutUpdate(const Input& input)
 {
 	if (--waitTimer == 0)
 	{
+		FileManager::Instance().DeleteAllResources();
 		controller_.ChangeScene(new GameOverScene(controller_));		
 	}
 }
@@ -138,9 +137,9 @@ void GamePlayingScene::NomalDraw()
 	bg_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Back));
 	enemyManager_->Draw();
-	stage_->Draw(static_cast<size_t>(LayerType::Base));
-	player_->Draw();
+	stage_->Draw(static_cast<size_t>(LayerType::Base));	
 	projectileManager_->Draw();
+	player_->Draw();
 	effectManager_->Draw();
 	stage_->Draw(static_cast<size_t>(LayerType::Flont));
 
@@ -208,6 +207,13 @@ std::shared_ptr<EffectManager>& GamePlayingScene::GetEffectMng()
 void GamePlayingScene::AddSpawner(Spawner* spawer)
 {
 	spawners_.emplace_back(spawer);
+}
+
+void GamePlayingScene::GameOver()
+{
+	updater_ = &GamePlayingScene::FadeoutUpdate;
+	drawer_ = &GamePlayingScene::FadeDraw;
+	waitTimer = FadeInterval;
 }
 
 

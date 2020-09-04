@@ -175,12 +175,18 @@ void Thrower::ThrowUpdate()
     animFrame_ = (animFrame_ + 1) % throw_frame;
     if (animFrame_ == throw_frame - throw_onepicture_frame * 2)
     {
-        SpecialAttack();
-        /*auto vel = player_->GetPosition() -  pos_;
-        vel.Nomarize();
-        vel *= bullet_speed;
-        projectileManager_.AddProjectile(new Kunai(pos_ + vel, vel, camera_));
-        collisionManager_->AddCollider(new CircleCollider(projectileManager_.Projectiles().back(), tagEnemyBullet, Circle(Position2f::ZERO, 5.0f)));*/
+        if (rand() % 3 == 0)
+        {
+            SpecialAttack();
+        }
+        else
+        {
+            auto vel = player_->GetPosition() - pos_;
+            vel.Nomarize();
+            vel *= bullet_speed;
+            projectileManager_.AddProjectile(new Kunai(pos_ + vel + Vector2f(0, -25), vel, camera_));
+            collisionManager_->AddCollider(new CircleCollider(projectileManager_.Projectiles().back(), tagEnemyBullet, Circle(Position2f::ZERO, 5.0f)));
+        }
     }
     if (fabs(player_->GetPosition().x - pos_.x) > attack_distance) 
     {
@@ -225,7 +231,7 @@ void Thrower::SpecialAttackUpdate()
                 Vector2f vel(cosf(lockonAngle_), sinf(lockonAngle_));
                 vel = vel.Nomarized() * bullet_speed;
                 lockonAngle_ += addAngle_;
-                projectileManager_.AddProjectile(new Kunai(pos_ + vel, vel, camera_));
+                projectileManager_.AddProjectile(new Kunai(pos_ + vel + Vector2f(0, -25), vel, camera_));
                 collisionManager_->AddCollider(new CircleCollider(projectileManager_.Projectiles().back(), tagEnemyBullet, Circle(Position2f::ZERO, 5.0f)));
             }
         }

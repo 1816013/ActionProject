@@ -201,6 +201,7 @@ struct FanShape
 	Position2f center;	//中心座標
 	Vector2f v1;		// 扇形の端点までのベクトル1
 	Vector2f v2;		// 扇形の端点までのベクトル2
+	Vector2f initV_;	// 扇形の端点ベクトルの初期値
 	FanShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
 	FanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
 	FanShape(const Position2f& p, const Vector2f& inv1, float angle);
@@ -208,8 +209,7 @@ struct FanShape
 	/// <summary>
 	/// 扇形を描画する
 	/// </summary>
-	/// <param name="color">色</param>
-	void Draw(int graphH, float amp, bool distF = false, unsigned int color = 0xffffff);
+	void Draw(int graphH, float amp, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
 	/// <summary>
 	/// 半径を返す
 	/// </summary>
@@ -278,6 +278,7 @@ struct SlashShape
 	Position2f center;	//中心座標
 	Vector2f v1;		// 斬撃の端点までのベクトル1
 	Vector2f v2;		// 斬撃の端点までのベクトル2
+	Vector2f initV_;	// 斬撃の端点ベクトルの初期値
 	SlashShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
 	SlashShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
 	SlashShape(const Position2f& p, const Vector2f& inv1, float angle);
@@ -286,7 +287,7 @@ struct SlashShape
 	/// 斬撃を描画する
 	/// </summary>
 	/// <param name="color">色</param>
-	void Draw(int graphH, float amp, int psH,int normalH, Vector2f offset = Vector2f::ZERO);
+	void Draw(int graphH, const float amp, const int psH, const int normalH,bool turnF, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
 	
 	/// <summary>
 	/// 半径を返す

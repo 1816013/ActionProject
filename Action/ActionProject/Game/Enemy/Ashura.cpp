@@ -37,7 +37,7 @@ Ashura::Ashura(GamePlayingScene* gs) :
 	ground_line = rc.size.h - 16.0f- 32.0f * 2.0f;
 	pos_.x = rc.pos.x;
 	pos_.y = chichu_y;
-	life_ = 10;
+	life_ = 100;
 	isActive_ = true;
 	
 	for (auto e : energyBalls_)
@@ -148,6 +148,7 @@ void Ashura::DeadUpdate()
 {
 	isDeletable_ = true;
 	isActive_ = false;
+	gameScene_->GameOver();
 }
 
 void Ashura::NormalDraw()

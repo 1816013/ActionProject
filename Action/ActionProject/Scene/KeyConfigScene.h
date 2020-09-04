@@ -30,6 +30,10 @@ private:
 	UpdateFunction_t updater_;
 
 	// updater
+	/// <summary>
+	/// Å‰‚¾‚¯“Ç‚Ş(‰Šú‰»)
+	/// </summary>
+	/// <param name="input">“ü—Íî•ñ</param>
 	void InUpdate(const Input& input);
 	// Šî–{Updaters
 	void NomalUpdate(const Input& input);

@@ -37,7 +37,7 @@ Player::Player(GamePlayingScene* gs) :
 	updater_(&Player::NomalUpdate),
 	drawer_(&Player::RunDraw)
 {
-	gs_ = gs;
+	gameScene_ = gs;
 	gravity_ = maxGraviry;
 	direction_ = Direction::RIGHT;
 	auto& fileMng = FileManager::Instance();
@@ -155,7 +155,7 @@ void Player::Move(const Vector2f& v)
 	auto movePos = pos_ + v;
 	if (movePos.x - 30 < rc.Left() || rc.Right() < movePos.x + 30)return;
 	pos_ += v;
-	auto vec = gs_->GetStage()->ComputeOverlapWall(pos_, 24);
+	auto vec = gameScene_->GetStage()->ComputeOverlapWall(pos_, 24);
 	pos_ += vec;
 }
 
@@ -200,7 +200,7 @@ void Player::Update()
 
 void Player::NomalUpdate()
 {
-	auto groundLine = gs_->GetStage()->GetGroundY(pos_);
+	auto groundLine = gameScene_->GetStage()->GetGroundY(pos_);
 	if (groundLine < pos_.y)
 	{
 		pos_.y = groundLine;
@@ -227,7 +227,7 @@ void Player::FallUpdate()
 {
 	velY_ += gravity_;
 	pos_.y += velY_;
-	auto groundLine = gs_->GetStage()->GetGroundY(pos_);
+	auto groundLine = gameScene_->GetStage()->GetGroundY(pos_);
 	if (groundLine < pos_.y)
 	{
 		velY_ = 0.0f;
@@ -352,13 +352,15 @@ void Player::OnHit(CollisionInfo& mine, CollisionInfo& another)
 	if (updater_ == &Player::DamageUpdate)return;
 	if (another.collider->GetTag() == tagEnemyAttack || another.collider->GetTag() == tagEnemyBullet && mine.collider->GetTag() == tagPlayerDamage)
 	{
-		knockbackfFrame = 6;
+		frame_ = 0;
+		knockbackfFrame = 10;
 		--life_;
 		updater_ = &Player::DamageUpdate;
 		drawer_ = &Player::DamageDraw;
 		if (life_ <= 0)
 		{
 			isActive_ = false;
+			gameScene_->GameOver();
 		}
 	}
 }

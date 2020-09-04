@@ -76,7 +76,7 @@ ChainEquip::ChainEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionMana
 void ChainEquip::Attack(const Player& player, const Input& input, Vector2f offset)
 {
 	if (frame_ >= 0)return;
-	offset_ = offset,
+	offset_ = offset + Vector2f(0.0f, -50.0f);
 	direction_ = {};
 	SetDirection(input, player);
 	angle_ = atan2f(direction_.y, direction_.x);
@@ -160,7 +160,7 @@ void ChainEquip::Update()
 {
 	if (shadow_ != nullptr && capsuleCollider_ != nullptr)
 	{
-		offset_ = shadow_->GetPosition() - player_->GetPosition();
+		offset_ = shadow_->GetPosition() - player_->GetPosition() + Vector2f(0.0f, -50.0f);
 		capsuleCollider_->GetCapsule().seg.start = offset_;
 	}
 	(this->*updater_)();

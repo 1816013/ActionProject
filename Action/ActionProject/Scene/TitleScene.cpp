@@ -64,24 +64,26 @@ void TitleScene::TitleUpdate(const Input& input)
 	{
 		if (input.IsPressed("left"))
 		{
-			slash_.AddAngle1(0.01f);//angle_ -= 0.05f;
+			slash_.AddAngle1(DX_PI_F / 180);//angle_ -= 0.05f;
 		}
 		
 		if (input.IsPressed("right"))
 		{
-			slash_.AddAngle2(0.01f);
+			slash_.AddAngle1(-DX_PI_F / 180);//angle_ -= 0.05f;
 		}
 		if (input.IsPressed("shot"))
 		{
-			slash_.AddAngle1(-0.01f);//angle_ -= 0.05f;
+			
+			slash_.AddAngle2(DX_PI_F / 180);
 		}
 		if (input.IsPressed("jump"))
 		{
-			slash_.AddAngle2(-0.01f);
+			slash_.AddAngle2(-DX_PI_F / 180);
 		}
 		if (input.IsPressed("up"))
 		{
 			dist_ -= 1.0f;
+			slash_.SetAngle1(0);
 		}
 
 		if (input.IsPressed("down"))
@@ -138,7 +140,7 @@ void TitleScene::NomalDraw()
 	}
 	SlashShape fan({ 400.0f, 300.0f }, {-125.0f, -125.0f},angle_);
 	GetDrawScreenGraph(0, 0, 800, 600, captureH_);
-	slash_.Draw(captureH_, dist_, psH_, normalH_);
+	slash_.Draw(captureH_, dist_, psH_, normalH_, true);
 }
 
 void TitleScene::FadeDraw()

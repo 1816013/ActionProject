@@ -26,6 +26,7 @@ private:
 	func_t updater_;
 	int chainH = -1;
 
+
 	void NomalUpdate();
 	void ExtensionUpdate();
 	/// <summary>

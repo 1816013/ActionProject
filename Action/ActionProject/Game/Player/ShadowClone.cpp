@@ -52,5 +52,5 @@ void ShadowClone::Draw()
 	equipments_[currentEquipmentNo_]->Draw();
 
 	auto offset = camera_->ViewOffset();
-	DrawCircleAA(pos_.x + offset.x, pos_.y, 10, 32, 0xff0000, true);
+//	DrawCircleAA(pos_.x + offset.x, pos_.y, 10, 32, 0xff0000, true);
 }
