@@ -20,7 +20,7 @@ private:
 	void NomalUpdate();
 public:
 	/// <summary>
-	/// 鎖鎌インスタンス
+	/// 剣インスタンス
 	/// </summary>
 	/// <param name="p">プレイヤー</param>
 	/// <param name="cm">コリジョン管理用</param>

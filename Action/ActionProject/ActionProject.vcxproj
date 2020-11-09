@@ -161,7 +161,6 @@
     <ClCompile Include="Game\Camera.cpp" />
     <ClCompile Include="Game\Collision\CapsuleCollider.cpp" />
     <ClCompile Include="Game\Collision\CollisionManager.cpp" />
-    <ClCompile Include="Game\Collision\AABBCollider.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="Game\Collision\CircleCollider.cpp" />
     <ClCompile Include="Game\Collision\Collider.cpp" />
@@ -213,7 +212,6 @@
     <ClInclude Include="Game\Camera.h" />
     <ClInclude Include="Game\Collision\CapsuleCollider.h" />
     <ClInclude Include="Game\Collision\CollisionManager.h" />
-    <ClInclude Include="Game\Collision\AABBCollider.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="Game\Collision\CircleCollider.h" />
     <ClInclude Include="Game\Collision\Collider.h" />

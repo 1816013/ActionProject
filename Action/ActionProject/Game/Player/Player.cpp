@@ -298,6 +298,7 @@ void Player::Draw()
 	DeleteMaskScreen();
 
 	DrawFormatString(0, 300, 0xffffff, L"life %d", life_);
+	DrawFormatString(0, 350, 0xffffff, L"pos x:%f, y:%f", pos_.x, pos_.y);
 	(this->*drawer_)(offset, isRight);
 }
 

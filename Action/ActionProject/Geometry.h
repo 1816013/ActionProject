@@ -206,10 +206,18 @@ struct FanShape
 	FanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
 	FanShape(const Position2f& p, const Vector2f& inv1, float angle);
 
+	void SetFanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
+
 	/// <summary>
 	/// 扇形を描画する
 	/// </summary>
-	void Draw(int graphH, float amp, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
+	/// <param name="amp">出すところの座標</param>
+	/// <param name="amp">歪みの係数</param>
+	/// <param name="graphH">画像ハンドル</param>
+	/// <param name="cOffset">カメラオフセット</param>
+	/// <param name="sOffset">分身オフセット</param>
+	void Draw(Position2f pos, float amp = 0.0f, int graphH = -1, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
+
 	/// <summary>
 	/// 半径を返す
 	/// </summary>
@@ -286,7 +294,13 @@ struct SlashShape
 	/// <summary>
 	/// 斬撃を描画する
 	/// </summary>
-	/// <param name="color">色</param>
+	/// <param name="graphH">画像ハンドル</param>
+	/// <param name="amp">歪みの係数</param>
+	/// <param name="psH">ピクセルシェーダハンドル</param>
+	/// <param name="normalH">ノーマルデータハンドル</param>
+	/// <param name="turnF">反転フラグ</param>
+	/// <param name="cOffset">カメラのオフセット</param>
+	/// <param name="sOffset">分身のオフセット</param>
 	void Draw(int graphH, const float amp, const int psH, const int normalH,bool turnF, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
 	
 	/// <summary>

@@ -39,28 +39,38 @@ namespace
 void SwordEquip::NomalUpdate()
 {
 	slash_.center = player_->GetPosition();
+	auto& fanCol = fanCollider_->GetFanShape();
 	if (--frame_ > 0)
 	{		
 		if (isRight_)
 		{			
 			slash_.AddAngle1(slash1Speed);
+			fanCol.AddAngle1(slash1Speed);
 			if (frame_ >= slash_end_frame)
 			{
 				slash_.AddAngle2(slash2Speed);
+				fanCol.AddAngle2(slash2Speed);
 			}
 		}
 		else
 		{
 			slash_.AddAngle2(slash2Speed);
+			fanCol.AddAngle2(slash2Speed);
 			if (frame_ >= slash_end_frame)
 			{
 				slash_.AddAngle1(slash1Speed);
+				fanCol.AddAngle1(slash1Speed);
 			}
 		}
 	}
 	else
 	{
 		frame_ = -1;
+		if (fanCollider_ == nullptr)
+		{
+			return;
+		}	
+		fanCollider_->SetIsAttack(false);
 	}
 }
 SwordEquip::SwordEquip(std::shared_ptr<Player>& p, std::shared_ptr<CollisionManager>cm, std::shared_ptr<Camera> c, ShadowClone* shadow) :
@@ -91,11 +101,6 @@ void SwordEquip::Attack(const Player& player, const Input& input, Vector2f offse
 {
 	if (frame_ >= 0)return;
 
-	/*if (capsuleCollider_ == nullptr)
-	{
-		capsuleCollider_ = new CapsuleCollider(player_, { {offset,offset}, 20 }, tagPlayerAtack, true);
-		collisionManager_->AddCollider(capsuleCollider_);
-	}*/
 	frame_ = slash_frame;
 	
 	if (player.Direction() == Direction::RIGHT)
@@ -105,8 +110,13 @@ void SwordEquip::Attack(const Player& player, const Input& input, Vector2f offse
 		slash2Speed = slash_start_speed;	// 終端スピード
 		slash_.v1 = slash_.v2= {-125.0f, -125.0f} ;
 		isRight_ = true;
-	/*	fanCollider_ = new FanCollider(player_, FanShape({0, 0}, { -125.0f, -125.0f }, 135 * (DX_PI_F / 180)), tagPlayerAtack, true);
-		collisionManager_->AddCollider(fanCollider_);*/
+		auto pos = offset + Vector2f(0, -50);
+		if (fanCollider_ == nullptr)
+		{
+			fanCollider_ = new FanCollider(player_, FanShape(pos, slash_.v1, slash_.v2), tagPlayerAtack, true);
+		}
+		fanCollider_->GetFanShape().SetFanShape(pos, slash_.v1, slash_.v2);
+		collisionManager_->AddCollider(fanCollider_);
 	}
 	else
 	{		
@@ -115,9 +125,15 @@ void SwordEquip::Attack(const Player& player, const Input& input, Vector2f offse
 		slash2Speed = -slash_end_speed;	// 終端スピード
 		slash_.v1 = slash_.v2 = { 125.0f, -125.0f };
 		isRight_ = false;
+		auto pos = offset + Vector2f(0, -50);
+		if (fanCollider_ == nullptr)
+		{
+			fanCollider_ = new FanCollider(player_, FanShape(pos, slash_.v1, slash_.v2), tagPlayerAtack, true);
+		}
+		fanCollider_->GetFanShape().SetFanShape(pos, slash_.v1, slash_.v2);
+		collisionManager_->AddCollider(fanCollider_);
 	}
-	
-
+	fanCollider_->SetIsAttack(true);
 }
 
 void SwordEquip::Update()

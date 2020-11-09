@@ -5,19 +5,25 @@
 #include "CircleCollider.h"
 
 FanCollider::FanCollider(std::shared_ptr<Character> owner, const char* tag, bool immortal):
-	Collider(owner, tag, immortal)
+	Collider(owner, tag, immortal),
+	isAttack_(false)
 {
 }
 
 FanCollider::FanCollider(std::shared_ptr<Character> owner, const FanShape& fan, const char* tag, bool immortal) :
 	Collider(owner, tag, immortal),
-	fanShape_(fan)
+	fanShape_(fan),
+	isAttack_(false)
 {
 
  }
 
 bool FanCollider::IsHit(std::shared_ptr<Collider> col)
 {
+	if (!isAttack_)
+	{
+		return false;
+	}
 	assert(col != nullptr);
 	auto cCol = std::dynamic_pointer_cast<CircleCollider>(col);
 	if (fanShape_.v1 == fanShape_.v2)return false;
@@ -49,14 +55,20 @@ bool FanCollider::IsHit(std::shared_ptr<Collider> col)
 void FanCollider::Draw(std::shared_ptr<Camera> c)
 {
 	DrawString(100, 150, L"o‚Ä‚é", 0xffffff);
+	fanShape_.Draw(this->GetOwner()->GetPosition());
 }
 
 const Vector2f FanCollider::AcutualPosition()
 {
-	return fanShape_.center + GetOwner()->GetPosition();;
+	return fanShape_.center + GetOwner()->GetPosition();
 }
 
 FanShape& FanCollider::GetFanShape()
 {
 	return fanShape_;
+}
+
+void FanCollider::SetIsAttack(bool isAttack)
+{
+	isAttack_ = isAttack;
 }

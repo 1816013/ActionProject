@@ -5,14 +5,13 @@
 /// </summary>
 class Debugger
 {
-private:
-	bool isDebug_;	// デバッグモード用
 public:
 	static Debugger& Instance()
 	{
 		static Debugger app;
 		return app;
 	}
+
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -28,5 +27,8 @@ public:
 	/// </summary>
 	/// <returns>true: デバッグモード</returns>
 	bool IsDebugMode();
+private:
+	bool isDebug_;	// デバッグモード用
+
 };
 

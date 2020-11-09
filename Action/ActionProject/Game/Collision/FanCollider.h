@@ -6,6 +6,7 @@ class FanCollider :
 {
 private:
 	FanShape fanShape_;
+	bool isAttack_;
 public:
 	FanCollider(std::shared_ptr<Character> owner, const char* tag = "", bool immortal = false);
 	/// <summary>
@@ -42,5 +43,11 @@ public:
 	/// <returns>Õ“Ëî•ñ‚ÌîŒ`‚ÌQÆ</returns>
 	/// <example></example>
 	FanShape& GetFanShape();
+
+	/// <summary>
+	/// UŒ‚’†‚©‚Ç‚¤‚©
+	/// </summary>
+	/// <returns></returns>
+	void SetIsAttack(bool isAttack);
 };
 

@@ -1,6 +1,10 @@
 #pragma once
 #include "Collider.h"
 #include "../../Geometry.h"
+
+/// <summary>
+/// カプセル状の衝突情報のクラス
+/// </summary>
 class CapsuleCollider : public Collider
 {
 private:
@@ -15,6 +19,7 @@ public:
 	/// <param name="tag">タグ</param>
 	/// <param name="immortal">不死かどうか</param>
 	CapsuleCollider(std::shared_ptr<Character> owner, const Capsule& cap,  const char* tag = "", bool immortal = false);
+
 	/// <summary>
 	/// 何かが当たった
 	/// </summary>
@@ -38,7 +43,6 @@ public:
 	/// 外からいじれるように参照を返す
 	/// </summary>
 	/// <returns>カプセルの参照</returns>
-	/// <example></example>
 	Capsule& GetCapsule();
 };
 

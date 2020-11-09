@@ -23,8 +23,6 @@
 
  namespace
  {
-	 void BuildVertex(Position2f& center, Vector2f& v1,Vector2f& v2, std::vector<DxLib::VERTEX2D>& vertices, const size_t& triangleNum, float amp, const float& step_angle, float rem);
-	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2,bool turnF, float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem);
 	 void BuildVertex(Position2f& center, Vector2f& v1, Vector2f& v2, std::vector<DxLib::VERTEX2D>& vertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
 	 {
 		 for (auto& v : vertices)
@@ -210,9 +208,17 @@ FanShape::FanShape(const Position2f& p, const Vector2f& inv1, float angle)
 	initV_ = inv1;
 }
 
-void FanShape::Draw(int graphH, float amp,const Vector2f cOffset, const Vector2f sOffset)
+void FanShape::SetFanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2)
 {
-	auto tmpCenter = center;
+	center = p;
+	initV_ = inv1;
+	v1 = inv1;
+	v2 = inv2;
+}
+
+void FanShape::Draw(Position2f pos,float amp, int graphH, const Vector2f cOffset, const Vector2f sOffset)
+{
+	auto tmpCenter = center + pos;
 	tmpCenter.x += cOffset.x;
 	tmpCenter += sOffset;
 	constexpr float step_angle = (DX_PI_F / 18.0f);
@@ -273,9 +279,9 @@ void FanShape::Draw(int graphH, float amp,const Vector2f cOffset, const Vector2f
 		graphH = DX_NONE_GRAPH;
 	}
 	DrawPrimitive2D(vertices.data(), static_cast<int>(vertices.size()), DX_PRIMTYPE_TRIANGLELIST, graphH, false);
-	DrawLineAA(center.x, tmpCenter.y,
+	DrawLineAA(tmpCenter.x, tmpCenter.y,
 		(tmpCenter + v1).x, (tmpCenter + v1).y, 0xff0000, 3.0f);
-	DrawLineAA(center.x, center.y,
+	DrawLineAA(tmpCenter.x, tmpCenter.y,
 		(tmpCenter + v2).x, (tmpCenter + v2).y, 0xff0000, 3.0f);
 }
 
@@ -286,14 +292,15 @@ float FanShape::Radius() const
 
 void FanShape::AddAngle1(float angle)
 {
-    float tmpAngle = GetAngle2Vector(v1, v2);
-    v2 = RotateMat(tmpAngle + angle) * v1;
+	float tmpAngle = GetAngle2Vector(v2, v1);
+	v1 = RotateMat(tmpAngle + angle) * v2;
 }
 
 void FanShape::AddAngle2(float angle)
 {
+	float tmpAngle = GetAngle2Vector(v1, v2);
+	v2 = RotateMat(tmpAngle + angle) * v1;
 }
-
 float FanShape::GetAngle() const
 {
 	return GetAngle2Vector(initV_, v1);
