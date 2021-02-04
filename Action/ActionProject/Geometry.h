@@ -201,15 +201,23 @@ struct FanShape
 	Position2f center;	//中心座標
 	Vector2f v1;		// 扇形の端点までのベクトル1
 	Vector2f v2;		// 扇形の端点までのベクトル2
+	Vector2f initV_;	// 扇形の端点ベクトルの初期値
 	FanShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
 	FanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
 	FanShape(const Position2f& p, const Vector2f& inv1, float angle);
 
+	void SetFanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
+
 	/// <summary>
 	/// 扇形を描画する
 	/// </summary>
-	/// <param name="color">色</param>
-	void Draw(int graphH, float amp, bool distF = false, unsigned int color = 0xffffff);
+	/// <param name="amp">出すところの座標</param>
+	/// <param name="amp">歪みの係数</param>
+	/// <param name="graphH">画像ハンドル</param>
+	/// <param name="cOffset">カメラオフセット</param>
+	/// <param name="sOffset">分身オフセット</param>
+	void Draw(Position2f pos, float amp = 0.0f, int graphH = -1, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
+
 	/// <summary>
 	/// 半径を返す
 	/// </summary>
@@ -278,6 +286,7 @@ struct SlashShape
 	Position2f center;	//中心座標
 	Vector2f v1;		// 斬撃の端点までのベクトル1
 	Vector2f v2;		// 斬撃の端点までのベクトル2
+	Vector2f initV_;	// 斬撃の端点ベクトルの初期値
 	SlashShape() :center(0, 0), v1(0, 0), v2(0, 0) {};
 	SlashShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2);
 	SlashShape(const Position2f& p, const Vector2f& inv1, float angle);
@@ -285,8 +294,14 @@ struct SlashShape
 	/// <summary>
 	/// 斬撃を描画する
 	/// </summary>
-	/// <param name="color">色</param>
-	void Draw(int graphH, float amp, int psH,int normalH, Vector2f offset = Vector2f::ZERO);
+	/// <param name="graphH">画像ハンドル</param>
+	/// <param name="amp">歪みの係数</param>
+	/// <param name="psH">ピクセルシェーダハンドル</param>
+	/// <param name="normalH">ノーマルデータハンドル</param>
+	/// <param name="turnF">反転フラグ</param>
+	/// <param name="cOffset">カメラのオフセット</param>
+	/// <param name="sOffset">分身のオフセット</param>
+	void Draw(int graphH, const float amp, const int psH, const int normalH,bool turnF, const Vector2f cOffset = Vector2f::ZERO, const Vector2f sOffset = Vector2f::ZERO);
 	
 	/// <summary>
 	/// 半径を返す

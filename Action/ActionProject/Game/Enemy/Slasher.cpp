@@ -94,8 +94,6 @@ void Slasher::RunUpdate()
             pos_.y = seg3[1].start.y + yVariation * (pos_.x - seg3[1].start.x);
         }
     }
-    
-   
 }
 void Slasher::JumpUpdate()
 {

@@ -194,9 +194,9 @@ void Samurai::DamageUpdate()
         drawer_ = &Samurai::RunDraw;
         if (updater_ != &Samurai::JumpUpdate && updater_ != &Samurai::FallUpdate)
         {
-            if (rand() % 4 == 0)
+            if (rand() % 3 == 0)
             {
-                if (fabs(pos_.x - player_->GetPosition().x) < slash_distance && !slashed)
+                if (fabs(pos_.x - player_->GetPosition().x) < slash_distance)
                 {
                     HSlash();
                 }
@@ -228,14 +228,17 @@ void Samurai::HSlashUpdate()
         frame_ = 1;
         updater_ = &Samurai::RunUpdate;
         drawer_ = &Samurai::RunDraw;
-        slashCol_.lock()->Suside();
+        if (!slashCol_.expired())
+        {
+            slashCol_.lock()->Suside();
+        }
     }
     if (animFrame_ == 2 * one_picture_frame)
     {
         if (slashCol_.expired() && !weakThis_.expired())
         {
             auto sign = Sign(velocity_.x);
-            collisionManager_->AddCollider(new CapsuleCollider(weakThis_.lock(), Capsule({ { 0 , 0 }, {100 * sign, 0} }, 20), tagEnemyAttack));
+            collisionManager_->AddCollider(new CapsuleCollider(weakThis_.lock(), Capsule({ { 0 , -40 }, {120 * sign, 0} }, 20), tagEnemyAttack));
             slashCol_ = collisionManager_->GetColliders().back();
         }
     }
@@ -247,6 +250,19 @@ void Samurai::VSlashUpdate()
     if (animFrame_ == 0) {
         updater_ = &Samurai::RunUpdate;
         drawer_ = &Samurai::RunDraw;
+        if (!slashCol_.expired())
+        {
+            slashCol_.lock()->Suside();
+        }
+    }
+    if (animFrame_ ==  one_picture_frame)
+    {
+        if (slashCol_.expired() && !weakThis_.expired())
+        {
+            auto sign = Sign(velocity_.x);
+            collisionManager_->AddCollider(new CapsuleCollider(weakThis_.lock(), Capsule({ { 0 , -40 }, {120 * sign, 0} }, 20), tagEnemyAttack));
+            slashCol_ = collisionManager_->GetColliders().back();
+        }
     }
     velocity_.y += 0.75f;
     pos_ += velocity_;
@@ -256,6 +272,10 @@ void Samurai::VSlashUpdate()
         updater_ = &Samurai::RunUpdate;
         drawer_ = &Samurai::RunDraw;
         frame_ = 0;
+        if (!slashCol_.expired())
+        {
+            slashCol_.lock()->Suside();
+        }
     }
 }
 void Samurai::IdleDraw()
@@ -356,7 +376,7 @@ void Samurai::OnHit(CollisionInfo& mine, CollisionInfo& another)
     if (another.collider->GetTag() == tagPlayerAtack)
     {
         
-        if (updater_ == &Samurai::DamageUpdate && updater_ == &Samurai::HSlashUpdate)
+        if (updater_ == &Samurai::DamageUpdate || updater_ == &Samurai::HSlashUpdate)
         {
             return;
         }

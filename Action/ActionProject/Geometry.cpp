@@ -23,8 +23,6 @@
 
  namespace
  {
-	 void BuildVertex(Position2f& center, Vector2f& v1,Vector2f& v2, std::vector<DxLib::VERTEX2D>& vertices, const size_t& triangleNum, float amp, const float& step_angle, float rem);
-	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2, float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem);
 	 void BuildVertex(Position2f& center, Vector2f& v1, Vector2f& v2, std::vector<DxLib::VERTEX2D>& vertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
 	 {
 		 for (auto& v : vertices)
@@ -78,8 +76,9 @@
 
 	 }
 
-	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2, float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
+	 void BuildVertexToShader(Position2f& center, Vector2f& v1, Vector2f& v2, bool isRight, float angleRange, std::vector<DxLib::VERTEX2DSHADER>& svertices, const size_t& triangleNum, float amp, const float& step_angle, float rem)
 	 {
+		 if (triangleNum <= 0)return;
 		 
 		 for (auto& v : svertices)
 		 {
@@ -91,14 +90,20 @@
 		 Vector2f tmpV = v1;
 		 auto r = tmpV.Magnitude();
 		 auto inr = r;
-		 auto stepr = r / (float)(triangleNum + 1);
 		 auto ampX = amp / 800.0f;
 		 auto ampY = amp / 600.0f;
 		 float curentAngle = 0.0f;
 		 for (size_t i = 0; i < triangleNum; ++i)
 		 {
 			 auto ratio = curentAngle / angleRange;
-			 inr = r * (1 - ratio);
+			 if (isRight)
+			 {
+				 inr = r * (1.0f - ratio);//(1.0f - (1.0f - ratio));
+			 }
+			 else
+			 {
+				 inr = r * (1.0f - (1.0f - ratio));
+			 }
 			 auto nv = tmpV.Nomarized();
 			 svertices[i * 2 + 0].pos = V2V(center + nv * inr);
 			 svertices[i * 2 + 0].u = svertices[i * 2 + 0].pos.x / 800.f;
@@ -113,25 +118,31 @@
 			 svertices[i * 2 + 1].dif.r = 0xff;
 			 svertices[i * 2 + 1].dif.g = 0xff;
 			 svertices[i * 2 + 1].dif.b = 0xff;
-			 svertices[i * 2 + 1].dif.a = 0xaa;
+			 svertices[i * 2 + 1].dif.a = 0xff;
 			 tmpV = RotateMat(step_angle) * tmpV;
-			 curentAngle += step_angle;//GetAngle2Vector(v1, tmpV);
-			 //max(inr, 0);
+			 curentAngle += step_angle;
 		 }
 		 // step_angle‚ÅŠ„‚èØ‚ê‚È‚¢‚Æ‚«‚Ì•\Ž¦
 		 tmpV = v2;
 		 if (rem > 0.0f)
 		 {
 			 auto ratio = curentAngle / angleRange;
-			 inr = r * (1 - ratio);
+			 if (isRight)
+			 {
+				 inr = r * (1.0f - ratio);//(1.0f - (1.0f - ratio));
+			 }
+			 else
+			 {
+				 inr = r;
+			 }
 			 auto nv = tmpV.Nomarized();
 			 svertices[triangleNum * 2 + 0].pos = V2V(center + nv * inr);
 			 svertices[triangleNum * 2 + 0].u = svertices[triangleNum * 2 + 0].pos.x / 800.f;
 			 svertices[triangleNum * 2 + 0].v = svertices[triangleNum * 2 + 0].pos.y / 600.f;
 			 svertices[triangleNum * 2 + 0].dif.r = 0xff;
-			 svertices[triangleNum * 2 + 0].dif.g = 0xff;
-			 svertices[triangleNum * 2 + 0].dif.b = 0xff;
-			 svertices[triangleNum * 2 + 0].dif.a = 0xff;
+			 svertices[triangleNum * 2 + 0].dif.g = 0x44;
+			 svertices[triangleNum * 2 + 0].dif.b = 0x00;
+			 svertices[triangleNum * 2 + 0].dif.a = 0xaa;
 			 svertices[triangleNum * 2 + 1].pos = V2V(center + nv * r);
 			 svertices[triangleNum * 2 + 1].u = sin(float(triangleNum * step_angle)) * ampX + svertices[triangleNum * 2 + 1].pos.x / 800.f;
 			 svertices[triangleNum * 2 + 1].v = cos(float(triangleNum * step_angle)) * ampY + svertices[triangleNum * 2 + 1].pos.y / 600.f;
@@ -187,16 +198,29 @@ Position2f Segment::End()
 FanShape::FanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2)
 : center(p), v1(inv1), v2(inv2)
 {
+	initV_ = inv1;
 }
 
 FanShape::FanShape(const Position2f& p, const Vector2f& inv1, float angle)
     : center(p), v1(inv1)
 {
 	v2 = RotateMat(angle)* v1;
+	initV_ = inv1;
 }
 
-void FanShape::Draw(int graphH, float amp, bool distF, unsigned int color)
+void FanShape::SetFanShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2)
 {
+	center = p;
+	initV_ = inv1;
+	v1 = inv1;
+	v2 = inv2;
+}
+
+void FanShape::Draw(Position2f pos,float amp, int graphH, const Vector2f cOffset, const Vector2f sOffset)
+{
+	auto tmpCenter = center + pos;
+	tmpCenter.x += cOffset.x;
+	tmpCenter += sOffset;
 	constexpr float step_angle = (DX_PI_F / 18.0f);
 	float angleRange = GetAngle2Vector(v1, v2);
 	size_t triangleNum = static_cast<size_t>(angleRange / step_angle);
@@ -221,15 +245,15 @@ void FanShape::Draw(int graphH, float amp, bool distF, unsigned int color)
 	auto ampY = amp / 600;
 	for (size_t i = 0; i < triangleNum; ++i)
 	{
-		vertices[i * 3 + 0].pos = V2V(center);
+		vertices[i * 3 + 0].pos = V2V(tmpCenter);
 		vertices[i * 3 + 0].u = vertices[i * 3 + 0].pos.x / 800.f;
 		vertices[i * 3 + 0].v = vertices[i * 3 + 0].pos.y / 600.f;
-		vertices[i * 3 + 1].pos = V2V(center + tmpV1);
-		vertices[i * 3 + 1].u = sin(float(i * step_angle)) * ampX + vertices[i * 3 + 1].pos.x / 800.f;
-		vertices[i * 3 + 1].v = sin(float(i * step_angle)) * ampY + vertices[i * 3 + 1].pos.y / 600.f;
-		vertices[i * 3 + 2].pos = V2V(center + tmpV2);
-		vertices[i * 3 + 2].u = sin(float(i * step_angle)) * ampX + vertices[i * 3 + 2].pos.x / 800.f;
-		vertices[i * 3 + 2].v = sin(float(i * step_angle)) * ampY + vertices[i * 3 + 2].pos.y / 600.f;
+		vertices[i * 3 + 1].pos = V2V(tmpCenter + tmpV1);
+		vertices[i * 3 + 1].u = vertices[i * 3 + 1].pos.x / 800.f;
+		vertices[i * 3 + 1].v = vertices[i * 3 + 1].pos.y / 600.f;
+		vertices[i * 3 + 2].pos = V2V(tmpCenter + tmpV2);
+		vertices[i * 3 + 2].u = vertices[i * 3 + 2].pos.x / 800.f;
+		vertices[i * 3 + 2].v = vertices[i * 3 + 2].pos.y / 600.f;
 		tmpV1 = tmpV2;
 		tmpV2 = RotateMat(step_angle) * tmpV1;
 	}
@@ -237,49 +261,49 @@ void FanShape::Draw(int graphH, float amp, bool distF, unsigned int color)
 	tmpV2 = v2;
 	if (rem > 0.0f)
 	{
-		vertices[triangleNum * 3 + 0].pos = V2V(center);
+		vertices[triangleNum * 3 + 0].pos = V2V(tmpCenter);
 		vertices[triangleNum * 3 + 0].u = /*cos(float(triangleNum * step_angle)) * ampX + */vertices[triangleNum * 3 + 0].pos.x / 800.f;
 		vertices[triangleNum * 3 + 0].v = /*cos(float(triangleNum * step_angle)) * ampY + */vertices[triangleNum * 3 + 0].pos.y / 600.f;
-		vertices[triangleNum * 3 + 1].pos = V2V(center + tmpV1);
+		vertices[triangleNum * 3 + 1].pos = V2V(tmpCenter + tmpV1);
 		vertices[triangleNum * 3 + 1].u = sin(float(triangleNum * step_angle)) * ampX + vertices[triangleNum * 3 + 1].pos.x / 800.f;
 		vertices[triangleNum * 3 + 1].v = sin(float(triangleNum * step_angle)) * ampY + vertices[triangleNum * 3 + 1].pos.y / 600.f;
-		vertices[triangleNum * 3 + 2].pos = V2V(center + tmpV2);
+		vertices[triangleNum * 3 + 2].pos = V2V(tmpCenter + tmpV2);
 		vertices[triangleNum * 3 + 2].u = sin(float(triangleNum * step_angle)) * ampX + vertices[triangleNum * 3 + 2].pos.x / 800.f;
 		vertices[triangleNum * 3 + 2].v = sin(float(triangleNum * step_angle)) * ampY + vertices[triangleNum * 3 + 2].pos.y / 600.f;
 		tmpV1 = tmpV2;
 		tmpV2 = RotateMat(step_angle) * tmpV1;
 	}
 
-	//v.emplace_back({center.x, center.y}, 1.0f, );
 	if (graphH == -1)
 	{
 		graphH = DX_NONE_GRAPH;
 	}
 	DrawPrimitive2D(vertices.data(), static_cast<int>(vertices.size()), DX_PRIMTYPE_TRIANGLELIST, graphH, false);
-	DrawLineAA(center.x, center.y,
-		(center + v1).x, (center + v1).y, 0xff0000, 3.0f);
-	DrawLineAA(center.x, center.y,
-		(center + v2).x, (center + v2).y, 0xff0000, 3.0f);
+	DrawLineAA(tmpCenter.x, tmpCenter.y,
+		(tmpCenter + v1).x, (tmpCenter + v1).y, 0xff0000, 3.0f);
+	DrawLineAA(tmpCenter.x, tmpCenter.y,
+		(tmpCenter + v2).x, (tmpCenter + v2).y, 0xff0000, 3.0f);
 }
 
 float FanShape::Radius() const
 {
-	return 0.0f;
+	return v1.Magnitude();
 }
 
 void FanShape::AddAngle1(float angle)
 {
-    float tmpAngle = GetAngle2Vector(v1, v2);
-    v2 = RotateMat(tmpAngle + angle) * v1;
+	float tmpAngle = GetAngle2Vector(v2, v1);
+	v1 = RotateMat(tmpAngle + angle) * v2;
 }
 
 void FanShape::AddAngle2(float angle)
 {
+	float tmpAngle = GetAngle2Vector(v1, v2);
+	v2 = RotateMat(tmpAngle + angle) * v1;
 }
-
 float FanShape::GetAngle() const
 {
-	return 0.0f;
+	return GetAngle2Vector(initV_, v1);
 }
 
 
@@ -343,18 +367,21 @@ Matrix RotateMat(float angle) {
 SlashShape::SlashShape(const Position2f& p, const Vector2f& inv1, const Vector2f& inv2)
 	: center(p), v1(inv1), v2(inv2)
 {
+	initV_ = inv1;
 }
 
 SlashShape::SlashShape(const Position2f& p, const Vector2f& inv1, float angle)
 	: center(p), v1(inv1)
 {
 	v2 = RotateMat(angle) * v1;
+	initV_ = inv1;
 }
 
-void SlashShape::Draw(int graphH, float amp,int psH, int normalH, Vector2f offset)
+void SlashShape::Draw(int graphH, const float amp, const int psH, const int normalH, bool turnF, const Vector2f cOffset, const Vector2f sOffset)
 {
 	auto tmpCenter = center;
-	tmpCenter.x += offset.x;
+	tmpCenter.x += cOffset.x;
+	tmpCenter += sOffset;
 	constexpr float step_angle = (DX_PI_F / 36.0f);
 	float angleRange = GetAngle2Vector(v1, v2);
 	size_t triangleNum = static_cast<size_t>(angleRange / step_angle);
@@ -379,24 +406,22 @@ void SlashShape::Draw(int graphH, float amp,int psH, int normalH, Vector2f offse
 	else
 	{
 		svertices.resize(2 * remNum);
-		BuildVertexToShader(tmpCenter, v1, v2,angleRange,svertices, triangleNum, amp, step_angle, rem);
+		BuildVertexToShader(tmpCenter, v1, v2,turnF, angleRange,svertices, triangleNum, amp, step_angle, rem);
 		SetUsePixelShader(psH);
 		SetUseTextureToShader(0, graphH);
 		SetUseTextureToShader(1, normalH);
 		DrawPrimitive2DToShader(svertices.data(), static_cast<int>(svertices.size()), DX_PRIMTYPE_TRIANGLESTRIP);
 	}
 	
-	
-
-	DrawLineAA(tmpCenter.x, tmpCenter.y,
+	/*DrawLineAA(tmpCenter.x, tmpCenter.y,
 		(tmpCenter + v1).x , (tmpCenter + v1).y, 0xff0000, 3.0f);
 	DrawLineAA(tmpCenter.x , tmpCenter.y,
-		(tmpCenter + v2).x, (tmpCenter + v2).y, 0xff0000, 3.0f);
+		(tmpCenter + v2).x, (tmpCenter + v2).y, 0xff0000, 3.0f);*/
 }
 
 float SlashShape::Radius() const
 {
-	return 0.0f;
+	return GetAngle2Vector(v1, v2);
 }
 
 void SlashShape::AddAngle1(float angle)
@@ -413,17 +438,17 @@ void SlashShape::AddAngle2(float angle)
 
 void SlashShape::SetAngle1(float angle)
 {
-	auto tmpAngle = angle - GetAngle();
+	auto tmpAngle = angle - GetAngle2Vector(initV_, v1);
 	v1 = RotateMat(tmpAngle) * v1;
 }
 
 void SlashShape::SetAngle2(float angle)
 {
-	auto tmpAngle = angle - GetAngle();
+	auto tmpAngle = angle - GetAngle2Vector(initV_, v2);
 	v2 = RotateMat(tmpAngle) * v2;
 }
 
 float SlashShape::GetAngle() const
 {
-	return GetAngle2Vector(v1, v2);
+	return GetAngle2Vector(initV_, v1);
 }

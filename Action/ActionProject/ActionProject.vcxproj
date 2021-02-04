@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Arithmetic.cpp" />
+    <ClCompile Include="Game\Collision\FanCollider.cpp" />
     <ClCompile Include="Game\Player\SwordEquip.cpp" />
     <ClCompile Include="Game\Enemy\AsuraBullet.cpp" />
     <ClCompile Include="Game\Enemy\Ashura.cpp" />
@@ -160,7 +161,6 @@
     <ClCompile Include="Game\Camera.cpp" />
     <ClCompile Include="Game\Collision\CapsuleCollider.cpp" />
     <ClCompile Include="Game\Collision\CollisionManager.cpp" />
-    <ClCompile Include="Game\Collision\AABBCollider.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="Game\Collision\CircleCollider.cpp" />
     <ClCompile Include="Game\Collision\Collider.cpp" />
@@ -196,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arithmetic.h" />
+    <ClInclude Include="Game\Collision\FanCollider.h" />
     <ClInclude Include="Game\Player\SwordEquip.h" />
     <ClInclude Include="Game\Enemy\AsuraBullet.h" />
     <ClInclude Include="Game\Enemy\Ashura.h" />
@@ -211,7 +212,6 @@
     <ClInclude Include="Game\Camera.h" />
     <ClInclude Include="Game\Collision\CapsuleCollider.h" />
     <ClInclude Include="Game\Collision\CollisionManager.h" />
-    <ClInclude Include="Game\Collision\AABBCollider.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="Game\Collision\CircleCollider.h" />
     <ClInclude Include="Game\Collision\Collider.h" />

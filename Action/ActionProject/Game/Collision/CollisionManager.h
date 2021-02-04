@@ -5,12 +5,10 @@
 class Collider;
 class Camera;
 /// <summary>
-/// 衝突判定を管理する
+/// 衝突判定を管理するクラス
 /// </summary>
 class CollisionManager
 {
-private:
-	std::list<std::shared_ptr<Collider>>colliders_;	// 全衝突情報のリスト
 public:
 	/// <summary>
 	/// 全てのコリジョンを判定する
@@ -29,7 +27,15 @@ public:
 	/// <param name="collider">衝突情報を追加する</param>
 	void AddCollider(Collider* collider);
 
+	/// <summary>
+	/// 衝突情報をすべて取得する
+	/// </summary>
+	/// <returns></returns>
 	std::list<std::shared_ptr<Collider>>GetColliders();
+
+private:
+	std::list<std::shared_ptr<Collider>>colliders_;	// 全衝突情報のリスト
+
 
 };
 

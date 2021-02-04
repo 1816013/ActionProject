@@ -1,11 +1,12 @@
 #pragma once
 #include "Collider.h"
 #include "../../Geometry.h"
+
+/// <summary>
+/// 円衝突情報のクラス
+/// </summary>
 class CircleCollider : public Collider
 {
-private:
-	Circle circle_;
-	
 public:
 	/// <summary>
 	/// 円衝突情報を作る(半径1,座標(0, 0) )
@@ -52,6 +53,10 @@ public:
 	/// </summary>
 	/// <returns>中心座標</returns>
 	const Vector2f AcutualPosition();
+private:
+	Circle circle_;
+	
+
 	
 };
 

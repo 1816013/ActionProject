@@ -5,11 +5,14 @@
 #include "../System/Input.h"
 #include "../System/Application.h"
 #include "../Geometry.h"
+#include "../System/File.h"
+#include "../System/FileManager.h"
 
 namespace
 {
 	constexpr uint32_t FadeInterval = 45;
 	unsigned int waitTimer = 0;
+	int gameoverH_ = -1;
 }
 
 
@@ -18,6 +21,8 @@ updater_(&GameOverScene::FadeinUpdate),
 drawer_(&GameOverScene::FadeDraw)
 {
 	waitTimer = 0;
+	auto& fileMng = FileManager::Instance();
+	gameoverH_ = fileMng.Load(L"Resource/Image/UI/GameOver.png")->Handle();
 }
 
 void GameOverScene::FadeinUpdate(const Input &)
@@ -50,6 +55,7 @@ void GameOverScene::GameOverUpdate(const Input& input)
 void GameOverScene::NomalDraw()
 {
 	DrawString(100, 100, L"GameOver", GetColor(255, 255, 255));
+	DrawRotaGraph(400,200, 3, 0.0f, gameoverH_, false);
 }
 
 void GameOverScene::FadeDraw()

@@ -39,6 +39,7 @@ bool CapsuleCollider::IsHit(std::shared_ptr<Collider> col)
 
 void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 {
+	if (OwnerIsDead())return;
 	auto offset = c->ViewOffset();
 	if (capsule_.seg.vec.SQMagnitude() == 0)return;
 	Capsule capsule = { {AcutualPosition(), capsule_.seg.vec }, capsule_.radius};
@@ -46,7 +47,7 @@ void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 	auto epos = capsule.seg.start + capsule.seg.vec ;
 
 	int posnum = 32; // DrawCircleAAÇÃí∏ì_êî
-	DrawCircleAA(spos.x, spos.y, capsule.radius, posnum, 0xffffff, false);
+	DrawCircleAA(spos.x + offset.x, spos.y, capsule.radius, posnum, 0xffffff, false);
 	
 	auto v90 = capsule.seg.vec;
 	v90 = {-v90.y, v90.x};
@@ -64,6 +65,11 @@ void CapsuleCollider::Draw(std::shared_ptr<Camera>c)
 
 const Vector2f CapsuleCollider::AcutualPosition()
 {
+	auto owner = GetOwner();
+	/*if (owner == nullptr)
+	{
+		return Vector2f::ZERO;
+	}*/
 	return capsule_.seg.start + GetOwner()->GetPosition();
 }
 

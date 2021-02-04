@@ -7,6 +7,9 @@
 
 namespace
 {
+	/// <summary>
+	/// 衝突組み合わせテーブル
+	/// </summary>
 	std::pair<std::string, std::string> hitConbinationTable[] = { 
 		{tagEnemyDamage,tagPlayerAtack }, 
 		{tagEnemyBullet,tagPlayerDamage},
@@ -44,30 +47,32 @@ void CollisionManager::Update()
 			{
 				continue;
 			}
-			if (col->IsHit(other) || other->IsHit(col))
+			if (!col->IsHit(other) && !other->IsHit(col))
 			{
-				CollisionInfo colInfoOwn = { col };
-				CollisionInfo colInfoAnother = { other };
-				col->GetOwner()->OnHit(colInfoOwn, colInfoAnother);
-				if (col->GetOwner()->IsActive())
-				{
-					col->Sleep();
-				}
-				else
-				{
-					col->Suside();
-				}
-				
-				other->GetOwner()->OnHit(colInfoAnother,colInfoOwn);
-				if (other->GetOwner()->IsActive())
-				{
-					other->Sleep();
-				}
-				else
-				{
-					other->Suside();
-				}
+				continue;
 			}
+			CollisionInfo colInfoOwn = { col };
+			CollisionInfo colInfoAnother = { other };
+			col->GetOwner()->OnHit(colInfoOwn, colInfoAnother);
+			if (col->GetOwner()->IsActive())
+			{
+				col->Sleep();
+			}
+			else
+			{
+				col->Suside();
+			}
+				
+			other->GetOwner()->OnHit(colInfoAnother,colInfoOwn);
+			if (other->GetOwner()->IsActive())
+			{
+				other->Sleep();
+			}
+			else
+			{
+				other->Suside();
+			}
+			
 		}
 	}
 	for (auto& col : colliders_) {
